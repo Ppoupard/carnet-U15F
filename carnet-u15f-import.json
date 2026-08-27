@@ -1,0 +1,210 @@
+{
+ "seances": [
+  {
+   "id": "XL1",
+   "date": "2026-08-19",
+   "cycle": "C0 - Reprise & diagnostic",
+   "effectif": 7,
+   "gardiennes": 0,
+   "duree": 90,
+   "espace": "Quart de terrain",
+   "comportement": "Créer une solution autour de la porteuse",
+   "famille": "Avec ballon",
+   "etape": "Découvrir",
+   "rotation": 1,
+   "nCycle": 1,
+   "nCap": 1,
+   "source": "Progression du cycle · séance 1/8",
+   "reglage": "Standard",
+   "durees": {
+    "mr": 12,
+    "s1": 25,
+    "s2": 18,
+    "match": 24,
+    "phys": 6,
+    "retour": 5
+   },
+   "modules": {
+    "mr": 105,
+    "s1": 125,
+    "s2": 126,
+    "match": 191
+   },
+   "raisons": {
+    "mr": "",
+    "s1": "",
+    "s2": "",
+    "match": ""
+   },
+   "phys": {
+    "id": 1,
+    "type": "Cardio",
+    "duree": 6,
+    "placement": "après le match"
+   },
+   "alerte": "Effectif compatible",
+   "alerteNiveau": "ok",
+   "noteEspace": "Quart de terrain : les modules trop grands passent en compact",
+   "diagnostic": "",
+   "pointFaible": "",
+   "statut": "Réalisée",
+   "bilan": {
+    "notes": {
+     "mr": 4,
+     "s1": 4,
+     "s2": 3,
+     "match": 2,
+     "groupe": 3
+    },
+    "texte": "Bonne séance avec du plaisir et de l'implication, installer une rigueur technique rapidement ainsi qu'une rigueur sans le ballon. Match à thème : beaucoup moins de concentration par rapport aux autres exercices.",
+    "score": 60,
+    "pointFaible": "le match à thème",
+    "decision": "REVOIR",
+    "decisionBrute": "REVOIR",
+    "diagnostic": "Le comportement ne ressort pas encore suffisamment dans le match à thème.",
+    "reglage": "Faciliter",
+    "pourquoi": "Le match à thème (2/5) et la stabilité générale montrent qu’il est trop tôt pour avancer. On garde le même comportement en simplifiant.",
+    "action": "Reprendre le même comportement avec une seule règle, plus d’espace ou un surnombre, puis vérifier de nouveau dans le match.",
+    "confiance": "Élevée"
+   }
+  },
+  {
+   "id": "XL2",
+   "date": "2026-08-24",
+   "cycle": "C0 - Reprise & diagnostic",
+   "effectif": 6,
+   "gardiennes": 0,
+   "duree": 90,
+   "espace": "Quart de terrain",
+   "comportement": "Créer une solution autour de la porteuse",
+   "famille": "Avec ballon",
+   "etape": "Découvrir",
+   "rotation": 2,
+   "nCycle": 2,
+   "nCap": 2,
+   "source": "Séance précédente à revoir",
+   "reglage": "Faciliter",
+   "durees": {
+    "mr": 11,
+    "s1": 22,
+    "s2": 16,
+    "match": 21,
+    "phys": 15,
+    "retour": 5
+   },
+   "modules": {
+    "mr": 106,
+    "s1": 125,
+    "s2": 126,
+    "match": 192
+   },
+   "raisons": {
+    "mr": "",
+    "s1": "",
+    "s2": "",
+    "match": ""
+   },
+   "phys": {
+    "id": 9,
+    "type": "Plyométrie / coordination",
+    "duree": 15,
+    "placement": "après la mise en route"
+   },
+   "alerte": "Effectif compatible",
+   "alerteNiveau": "ok",
+   "noteEspace": "Quart de terrain : les modules trop grands passent en compact",
+   "diagnostic": "",
+   "pointFaible": "",
+   "statut": "Réalisée",
+   "bilan": {
+    "notes": {
+     "mr": 3,
+     "s1": 4,
+     "s2": 3,
+     "match": 4,
+     "groupe": 3
+    },
+    "texte": "Bonne séance, joueuses appliquées, mélangeant plaisir et progrès.",
+    "score": 70,
+    "pointFaible": "la mise en route",
+    "decision": "CONSOLIDER",
+    "decisionBrute": "CONSOLIDER",
+    "diagnostic": "La séance est positive mais certains éléments restent encore irréguliers.",
+    "reglage": "Stabiliser",
+    "pourquoi": "Le comportement existe, mais la mise en route reste trop irrégulier. On garde le même objectif avec une forme mieux calibrée.",
+    "action": "Garder le même comportement mais changer la situation ou le niveau de difficulté. Objectif : plus de répétitions réussies.",
+    "confiance": "Élevée"
+   }
+  },
+  {
+   "id": "XL3",
+   "date": "2026-08-26",
+   "cycle": "C0 - Reprise & diagnostic",
+   "effectif": 9,
+   "gardiennes": 0,
+   "duree": 90,
+   "espace": "Quart de terrain",
+   "comportement": "Créer une solution autour de la porteuse",
+   "famille": "Avec ballon",
+   "etape": "Découvrir",
+   "rotation": 3,
+   "nCycle": 3,
+   "nCap": 3,
+   "source": "Séance précédente à consolider",
+   "reglage": "Stabiliser",
+   "durees": {
+    "mr": 12,
+    "s1": 25,
+    "s2": 18,
+    "match": 24,
+    "phys": 6,
+    "retour": 5
+   },
+   "modules": {
+    "mr": 3,
+    "s1": 21,
+    "s2": 126,
+    "match": 193
+   },
+   "raisons": {
+    "mr": "",
+    "s1": "",
+    "s2": "",
+    "match": ""
+   },
+   "phys": {
+    "id": 3,
+    "type": "Cardio",
+    "duree": 6,
+    "placement": "après le match"
+   },
+   "alerte": "Effectif compatible",
+   "alerteNiveau": "ok",
+   "noteEspace": "Quart de terrain : les modules trop grands passent en compact",
+   "diagnostic": "",
+   "pointFaible": "",
+   "statut": "Réalisée",
+   "bilan": {
+    "notes": {
+     "mr": 3,
+     "s1": 4,
+     "s2": 4,
+     "match": 4,
+     "groupe": 4
+    },
+    "texte": "Bonne séance, je vois de plus en plus le comportement recherché.",
+    "score": 78,
+    "pointFaible": "la mise en route",
+    "decision": "AVANCER AVEC RAPPEL",
+    "decisionBrute": "AVANCER AVEC RAPPEL",
+    "diagnostic": "La séance est positive mais certains éléments restent encore irréguliers.",
+    "reglage": "Standard",
+    "pourquoi": "Le transfert est suffisant pour avancer, mais la mise en route mérite encore un rappel court de 5 à 10 minutes.",
+    "action": "Passer à l’étape suivante en gardant 5 à 10 minutes de rappel sur la mise en route.",
+    "confiance": "Élevée"
+   }
+  }
+ ],
+ "matchs": [],
+ "theme": ""
+}
