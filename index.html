@@ -3,40 +3,42 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#276B4E">
+<meta name="theme-color" content="#1B274A">
 <title>Carnet U15F</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,75..125,400..800;1,75..125,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wdth,wght@0,75..125,400..800;1,75..125,400..700&display=swap">
 <style>
 /* ============ TOKENS ============ */
 :root{
-  --ground:#F4F3ED; --surface:#FFFFFF; --surface-2:#EBEAE2; --surface-3:#E1E0D6;
-  --ink:#141D18; --ink-2:#3C4A43; --muted:#63716A; --line:#D8D7CC; --line-2:#C4C3B6;
-  --accent:#D9501B; --accent-soft:#FBEAE2; --on-accent:#FFFFFF;
-  --field:#22664A; --field-soft:#E1EDE6;
-  --ok:#22664A; --warn:#9A6A0C; --alert:#A03325;
-  --shadow:0 1px 2px rgba(20,29,24,.06), 0 8px 24px -16px rgba(20,29,24,.28);
+  /* Charte GF MMJ — Marine #1B274A · Rose vif #D10E77 · Rose clair #F794D4 · Marine profond #111A33 */
+  --ground:#F4F5F9; --surface:#FFFFFF; --surface-2:#EAECF4; --surface-3:#DBDFEC;
+  --ink:#1B274A; --ink-2:#414D75; --muted:#626C90; --line:#DBDFEC; --line-2:#C2C8DD;
+  --accent:#D10E77; --accent-soft:#FCE7F2; --on-accent:#FFFFFF; --accent-ink:#A80A5F;
+  --field:#1B274A; --field-soft:#E7EAF4;
+  --ok:#1B274A; --warn:#8A5B08; --alert:#B0122B;
+  --shadow:0 1px 2px rgba(27,39,74,.06), 0 8px 24px -16px rgba(27,39,74,.30);
   --r:10px; --r-s:6px;
+  --f-display:"Anton", "Archivo Narrow", Impact, sans-serif;
   --f-ui:"Archivo", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
-  --f-read:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-read:"Archivo", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --ground:#0E1613; --surface:#16201C; --surface-2:#1D2924; --surface-3:#25332D;
-    --ink:#E8EEE9; --ink-2:#C3D0C8; --muted:#93A69B; --line:#28352F; --line-2:#35453D;
-    --accent:#FF7C4D; --accent-soft:#2E1D14; --on-accent:#1A0E07;
-    --field:#59A783; --field-soft:#16281F;
-    --ok:#59A783; --warn:#D9A438; --alert:#E2705C;
+    --ground:#111A33; --surface:#1B274A; --surface-2:#243156; --surface-3:#2E3B66;
+    --ink:#FFFFFF; --ink-2:#C9D0E4; --muted:#8F9ABF; --line:#2B3762; --line-2:#3A4776;
+    --accent:#F794D4; --accent-soft:#3A1C33; --on-accent:#1B274A; --accent-ink:#F794D4;
+    --field:#8FA3D9; --field-soft:#1E2B52;
+    --ok:#8FA3D9; --warn:#E0B252; --alert:#F08C8C;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
   }
 }
 :root[data-theme="dark"]{
-  --ground:#0E1613; --surface:#16201C; --surface-2:#1D2924; --surface-3:#25332D;
-  --ink:#E8EEE9; --ink-2:#C3D0C8; --muted:#93A69B; --line:#28352F; --line-2:#35453D;
-  --accent:#FF7C4D; --accent-soft:#2E1D14; --on-accent:#1A0E07;
-  --field:#59A783; --field-soft:#16281F;
-  --ok:#59A783; --warn:#D9A438; --alert:#E2705C;
+  --ground:#111A33; --surface:#1B274A; --surface-2:#243156; --surface-3:#2E3B66;
+  --ink:#FFFFFF; --ink-2:#C9D0E4; --muted:#8F9ABF; --line:#2B3762; --line-2:#3A4776;
+  --accent:#F794D4; --accent-soft:#3A1C33; --on-accent:#1B274A; --accent-ink:#F794D4;
+  --field:#8FA3D9; --field-soft:#1E2B52;
+  --ok:#8FA3D9; --warn:#E0B252; --alert:#F08C8C;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.8);
 }
 
@@ -68,12 +70,29 @@ header.top{
   border-bottom:1px solid var(--line);
 }
 .top-in{display:flex; align-items:center; gap:14px; min-height:54px}
-.brand{display:flex; align-items:baseline; gap:8px; margin-right:auto; min-width:0}
+.brand{display:flex; align-items:center; gap:9px; margin-right:auto; min-width:0}
 .brand b{
-  font-size:16px; font-weight:800; letter-spacing:-.02em;
-  font-variation-settings:"wdth" 88;
+  font-family:var(--f-display); font-weight:400; font-size:19px;
+  letter-spacing:.015em; text-transform:uppercase; line-height:1;
 }
-.brand span{font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.brand > span{font-size:11px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+#brandLogo{height:30px; width:auto; max-width:90px; object-fit:contain; display:block}
+#brandMono{
+  flex:none; display:grid; place-items:center; width:30px; height:30px; border-radius:7px;
+  background:var(--field); color:#fff; font-size:10.5px; font-weight:800; letter-spacing:.02em;
+}
+#brandLogo:not([hidden]) + #brandMono{display:none}
+.swatch-row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+input[type=color]{
+  width:100%; height:42px; padding:3px; border:1px solid var(--line-2);
+  border-radius:var(--r-s); background:var(--ground); cursor:pointer;
+}
+input[type=file]{font-size:13px}
+.logo-prev{
+  display:flex; align-items:center; justify-content:center; gap:10px; padding:14px;
+  border:1px dashed var(--line-2); border-radius:var(--r-s); background:var(--surface-2); min-height:74px;
+}
+.logo-prev img{max-height:52px; max-width:190px; object-fit:contain}
 nav.tabs{display:flex; gap:2px; overflow-x:auto; scrollbar-width:none}
 nav.tabs::-webkit-scrollbar{display:none}
 .tab{
@@ -101,7 +120,9 @@ nav.tabs::-webkit-scrollbar{display:none}
 /* ============ LAYOUT ============ */
 main{padding:18px 0 64px}
 .cols{display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:22px; align-items:start}
-@media (max-width:900px){.cols{grid-template-columns:1fr; gap:16px}}
+.cols > *{min-width:0}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr); gap:16px}}
+select{max-width:100%; text-overflow:ellipsis}
 
 .panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow)}
 .panel-h{padding:12px 14px 0}
@@ -146,11 +167,12 @@ details.adv .stack{margin-top:12px}
   display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:100px;
   font-size:11px; font-weight:700; letter-spacing:.04em; background:var(--surface-2); color:var(--ink-2);
   border:1px solid var(--line); white-space:nowrap;
+  max-width:100%; overflow:hidden; text-overflow:ellipsis;
 }
 .pill.ok{background:var(--field-soft); color:var(--ok); border-color:transparent}
 .pill.warn{background:transparent; color:var(--warn); border-color:currentColor}
 .pill.alert{background:transparent; color:var(--alert); border-color:currentColor}
-.pill.accent{background:var(--accent-soft); color:var(--accent); border-color:transparent}
+.pill.accent{background:var(--accent-soft); color:var(--accent-ink); border-color:transparent}
 
 /* ============ DECISION BANNER ============ */
 .decision{
@@ -158,13 +180,16 @@ details.adv .stack{margin-top:12px}
   background:var(--surface); padding:13px 15px; display:flex; flex-direction:column; gap:9px;
 }
 .decision .d-top{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
-.decision h2{font-size:19px; font-weight:800; letter-spacing:-.02em; line-height:1.2}
-.decision .why{font-family:var(--f-read); font-size:14.5px; color:var(--ink-2); max-width:68ch}
+.decision h2{
+  font-family:var(--f-display); font-weight:400; font-size:clamp(22px,3.4vw,30px);
+  letter-spacing:.01em; text-transform:uppercase; line-height:1.06;
+}
+.decision .why{font-family:var(--f-read); font-size:14.5px; line-height:1.55; color:var(--ink-2); max-width:66ch}
 .decision.empty{border-left-color:var(--line-2)}
 
 /* ============ SESSION TIMELINE ============ */
 .seance-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin:22px 0 10px}
-.seance-head h3{font-size:13px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-variation-settings:"wdth" 90}
+.seance-head h3{font-family:var(--f-display); font-weight:400; font-size:15px; letter-spacing:.06em; text-transform:uppercase}
 .timeline{display:flex; flex-direction:column; gap:10px}
 .blk{
   display:grid; grid-template-columns:64px minmax(0,1fr); background:var(--surface);
@@ -208,13 +233,13 @@ details.adv .stack{margin-top:12px}
 .manual{border-top:1px solid var(--line); margin-top:2px}
 .manual summary{
   cursor:pointer; list-style:none; padding:10px 0 0; font-size:11px; font-weight:700;
-  letter-spacing:.08em; text-transform:uppercase; color:var(--accent);
+  letter-spacing:.08em; text-transform:uppercase; color:var(--accent-ink);
 }
 .manual summary::-webkit-details-marker{display:none}
 .manual summary::after{content:" ↓"}
 .manual[open] summary::after{content:" ↑"}
 .manual-b{
-  font-family:var(--f-read); font-size:15.5px; line-height:1.6; color:var(--ink-2);
+  font-family:var(--f-read); font-size:15px; line-height:1.62; color:var(--ink-2);
   display:flex; flex-direction:column; gap:14px; padding:12px 0 4px; max-width:70ch;
 }
 .manual-b section h5{
@@ -250,7 +275,7 @@ td.num,th.num{font-variant-numeric:tabular-nums}
 .cyc-h::-webkit-details-marker{display:none}
 .cyc-h::after{content:"▾"; color:var(--muted); font-size:12px}
 .cyc[open] .cyc-h::after{content:"▴"}
-.cyc-h h4{font-size:16px; font-weight:700; letter-spacing:-.01em; margin-right:auto}
+.cyc-h h4{font-family:var(--f-display); font-weight:400; font-size:19px; letter-spacing:.02em; text-transform:uppercase; margin-right:auto; line-height:1.1}
 .bar{height:5px; background:var(--surface-3); border-radius:100px; overflow:hidden; width:104px; flex:none}
 .bar i{display:block; height:100%; background:var(--field)}
 .cyc.current .bar i{background:var(--accent)}
@@ -318,8 +343,9 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
 .t-body{flex:1; overflow:auto; padding:18px 16px; display:flex; flex-direction:column; gap:14px; align-items:center}
 .t-card{width:100%; max-width:680px; display:flex; flex-direction:column; gap:14px}
 .clock{
-  font-size:clamp(56px,17vw,110px); font-weight:800; line-height:.95; letter-spacing:-.04em;
-  font-variant-numeric:tabular-nums; text-align:center; font-variation-settings:"wdth" 88;
+  font-family:var(--f-display); font-weight:400;
+  font-size:clamp(64px,19vw,124px); line-height:.9; letter-spacing:.01em;
+  font-variant-numeric:tabular-nums; text-align:center;
 }
 .clock.over{color:var(--alert)}
 .t-nav{display:flex; gap:8px; padding:12px 16px calc(12px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:var(--surface)}
@@ -338,6 +364,7 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
 #terrain.on ~ .toast{bottom:calc(100px + env(safe-area-inset-bottom))}
 
 .hint{font-size:12.5px; color:var(--muted); font-family:var(--f-read)}
+.print-head{display:none}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 
 /* ============ PRINT ============ */
@@ -363,9 +390,18 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
   .prep ul{font-size:9pt}
   .seance-head{margin:9px 0 5px}
   .decision{padding:8px 10px; gap:5px; border-left-width:2px; break-inside:avoid}
-  .decision h2{font-size:15pt}
+  .decision h2{font-size:17pt; line-height:1.05}
   .decision .why{font-size:9.5pt}
   .pill{padding:1px 6px; font-size:8pt}
+  .print-head{
+    display:flex; align-items:center; gap:10px; padding-bottom:7px; margin-bottom:9px;
+    border-bottom:1.5px solid #333;
+  }
+  .print-head img{height:34px; width:auto; max-width:90px; object-fit:contain}
+  .print-head div{display:flex; flex-direction:column; margin-right:auto}
+  .print-head b{font-family:var(--f-display); font-weight:400; font-size:14pt; letter-spacing:.02em; text-transform:uppercase}
+  .print-head span{font-size:8.5pt; color:#555}
+  .print-head .ph-date{font-size:10pt; font-weight:700}
   @page{margin:12mm}
 }
 </style>
@@ -375,8 +411,10 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
 <header class="top no-print">
   <div class="wrap top-in">
     <div class="brand">
-      <b>CARNET U15F</b>
-      <span id="brandSub">GF MMJ · saison 2026-2027</span>
+      <img id="brandLogo" alt="" hidden>
+      <span id="brandMono" aria-hidden="true">MMJ</span>
+      <b id="brandName">CARNET U15F</b>
+      <span id="brandSub">GF MMJ · Mûrs · Melaine · Juigné</span>
     </div>
     <nav class="tabs" id="tabs">
       <button class="tab" data-view="seance" aria-current="page">Séance</button>
@@ -384,6 +422,7 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
       <button class="tab" data-view="saison">Saison</button>
       <button class="tab" data-view="exercices">Exercices</button>
     </nav>
+    <button class="icon-btn" id="brandBtn" title="Identité du groupement" aria-label="Identité du groupement">◈</button>
     <button class="icon-btn" id="themeBtn" title="Thème clair / sombre" aria-label="Changer de thème">◐</button>
     <button class="icon-btn" id="dataBtn" title="Données : export / import" aria-label="Données">⤓</button>
   </div>
@@ -466,7 +505,7 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
     <div class="t-card">
       <div>
         <p class="eyebrow" id="tPhase">—</p>
-        <h2 id="tName" style="font-size:26px; font-weight:800; letter-spacing:-.02em; margin-top:4px">—</h2>
+        <h2 id="tName" style="font-family:var(--f-display); font-weight:400; font-size:clamp(24px,5.4vw,34px); letter-spacing:.01em; text-transform:uppercase; line-height:1.08; margin-top:6px">—</h2>
       </div>
       <div class="clock num" id="tClock">00:00</div>
       <div class="rule" id="tRule"></div>
@@ -756,10 +795,15 @@ function genererSeance(ctx) {
 
   /* alerte effectif sur les deux situations */
   const m1 = MOD[ids.s1], m2 = MOD[ids.s2];
-  let alerte = 'Effectif compatible', alerteNiveau = 'ok';
+  let alerte = 'Les deux situations tournent avec cet effectif.', alerteCourt = 'Effectif compatible', alerteNiveau = 'ok';
   const minReq = Math.max(m1.effMin, m2.effMin), maxReq = Math.min(m1.effMax, m2.effMax);
-  if (ctx.effectif < minReq) { alerte = 'Petit effectif : utiliser joker ou surnombre'; alerteNiveau = 'warn'; }
-  else if (ctx.effectif > maxReq) { alerte = 'Grand effectif : doubler le terrain ou faire tourner'; alerteNiveau = 'warn'; }
+  if (ctx.effectif < minReq) {
+    alerteCourt = 'Petit effectif'; alerteNiveau = 'warn';
+    alerte = 'Petit effectif (' + minReq + ' attendues) : ajoute une joker ou joue en surnombre.';
+  } else if (ctx.effectif > maxReq) {
+    alerteCourt = 'Grand effectif'; alerteNiveau = 'warn';
+    alerte = 'Grand effectif (' + maxReq + ' maximum) : double le terrain ou fais tourner les groupes.';
+  }
 
   let noteEspace;
   if (rangEspace(ctx.espace) === 1) noteEspace = 'Espace 20 x 20 : formats compacts prioritaires';
@@ -774,7 +818,7 @@ function genererSeance(ctx) {
     durees: { mr: dMR, s1: dS1, s2: dS2, match: dMatch, phys: dPhys, retour: 5 },
     modules: ids, raisons, variantes,
     phys: { id: idPhys, type: typePhys, duree: dPhys, placement: typePhys === 'Cardio' ? 'après le match' : 'après la mise en route' },
-    alerte, alerteNiveau, noteEspace,
+    alerte, alerteCourt, alerteNiveau, noteEspace,
     diagnostic: derniere && derniere.bilan ? derniere.bilan.diagnostic : '',
     pointFaible: derniere && derniere.bilan ? derniere.bilan.pointFaible : '',
     statut: 'Planifiée'
@@ -984,18 +1028,23 @@ function renderSeance(s) {
   const materiel = [];
   blocs.forEach(b => { if (b.mod) { materiel.push(b.mod.dimensions + ' — ' + b.mod.materiel); } });
 
+  const mq = Object.assign({}, MARQUE_DEF, store.read().marque || {});
   out.innerHTML =
-    '<div class="decision">'
+    '<div class="print-head">' + (mq.logo ? '<img src="' + mq.logo + '" alt="">' : '')
+    + '<div><b>' + esc(mq.nom) + '</b><span>' + esc(mq.sous) + '</span></div>'
+    + '<span class="ph-date num">' + frDate(s.date) + '</span></div>'
+    + '<div class="decision">'
     + '<div class="d-top">' + pill(s.cycle) + pill('Séance ' + s.nCap + '/8') + pill(s.etape, 'accent')
     + pill(s.famille) + (s.reglage !== 'Standard' ? pill('Réglage : ' + s.reglage, 'warn') : '')
     + (s.varier === 'Varié' ? pill('Exercices variés', 'accent') : '')
     + (s.physique && s.physique !== 'Auto' ? pill('Physique : ' + s.physique.toLowerCase()) : '')
-    + pill(s.alerte, s.alerteNiveau) + '</div>'
+    + pill(s.alerteCourt || s.alerte, s.alerteNiveau) + '</div>'
     + '<h2>' + esc(s.comportement) + '</h2>'
     + '<p class="why"><b>' + esc(s.source) + '.</b> ' + esc(et.intention ? et.intention + ' ce comportement. ' : '')
     + esc(c.pourquoi ? 'Enjeu : ' + c.pourquoi.toLowerCase() + '. ' : '')
     + esc(s.diagnostic ? 'Bilan précédent : ' + s.diagnostic : '') + '</p>'
-    + '<div class="d-top">' + pill('Mot-clé : ' + (c.motCle || '')) + pill(s.noteEspace) + '</div>'
+    + '<div class="d-top">' + pill('Mot-clé : ' + (c.motCle || '')) + '</div>'
+    + '<p class="hint">' + esc(s.alerte) + ' ' + esc(s.noteEspace) + '.</p>'
     + '</div>'
 
     + '<div class="seance-head"><h3>Préparation</h3><span class="hint">' + frDate(s.date) + ' · ' + s.effectif + ' joueuses · ' + s.gardiennes + ' gardienne(s) · ' + s.duree + ' min · ' + esc(s.espace) + '</span></div>'
@@ -1400,8 +1449,8 @@ function importer() {
   try {
     const d = JSON.parse(txt);
     if (!d.seances) throw 0;
-    mem = { seances: d.seances || [], matchs: d.matchs || [], theme: mem.theme };
-    store.save(); fermerDialog(); renderHistorique(); toast('Données importées');
+    mem = { seances: d.seances || [], matchs: d.matchs || [], theme: mem.theme, marque: d.marque || mem.marque };
+    store.save(); appliquerMarque(mem.marque); fermerDialog(); renderHistorique(); toast('Données importées');
   } catch (e) { toast('Fichier illisible'); }
 }
 
@@ -1411,11 +1460,190 @@ function appliquerTheme(t) {
   else document.documentElement.removeAttribute('data-theme');
 }
 
+/* ================= IDENTITÉ DU GROUPEMENT ================= */
+/* Couleurs et logo du club. Tant que rien n'est renseigné, la palette d'origine s'applique. */
+/* Valeurs par défaut = charte GF MMJ (Marine #1B274A, Rose vif #D10E77) déjà appliquée dans le CSS */
+const MARQUE_DEF = { nom: 'CARNET U15F', sous: 'GF MMJ · Mûrs · Melaine · Juigné', accent: '', field: '', logo: '' };
+const CHARTE = { accent: '#D10E77', field: '#1B274A' };
+
+function hex2hsl(h) {
+  h = h.replace('#', '');
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  const r = parseInt(h.slice(0, 2), 16) / 255, g = parseInt(h.slice(2, 4), 16) / 255, b = parseInt(h.slice(4, 6), 16) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+  let s = 0, hu = 0;
+  if (mx !== mn) {
+    const d = mx - mn;
+    s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+    hu = mx === r ? ((g - b) / d + (g < b ? 6 : 0)) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    hu *= 60;
+  }
+  return [hu, s * 100, l * 100];
+}
+function hsl2hex(h, s, l) {
+  s /= 100; l /= 100;
+  const k = n => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = n => Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))));
+  return '#' + [f(0), f(8), f(4)].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+function lisibleSur(hex) {
+  const [, , l] = hex2hsl(hex);
+  return l > 62 ? '#141D18' : '#FFFFFF';
+}
+function appliquerMarque(m) {
+  m = Object.assign({}, MARQUE_DEF, m || {});
+  $('#brandName').textContent = m.nom || MARQUE_DEF.nom;
+  $('#brandSub').textContent = m.sous || '';
+  const img = $('#brandLogo');
+  if (m.logo) { img.src = m.logo; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+
+  let css = '';
+  const bloc = (acc, fld, sombre) => {
+    let out = '';
+    if (acc) {
+      const [h, s, l] = hex2hsl(acc);
+      const clair = sombre ? hsl2hex(h, Math.min(s, 92), Math.max(l, 62)) : hsl2hex(h, s, Math.min(l, 58));
+      out += '--accent:' + clair + ';--on-accent:' + lisibleSur(clair) + ';'
+        + '--accent-soft:' + (sombre ? hsl2hex(h, Math.min(s, 60), 13) : hsl2hex(h, Math.min(s, 62), 93)) + ';'
+        + '--accent-ink:' + (sombre ? hsl2hex(h, Math.min(s, 90), Math.max(l, 70)) : hsl2hex(h, Math.max(s, 45), Math.min(l, 34))) + ';';
+    }
+    if (fld) {
+      const [h, s, l] = hex2hsl(fld);
+      const c = sombre ? hsl2hex(h, Math.min(s, 78), Math.max(l, 58)) : hsl2hex(h, s, Math.min(l, 42));
+      out += '--field:' + c + ';--ok:' + c + ';'
+        + '--field-soft:' + (sombre ? hsl2hex(h, Math.min(s, 55), 12) : hsl2hex(h, Math.min(s, 45), 92)) + ';';
+    }
+    return out;
+  };
+  const clair = bloc(m.accent, m.field, false), sombre = bloc(m.accent, m.field, true);
+  if (clair) css += ':root{' + clair + '}';
+  if (sombre) css += '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){' + sombre + '}}'
+    + ':root[data-theme="dark"]{' + sombre + '}';
+  if (clair) css += ':root[data-theme="light"]{' + clair + '}';
+  let tag = document.getElementById('marqueCss');
+  if (!tag) { tag = document.createElement('style'); tag.id = 'marqueCss'; document.head.appendChild(tag); }
+  tag.textContent = css;
+  $('#brandMono').textContent = (m.sous.match(/MMJ/) ? 'MMJ' : (m.nom || 'U15F').slice(0, 3).toUpperCase());
+}
+
+/* redimensionne un logo importé et le convertit en image intégrée au fichier */
+function lireLogo(file, cb) {
+  const fr = new FileReader();
+  fr.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const h = Math.min(120, im.height), w = Math.round(im.width * h / im.height);
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(im, 0, 0, w, h);
+      let out;
+      try { out = cv.toDataURL('image/png'); } catch (e) { out = fr.result; }
+      cb(out, im);
+    };
+    im.onerror = () => toast('Image illisible');
+    im.src = fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+
+/* deux couleurs dominantes du logo, en écartant le blanc, le noir et les gris */
+function couleursDuLogo(im) {
+  const n = 64, cv = document.createElement('canvas');
+  cv.width = n; cv.height = n;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(im, 0, 0, n, n);
+  let px;
+  try { px = ctx.getImageData(0, 0, n, n).data; } catch (e) { return []; }
+  const seaux = {};
+  for (let i = 0; i < px.length; i += 4) {
+    if (px[i + 3] < 128) continue;
+    const hex = '#' + [px[i], px[i + 1], px[i + 2]].map(v => v.toString(16).padStart(2, '0')).join('');
+    const [h, s, l] = hex2hsl(hex);
+    if (l > 92 || l < 8) continue;
+    if (s < 18 && l > 25 && l < 80) continue;
+    const cle = Math.round(h / 18) + '|' + (s < 18 ? 'gris' : 'vif') + '|' + Math.round(l / 22);
+    (seaux[cle] = seaux[cle] || { n: 0, h: 0, s: 0, l: 0 });
+    const b = seaux[cle]; b.n++; b.h += h; b.s += s; b.l += l;
+  }
+  return Object.values(seaux).sort((a, b) => b.n - a.n).slice(0, 2)
+    .map(b => hsl2hex(b.h / b.n, b.s / b.n, b.l / b.n));
+}
+
+function ouvrirMarque() {
+  const db = store.read();
+  const m = Object.assign({}, MARQUE_DEF, db.marque || {});
+  let logo = m.logo, imgRef = null;
+  ouvrirDialog('Identité du groupement',
+    '<p class="hint">Les couleurs de la charte GF MMJ sont déjà en place : Marine #1B274A et Rose vif #D10E77, avec le Rose clair #F794D4 en thème sombre. Dépose le logo pour compléter, ou change les couleurs si la charte évolue.</p>'
+    + '<div class="stack">'
+    + '<div class="field"><label for="brNom">Titre affiché</label><input type="text" id="brNom" value="' + esc(m.nom) + '"></div>'
+    + '<div class="field"><label for="brSous">Sous-titre</label><input type="text" id="brSous" value="' + esc(m.sous) + '"></div>'
+    + '<div class="field"><label for="brLogo">Logo (PNG, JPG ou SVG)</label><input type="file" id="brLogo" accept="image/*">'
+    + '<div class="logo-prev" id="brPrev">' + (logo ? '<img src="' + logo + '" alt="">' : '<span class="hint">Aucun logo pour l’instant</span>') + '</div></div>'
+    + '<div class="swatch-row">'
+    + '<div class="field"><label for="brAcc">Couleur principale</label><input type="color" id="brAcc" value="' + (m.accent || CHARTE.accent) + '"></div>'
+    + '<div class="field"><label for="brFld">Couleur secondaire</label><input type="color" id="brFld" value="' + (m.field || CHARTE.field) + '"></div>'
+    + '</div>'
+    + '<div class="btn-row"><button class="btn btn-s" id="brExtr">Reprendre les couleurs du logo</button>'
+    + '<button class="btn btn-s" id="brReset">Revenir à la charte</button></div>'
+    + '<p class="hint">La couleur principale sert aux actions et au comportement du jour, la secondaire aux repères de terrain. Elles sont éclaircies automatiquement en thème sombre.</p>'
+    + '</div>',
+    [{ label: 'Annuler', onClick: () => { appliquerMarque(db.marque); fermerDialog(); } },
+    {
+      label: 'Appliquer', primary: true, onClick: () => {
+        db.marque = {
+          nom: $('#brNom').value.trim() || MARQUE_DEF.nom, sous: $('#brSous').value.trim(),
+          accent: $('#brAcc').value, field: $('#brFld').value, logo: logo
+        };
+        store.save(); appliquerMarque(db.marque); fermerDialog(); toast('Identité appliquée');
+      }
+    }],
+    body => {
+      const apercu = () => appliquerMarque({
+        nom: $('#brNom').value, sous: $('#brSous').value,
+        accent: $('#brAcc').value, field: $('#brFld').value, logo: logo
+      });
+      body.querySelector('#brAcc').oninput = apercu;
+      body.querySelector('#brFld').oninput = apercu;
+      body.querySelector('#brNom').oninput = apercu;
+      body.querySelector('#brSous').oninput = apercu;
+      body.querySelector('#brLogo').onchange = e => {
+        const f = e.target.files && e.target.files[0]; if (!f) return;
+        lireLogo(f, (data, im) => {
+          logo = data; imgRef = im;
+          body.querySelector('#brPrev').innerHTML = '<img src="' + data + '" alt="">';
+          const cs = couleursDuLogo(im);
+          if (cs[0]) body.querySelector('#brAcc').value = cs[0];
+          if (cs[1]) body.querySelector('#brFld').value = cs[1];
+          apercu();
+          toast(cs.length ? 'Logo importé, couleurs reprises' : 'Logo importé');
+        });
+      };
+      body.querySelector('#brExtr').onclick = () => {
+        if (!imgRef) { toast('Importe d’abord un logo'); return; }
+        const cs = couleursDuLogo(imgRef);
+        if (!cs.length) { toast('Aucune couleur nette trouvée'); return; }
+        body.querySelector('#brAcc').value = cs[0];
+        if (cs[1]) body.querySelector('#brFld').value = cs[1];
+        apercu();
+      };
+      body.querySelector('#brReset').onclick = () => {
+        logo = ''; imgRef = null;
+        body.querySelector('#brPrev').innerHTML = '<span class="hint">Aucun logo pour l’instant</span>';
+        body.querySelector('#brAcc').value = CHARTE.accent; body.querySelector('#brFld').value = CHARTE.field;
+        body.querySelector('#brNom').value = MARQUE_DEF.nom; body.querySelector('#brSous').value = MARQUE_DEF.sous;
+        appliquerMarque(null); toast('Couleurs de la charte rétablies');
+      };
+    });
+}
+
 /* ================= INIT ================= */
 function init() {
   remplirSelects();
   const db = store.read();
   appliquerTheme(db.theme);
+  appliquerMarque(db.marque);
+  $('#brandBtn').onclick = ouvrirMarque;
 
   const today = iso(new Date());
   $('#fDate').value = today;
