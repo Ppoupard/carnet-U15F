@@ -187,6 +187,38 @@ details.adv .stack{margin-top:12px}
 .decision .why{font-family:var(--f-read); font-size:14.5px; line-height:1.55; color:var(--ink-2); max-width:66ch}
 .decision.empty{border-left-color:var(--line-2)}
 
+/* ============ POURQUOI CETTE SÉANCE ============ */
+details.pourquoi{
+  margin-top:10px; background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--r); overflow:hidden;
+}
+details.pourquoi summary{
+  cursor:pointer; list-style:none; padding:11px 15px;
+  font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-ink);
+}
+details.pourquoi summary::-webkit-details-marker{display:none}
+details.pourquoi summary::after{content:" ↓"}
+details.pourquoi[open] summary{border-bottom:1px solid var(--line)}
+details.pourquoi[open] summary::after{content:" ↑"}
+ol.pq{list-style:none; margin:0; padding:13px 15px; display:grid; gap:12px; counter-reset:pq}
+ol.pq li{
+  display:grid; gap:2px; padding-left:28px; position:relative; counter-increment:pq; max-width:74ch;
+}
+ol.pq li::before{
+  content:counter(pq); position:absolute; left:0; top:1px;
+  width:19px; height:19px; border-radius:100px; background:var(--field); color:var(--surface);
+  font-size:10.5px; font-weight:800; display:grid; place-items:center; font-variant-numeric:tabular-nums;
+}
+ol.pq b{font-size:14.5px; font-weight:700}
+ol.pq span{font-size:14px; color:var(--ink-2); line-height:1.5}
+@media print{
+  details.pourquoi{break-inside:avoid}
+  details.pourquoi summary::after{content:""}
+  ol.pq{padding:8px 12px; gap:7px}
+  ol.pq b{font-size:10pt}
+  ol.pq span{font-size:9pt}
+}
+
 /* ============ SESSION TIMELINE ============ */
 .seance-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin:22px 0 10px}
 .seance-head h3{font-family:var(--f-display); font-weight:400; font-size:15px; letter-spacing:.06em; text-transform:uppercase}
@@ -247,6 +279,20 @@ details.adv .stack{margin-top:12px}
   text-transform:uppercase; color:var(--field); margin:0 0 4px;
 }
 .manual-b p{white-space:pre-line}
+.manual-b ol.pas{list-style:none; margin:6px 0 0; padding:0; display:grid; gap:7px}
+.manual-b ol.pas li{
+  display:grid; grid-template-columns:74px 1fr; gap:10px; align-items:baseline;
+  font-size:14.5px; line-height:1.5;
+}
+.manual-b ol.pas .t{
+  font-family:var(--f-ui); font-size:11px; font-weight:800; letter-spacing:.03em;
+  color:var(--on-accent); background:var(--field); border-radius:100px;
+  padding:2px 0; text-align:center;
+}
+@media (max-width:520px){
+  .manual-b ol.pas li{grid-template-columns:1fr; gap:2px}
+  .manual-b ol.pas .t{justify-self:start; padding:2px 9px}
+}
 
 /* ============ PREP ============ */
 .prep{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:13px 15px; display:flex; flex-direction:column; gap:9px}
@@ -383,7 +429,10 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
 .sc-zone{fill:none; stroke:var(--field); opacity:.7}
 .sc-zone.plein{fill:var(--field-soft); stroke:none}
 .sc-zone.accent{fill:var(--accent-soft); stroke:var(--accent); opacity:.9}
-.sc-zlabel{fill:var(--muted); text-anchor:middle; font-family:var(--f-ui); font-weight:700; letter-spacing:.04em}
+.sc-zlabel{
+  fill:var(--muted); text-anchor:middle; font-family:var(--f-ui); font-weight:700; letter-spacing:.04em;
+  paint-order:stroke fill; stroke:var(--surface); stroke-width:.5; stroke-linejoin:round;
+}
 .sc-ligne{stroke:var(--line-2)}
 .sc-porte{stroke:var(--accent); stroke-linecap:round}
 .sc-plot{fill:var(--accent)}
@@ -391,10 +440,14 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
 .sc-fleche{fill:none; stroke:var(--ink-2); stroke-linecap:round; stroke-linejoin:round}
 .sc-fleche.passe{stroke:var(--accent)}
 .sc-fleche.conduite{stroke:var(--ink-2)}
-.sc-flabel{fill:var(--ink-2); text-anchor:middle; font-family:var(--f-ui); font-weight:700}
+.sc-flabel{fill:var(--surface); text-anchor:middle; font-family:var(--f-ui); font-weight:800}
+.sc-fbadge{fill:var(--ink-2)}
 .sc-ballon{fill:var(--ink)}
 .sc-cote{stroke:var(--muted); opacity:.55}
-.sc-clabel{fill:var(--muted); text-anchor:middle; font-family:var(--f-ui); font-weight:600}
+.sc-clabel{
+  fill:var(--muted); text-anchor:middle; font-family:var(--f-ui); font-weight:600;
+  paint-order:stroke fill; stroke:var(--surface-2); stroke-width:.45; stroke-linejoin:round;
+}
 .sc-j text{text-anchor:middle; font-family:var(--f-ui); font-weight:800}
 .sc-j.eqA circle{fill:var(--field); stroke:none}
 .sc-j.eqA text{fill:var(--ground)}
@@ -414,6 +467,23 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
 .sc-l i.tr{width:16px; height:0; border-radius:0; border-top:2px solid var(--ink-2)}
 .sc-l i.tr.passe{border-top:2px dashed var(--accent)}
 .sc-l i.tr.conduite{border-top:2px dotted var(--ink-2)}
+.sc-l i.ordre{
+  width:14px; height:14px; background:var(--ink-2); color:var(--surface); border-radius:100px;
+  font-size:9px; font-weight:800; display:grid; place-items:center; line-height:1;
+}
+/* agrandissement au toucher */
+button.sc-zoom{
+  appearance:none; border:0; background:none; padding:0; margin:0; width:100%; cursor:zoom-in; display:block;
+  border-radius:var(--r-s);
+}
+button.sc-zoom:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.sc-hint{
+  font-size:10.5px; color:var(--muted); text-align:right; margin-top:2px; font-weight:600;
+  letter-spacing:.04em; text-transform:uppercase;
+}
+#dlgBody .sc-wrap .schema{max-height:min(62vh, 520px)}
+@media print{.sc-hint{display:none}}
+
 
 /* ============ MODE D'EMPLOI RÉDIGÉ ============ */
 .manual-b .dire{display:grid; gap:8px}
@@ -676,7 +746,9 @@ function dessinerSchema(sp) {
   });
 
   /* --- flèches --- */
-  (sp.fleches || []).forEach((f, i) => {
+  const fls = sp.fleches || [];
+  const auto = fls.length > 1 && fls.every(f => !f.label);   // séquence sans repère : on numérote
+  fls.forEach((f, i) => {
     const pts = f.pts || [];
     if (pts.length < 2) return;
     const cls = 'sc-fleche ' + (f.type || 'course');
@@ -684,9 +756,17 @@ function dessinerSchema(sp) {
     const dash = f.type === 'passe' ? ' stroke-dasharray="' + (tr * 7) + ' ' + (tr * 5) + '"'
       : f.type === 'conduite' ? ' stroke-dasharray="' + (tr * 2.4) + ' ' + (tr * 3) + '"' : '';
     e.push('<path class="' + cls + '" d="' + d + '" stroke-width="' + (tr * 1.35) + '"' + dash + ' marker-end="url(#scArrow)"/>');
-    if (f.label) {
-      const m = pts[Math.floor(pts.length / 2)];
-      e.push('<text class="sc-flabel" x="' + m[0] + '" y="' + (m[1] - r * 0.55) + '" font-size="' + (ft * 0.9) + '">' + esc(f.label) + '</text>');
+    const txt = f.label || (auto ? String(i + 1) : '');
+    if (txt) {
+      /* on pose le repère au milieu du segment, décalé perpendiculairement pour ne rien recouvrir */
+      const k = Math.max(0, Math.floor(pts.length / 2) - 1);
+      const a = pts[k], b2 = pts[k + 1] || pts[k];
+      const mx = (a[0] + b2[0]) / 2, my = (a[1] + b2[1]) / 2;
+      const vx = b2[0] - a[0], vy = b2[1] - a[1];
+      const n = Math.hypot(vx, vy) || 1;
+      const ox = (-vy / n) * r * 0.95, oy = (vx / n) * r * 0.95;
+      e.push('<circle class="sc-fbadge" cx="' + (mx + ox) + '" cy="' + (my + oy) + '" r="' + (r * 0.52) + '"/>');
+      e.push('<text class="sc-flabel" x="' + (mx + ox) + '" y="' + (my + oy + ft * 0.3) + '" font-size="' + (ft * 0.78) + '">' + esc(txt) + '</text>');
     }
   });
 
@@ -731,7 +811,9 @@ function legendeSchema(sp) {
   if (eqs.has('B')) p.push('<span class="sc-l"><i class="eqB"></i>équipe B</span>');
   if (eqs.has('J')) p.push('<span class="sc-l"><i class="joker"></i>joker</span>');
   if (eqs.has('GB')) p.push('<span class="sc-l"><i class="gb"></i>gardienne</span>');
-  const types = new Set((sp.fleches || []).map(f => f.type || 'course'));
+  const fl = sp.fleches || [];
+  if (fl.length > 1 && fl.every(f => !f.label)) p.push('<span class="sc-l"><i class="ordre">1</i>ordre des actions</span>');
+  const types = new Set(fl.map(f => f.type || 'course'));
   if (types.has('passe')) p.push('<span class="sc-l"><i class="tr passe"></i>passe</span>');
   if (types.has('course')) p.push('<span class="sc-l"><i class="tr course"></i>course</span>');
   if (types.has('conduite')) p.push('<span class="sc-l"><i class="tr conduite"></i>conduite</span>');
@@ -1024,8 +1106,61 @@ function genererSeance(ctx) {
   else if (rangEspace(ctx.espace) === 2) noteEspace = 'Quart de terrain : les modules trop grands passent en compact';
   else noteEspace = 'Espace suffisant : formats standards privilégiés';
 
+  /* ---- trace des décisions, pour l'onglet « Pourquoi cette séance ? » ---- */
+  const nomModule = id => (MOD[id] || {}).nom || '?';
+  const testCompat = (id, duree) => {
+    const m = MOD[id]; if (!m) return '';
+    const t = [];
+    t.push((ctx.effectif >= m.effMin && ctx.effectif <= m.effMax ? '✓' : '✗') + ' effectif ' + ctx.effectif + ' dans ' + m.effMin + '–' + m.effMax);
+    t.push((rangEspace(ctx.espace) >= m.rangEspace ? '✓' : '✗') + ' espace ' + ctx.espace.toLowerCase() + ' vs ' + m.espaceMin.toLowerCase());
+    t.push((duree >= m.dureeMin ? '✓' : '✗') + ' bloc de ' + duree + ' min vs ' + m.dureeMin + ' min minimum');
+    return t.join(' · ');
+  };
+  const ligneEx = (kind, std, cpt, duree, libelle) => ({
+    t: NOM_PHASE[kind] + ' — ' + nomModule(ids[kind]),
+    d: libelle + '. Test sur la version standard « ' + nomModule(std) + ' » : ' + testCompat(std, duree)
+      + (ids[kind] === std ? '. Elle passe, on la garde.' : '. Un test échoue, bascule sur la version compacte.')
+      + (variantes[kind] ? ' Puis le mode Varié a remplacé le module habituel.' : '')
+  });
+
+  const trace = [
+    { t: 'Comportement retenu : ' + comportement,
+      d: (ctx.comportement && ctx.comportement !== 'Auto')
+        ? 'Tu l’as forcé dans le panneau de gauche, le référentiel du cycle est ignoré.'
+        : (dernierMatch && depuisMatch < 2)
+          ? 'Le match du ' + frDate(dernierMatch.date) + ' a fait ressortir cette priorité, et seulement ' + depuisMatch + ' séance(s) l’ont travaillée depuis. La priorité match passe avant le cycle pendant deux séances.'
+          : (derniere && derniere.cycle === ctx.cycle && revoirOuConsolider)
+            ? 'Le bilan de la séance du ' + frDate(derniere.date) + ' disait ' + decisionPrec + ', donc on ne change pas d’objectif tant que celui-ci n’est pas acquis.'
+            : 'Aucune priorité match récente, aucun bilan qui demande de revoir : on suit le plan annuel. ' + ctx.cycle + ', séance ' + nCap + ' sur 8 → ' + comportement + '. ' + (ref.logique || '') },
+    { t: 'Étape d’apprentissage : ' + etape,
+      d: (ctx.etape && ctx.etape !== 'Auto') ? 'Étape forcée manuellement.'
+        : !etapePrec ? 'Ce comportement n’a jamais été travaillé, on commence donc par Découvrir.'
+        : (derniere && derniere.comportement === comportement && revoirOuConsolider)
+          ? 'La dernière séance sur ce comportement était à l’étape ' + etapePrec + ', et le bilan demandait de ' + (decisionPrec === 'REVOIR' ? 'revoir' : 'consolider') + ' : on refait la même étape au lieu d’avancer.'
+          : 'Dernière séance sur ce comportement : étape ' + etapePrec + '. On passe à la suivante dans la progression Découvrir → Comprendre → Stabiliser → Valider → Complexifier → Opposer → Réinvestir → Évaluer.' },
+    { t: 'Famille « ' + fam + ' », rotation ' + rotation + '/3',
+      d: 'Le comportement appartient à la famille « ' + fam + ' », et c’est elle qui commande la mise en route et le match à thème. '
+        + (ctx.rotation && ctx.rotation !== 'Auto' ? 'Rotation forcée sur ' + rotation + '.'
+          : memeComp.length + ' séance(s) déjà faite(s) sur ce comportement, donc rotation ' + rotation + ' : de quoi changer d’échauffement et de match d’une fois sur l’autre.') },
+    { t: 'Répartition du temps sur ' + ctx.duree + ' minutes',
+      d: (dPhys ? 'Bloc physique ' + typePhys.toLowerCase() + ' de ' + dPhys + ' min (imposé par le cycle et le rang de la séance), ' : 'Pas de bloc physique, ')
+        + '5 min de retour au calme, il reste ' + tempsFoot + ' min de football. '
+        + (tot
+          ? 'À l’étape ' + etape + ' on cherche encore à faire comprendre : la situation 1 prend 32 % (' + dS1 + ' min) et la situation 2 seulement 23 % (' + dS2 + ' min).'
+          : 'À l’étape ' + etape + ' on cherche le transfert : la situation 2 passe devant avec 30 % (' + dS2 + ' min) contre 25 % à la situation 1 (' + dS1 + ' min).')
+        + ' Mise en route 15 % (' + dMR + ' min), le match récupère le reste (' + dMatch + ' min).' },
+    ligneEx('mr', stdMR, cpMR, dMR, 'Adresse calculée : famille n°' + fi + ' × rotation ' + rotation + ' → module ' + stdMR),
+    ligneEx('s1', stdS1, cpS1, dS1, 'La bibliothèque ne contient qu’une situation 1 par comportement : celle de « ' + comportement +' » est le module ' + stdS1),
+    ligneEx('s2', stdS2, cpS2, dS2, 'Même principe : l’unique situation 2 de ce comportement est le module ' + stdS2),
+    ligneEx('match', stdMa, cpMa, dMatch, 'Adresse calculée : famille n°' + fi + ' × rotation ' + rotation + ' → module ' + stdMa),
+    { t: 'Réglage : ' + reglage,
+      d: reglage === 'Standard'
+        ? 'Aucun bilan précédent sur ce même comportement dans ce cycle, donc pas d’ajustement : les repères « si c’est trop dur / trop facile » restent ceux d’origine.'
+        : 'Le bilan de la séance du ' + frDate(derniere.date) + ' a conclu ' + (derniere.bilan || {}).decision + ', ce qui impose le réglage ' + reglage + ' : c’est lui qui change ce qui s’affiche dans « si c’est trop dur ».' }
+  ];
+
   return {
-    id: uid(), ...ctx,
+    id: uid(), ...ctx, trace,
     nCycle, nCap, comportement, famille: fam, source, etape, rotation, reglage,
     durees: { mr: dMR, s1: dS1, s2: dS2, match: dMatch, phys: dPhys, retour: 5 },
     modules: ids, raisons, variantes,
@@ -1145,20 +1280,40 @@ function ajusteTexte(mod, s, sens) {
   return mod.complexifier;
 }
 
+/* le texte de préparation contient un déroulé minuté : on le sort en étapes */
+function etapesMinutees(txt) {
+  const re = /(\d{1,3}\s*[–-]\s*\d{1,3}\s*min)\s*:?\s*/g;
+  const cuts = [];
+  let m;
+  while ((m = re.exec(txt))) cuts.push({ i: m.index, fin: re.lastIndex, t: m[1].replace(/\s*[–-]\s*/, '–').replace(/\s*min/, ' min') });
+  if (cuts.length < 2) return null;
+  const avant = txt.slice(0, cuts[0].i).trim();
+  const pas = cuts.map((c, k) => ({
+    t: c.t, txt: txt.slice(c.fin, k + 1 < cuts.length ? cuts[k + 1].i : txt.length).trim().replace(/^[:\s]+/, '')
+  }));
+  return { avant, pas };
+}
+
 function renderManual(mod) {
   const f = fiche(mod.id);
   if (f) {
+    const et = etapesMinutees(f.moyen);
+    const prep = et
+      ? (et.avant ? '<p>' + esc(et.avant) + '</p>' : '')
+        + '<ol class="pas">' + et.pas.map(p => '<li><span class="t num">' + esc(p.t) + '</span>' + esc(p.txt) + '</li>').join('') + '</ol>'
+      : '<p>' + esc(f.moyen) + '</p>';
     const err = f.erreurs.map((e, i) => '<li><b>' + esc(e.quoi) + '</b>'
       + '<span class="cause">' + esc(e.pourquoi) + '</span>'
       + '<span class="corr">' + esc(e.corriger) + '</span></li>').join('');
     return '<details class="manual"><summary>Mode d’emploi · 2 minutes</summary><div class="manual-b">'
-      + '<section><h5>Préparer</h5><p>' + esc(f.moyen) + '</p></section>'
+      + '<section><h5>Préparer et dérouler</h5>' + prep + '</section>'
       + '<section><h5>Trois façons de le dire</h5><div class="dire">'
       + '<div><span>Je montre</span>' + esc(f.dire.montre) + '</div>'
       + '<div><span>Je questionne</span>' + esc(f.dire.questionne) + '</div>'
       + '<div><span>Je contrains</span>' + esc(f.dire.contrains) + '</div></div></section>'
       + '<section><h5>Erreurs fréquentes</h5><ul class="err">' + err + '</ul></section>'
       + '<section><h5>Si ça part en vrille</h5><p>' + esc(f.derive) + '</p></section>'
+      + (mod.variImpair ? '<section><h5>Effectif impair</h5><p>' + esc(mod.variImpair) + '</p></section>' : '')
       + '<section><h5>Pourquoi cet exercice</h5><p>' + esc(f.pourquoi) + '</p></section>'
       + '</div></details>';
   }
@@ -1217,7 +1372,9 @@ function blocHTML(b, s, i) {
   const note = (store.read().notes || {})[mod.id];
 
   const schema = f && f.schema
-    ? '<div class="sc-wrap">' + dessinerSchema(f.schema) + legendeSchema(f.schema) + '</div>' : '';
+    ? '<div class="sc-wrap"><button class="sc-zoom" data-zoom="' + mod.id + '" aria-label="Agrandir le schéma">'
+      + dessinerSchema(f.schema) + '</button>' + legendeSchema(f.schema)
+      + '<p class="sc-hint no-print">Toucher pour agrandir</p></div>' : '';
 
   const annonce = f
     ? '<div class="rule"><b>À annoncer aux joueuses</b>' + esc(f.court) + '</div>'
@@ -1286,6 +1443,9 @@ function renderSeance(s) {
     + '<p class="hint">' + esc(s.alerte) + ' ' + esc(s.noteEspace) + '.</p>'
     + '</div>'
 
+    + (s.trace ? '<details class="pourquoi"><summary>Pourquoi cette séance ?</summary><ol class="pq">'
+        + s.trace.map(x => '<li><b>' + esc(x.t) + '</b><span>' + esc(x.d) + '</span></li>').join('')
+        + '</ol></details>' : '')
     + '<div class="seance-head"><h3>Préparation</h3><span class="hint">' + frDate(s.date) + ' · ' + s.effectif + ' joueuses · ' + s.gardiennes + ' gardienne(s) · ' + s.duree + ' min · ' + esc(s.espace) + '</span></div>'
     + '<div class="prep"><p class="eyebrow">À installer avant l’arrivée du groupe</p><ul>'
     + materiel.map(m => '<li>' + esc(m) + '</li>').join('')
@@ -1301,6 +1461,7 @@ function renderSeance(s) {
 
   out.querySelectorAll('[data-swap]').forEach(btn => btn.onclick = () => ouvrirSwap(btn.dataset.swap));
   out.querySelectorAll('[data-note]').forEach(btn => btn.onclick = () => ouvrirNoteExercice(+btn.dataset.note));
+  out.querySelectorAll('[data-zoom]').forEach(btn => btn.onclick = () => ouvrirSchema(+btn.dataset.zoom));
   const bn = out.querySelector('#btnNoter'); if (bn) bn.onclick = noterCourante;
 }
 
@@ -1401,6 +1562,17 @@ function ouvrirSwap(kind) {
         fermerDialog(); renderSeance(s); toast('Exercice remplacé');
       });
     });
+}
+
+/* ================= SCHÉMA EN GRAND ================= */
+function ouvrirSchema(id) {
+  const mod = MOD[id], f = fiche(id);
+  if (!mod || !f || !f.schema) return;
+  ouvrirDialog(mod.nom,
+    '<div class="sc-wrap">' + dessinerSchema(f.schema) + legendeSchema(f.schema) + '</div>'
+    + '<div class="rule"><b>À annoncer aux joueuses</b>' + esc(f.court) + '</div>'
+    + '<div class="kv">' + kv('Matériel', mod.materiel) + kv('Organisation', mod.organisation) + '</div>',
+    [{ label: 'Fermer', primary: true, onClick: fermerDialog }]);
 }
 
 /* ================= NOTE PERSONNELLE SUR UN EXERCICE ================= */
