@@ -132,6 +132,7 @@ select{max-width:100%; text-overflow:ellipsis}
 /* ============ FORM ============ */
 .field{display:flex; flex-direction:column; gap:5px; min-width:0}
 .field > label{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.field > label .opt{font-weight:600; letter-spacing:.02em; text-transform:none; opacity:.75}
 input[type=date],input[type=number],input[type=text],select,textarea{
   width:100%; background:var(--ground); border:1px solid var(--line-2); border-radius:var(--r-s);
   padding:9px 10px; font-size:15px; font-variant-numeric:tabular-nums;
@@ -240,6 +241,7 @@ ol.pq span{font-size:14px; color:var(--ink-2); line-height:1.5}
   background:var(--field); border-radius:100px; padding:2px 6px;
 }
 .blk[data-kind="phys"] .rail .dur{background:var(--warn)}
+.blk[data-kind="tech"] .rail .dur{background:var(--accent)}
 .blk[data-kind="match"] .rail .dur{background:var(--accent)}
 .blk[data-kind="retour"] .rail .dur{background:var(--muted)}
 .blk-b{padding:13px 15px; display:flex; flex-direction:column; gap:11px; min-width:0}
@@ -339,6 +341,23 @@ td.num,th.num{font-variant-numeric:tabular-nums}
 .step .lbl{font-size:14px}
 .step.done .lbl{color:var(--muted)}
 .step .logic{font-family:var(--f-read); font-size:13px; color:var(--muted); grid-column:2/-1}
+.step.hors{opacity:.55}
+.step.hors .lbl{text-decoration:line-through; text-decoration-color:var(--line-2)}
+.alerte-cal{
+  font-family:var(--f-read); font-size:13.5px; color:var(--ink-2); line-height:1.45;
+  background:var(--accent-soft); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:9px 12px;
+}
+.alerte-cal b{color:var(--accent-ink); font-weight:700}
+.coupure{display:grid; grid-template-columns:1fr 140px 140px 32px; gap:7px; align-items:center; margin-bottom:7px}
+.coupure input{
+  width:100%; font:inherit; font-size:14px; color:var(--ink); background:var(--surface);
+  border:1px solid var(--line-2); border-radius:8px; padding:7px 9px;
+}
+.coupure input:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+@media (max-width:560px){
+  .coupure{grid-template-columns:1fr 1fr 30px}
+  .coupure .cn{grid-column:1/-1}
+}
 
 /* ============ LIBRARY ============ */
 .filters{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px}
@@ -529,6 +548,35 @@ ol.ateliers .cle::before{content:"Point clé : "; font-weight:700}
   display:block; font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
   color:var(--accent-ink); margin-bottom:2px;
 }
+
+/* les non-négociables d'un coup de pied arrêté */
+ul.principes{
+  list-style:none; margin:0; padding:11px 13px; display:grid; gap:6px;
+  background:var(--field-soft); border-radius:var(--r-s); counter-reset:pr;
+}
+ul.principes li{
+  font-size:14.5px; line-height:1.42; color:var(--ink); position:relative; padding-left:22px;
+  counter-increment:pr;
+}
+ul.principes li::before{
+  content:counter(pr); position:absolute; left:0; top:2px;
+  width:16px; height:16px; border-radius:100px; background:var(--field); color:var(--surface);
+  font-size:10px; font-weight:800; display:grid; place-items:center;
+}
+ul.principes li.pr-t{
+  counter-increment:none; padding-left:0; font-size:10.5px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+}
+ul.principes li.pr-t::before{display:none}
+.blk[data-kind="cpa"] .rail .dur{background:var(--accent)}
+.card.actif{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent)}
+button.card{text-align:left; cursor:pointer; font:inherit}
+button.card:hover{border-color:var(--line-2)}
+@media print{
+  ul.principes{background:none; border:1px solid #bbb; padding:6px 9px; gap:3px}
+  ul.principes li{font-size:9pt}
+  ul.principes li::before{background:#000; color:#fff}
+}
 @media print{
   .sc-wrap{background:none; border:1px solid #ccc; padding:6px 8px 2px; break-inside:avoid}
   .schema{max-height:210px}
@@ -572,6 +620,92 @@ ol.ateliers .cle::before{content:"Point clé : "; font-weight:700}
   .print-head span{font-size:8.5pt; color:#555}
   .print-head .ph-date{font-size:10pt; font-weight:700}
   @page{margin:12mm}
+}
+
+/* ============ FICHE TERRAIN (impression une page) ============ */
+.fiche{display:none}
+@media print{
+  body.print-fiche > *:not(main){display:none!important}
+  body.print-fiche main > section:not(#v-seance){display:none!important}
+  body.print-fiche #seanceOut{display:none!important}
+  body.print-fiche .fiche{display:block; color:#000; font-size:9pt; line-height:1.3}
+
+  .fh{display:flex; align-items:center; gap:9px; border-bottom:1.6pt solid #000; padding-bottom:5px}
+  .fh img{height:30px; width:auto; max-width:80px; object-fit:contain}
+  .fh-t{display:flex; flex-direction:column; margin-right:auto}
+  .fh-t b{font-family:var(--f-display); font-weight:400; font-size:13.5pt; letter-spacing:.02em; text-transform:uppercase; line-height:1}
+  .fh-t span{font-size:7.4pt; color:#444}
+  .fh-d{display:flex; flex-direction:column; text-align:right}
+  .fh-d b{font-size:10pt}
+  .fh-d span{font-size:7.6pt; color:#444}
+
+  .fo{display:flex; align-items:center; gap:10px; padding:5px 0 6px; border-bottom:.6pt solid #999}
+  .fo-l{min-width:0; margin-right:auto}
+  .fo h3{font-size:13pt; font-weight:700; line-height:1.1; letter-spacing:-.01em}
+  .fo-w{font-size:7.8pt; color:#444}
+  .fo-k{flex:none; border:1.2pt solid #000; border-radius:4px; padding:3px 9px; text-align:center}
+  .fo-k span{display:block; font-size:6.4pt; letter-spacing:.09em; text-transform:uppercase; color:#555}
+  .fo-k b{font-size:10.5pt; line-height:1.1}
+
+  .fbs-l{display:flex; flex-direction:column}
+  .fb{
+    display:grid; grid-template-columns:36px 112px minmax(0,1fr); gap:9px; align-items:start;
+    padding:6px 0; border-bottom:.5pt dotted #999; break-inside:avoid;
+  }
+  .fb:last-child{border-bottom:0}
+  .fbt{
+    font-size:10pt; font-weight:800; line-height:1.1; text-align:center;
+    border-right:.5pt solid #ccc; padding-right:5px; align-self:stretch;
+  }
+  .fbt i{display:block; font-style:normal; font-size:7.2pt; font-weight:700; color:#555; margin-top:1px}
+  .fbs{align-self:center}
+  .fbs .schema{max-height:76px; width:100%; display:block}
+  .fbs .sc-terrain{fill:#fff; stroke:#555; stroke-width:.3}
+  .fbs .sc-zone{fill:none; stroke:#aaa}
+  .fbs .sc-zone.plein{fill:#eee}
+  .fbs .sc-j circle{fill:#fff; stroke:#000}
+  .fbs .sc-j.eqB circle{fill:#000}
+  .fbs .sc-zlabel, .fbs .sc-clabel, .fbs .sc-cote, .fbs .sc-flabel, .fbs .sc-fbadge{display:none}
+  .fbc{min-width:0}
+  .fbe{font-size:6.6pt; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#666}
+  .fbc h4{font-size:10.5pt; font-weight:700; line-height:1.15; margin:1px 0}
+  .fbm{font-size:7.8pt; color:#555; margin-bottom:1px}
+  .fba{font-size:9pt; color:#000}
+  .fbn{display:flex; flex-wrap:wrap; gap:2px 10px; margin-top:2px; font-size:8.2pt; color:#000}
+  .fbn span{display:flex; align-items:baseline; gap:3px}
+  .fbn i{
+    font-style:normal; font-size:6.6pt; font-weight:800; color:#fff; background:#000;
+    border-radius:100px; min-width:11px; height:11px; display:inline-grid; place-items:center; flex:none;
+  }
+  .fbw{font-size:7.8pt; color:#333; margin-top:2px; display:flex; flex-wrap:wrap; gap:2px 7px; align-items:baseline}
+  .fbw b{
+    font-size:6.4pt; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+    color:#000; border:.5pt solid #999; border-radius:3px; padding:0 3px;
+  }
+  .fbw span{position:relative; padding-left:7px}
+  .fbw span::before{content:"›"; position:absolute; left:0; color:#999}
+
+  /* sept blocs ou plus : on resserre d'un cran pour rester sur une page */
+  body.print-fiche .fiche.dense{font-size:8.2pt; line-height:1.24}
+  .fiche.dense .fh{padding-bottom:3px}
+  .fiche.dense .fh img{height:24px}
+  .fiche.dense .fh-t b{font-size:12pt}
+  .fiche.dense .fo{padding:3px 0 4px}
+  .fiche.dense .fo h3{font-size:11.5pt}
+  .fiche.dense .fb{padding:2px 0; grid-template-columns:32px 92px minmax(0,1fr); gap:7px}
+  .fiche.dense .fbs .schema{max-height:50px}
+  .fiche.dense .ff{padding-top:4px; margin-top:2px}
+  .fiche.dense .ff-l:last-child{display:none}
+  .fiche.dense .fbc h4{font-size:9.5pt}
+  .fiche.dense .fba{font-size:8.2pt}
+  .fiche.dense .fbn{font-size:7.6pt; gap:1px 8px}
+  .fiche.dense .fbw{font-size:7.2pt}
+  .fiche.dense .ff-l{height:9px}
+
+  .ff{display:flex; gap:12px; border-top:1.2pt solid #000; padding-top:5px; margin-top:4px}
+  .ff > div{flex:1; min-width:0; font-size:7.4pt; color:#333}
+  .ff b{display:block; font-size:6.4pt; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:#666; margin-bottom:2px}
+  .ff-l{display:block; border-bottom:.5pt solid #bbb; height:11px}
 }
 </style>
 </head>
@@ -623,6 +757,11 @@ ol.ateliers .cle::before{content:"Point clé : "; font-weight:700}
               <div class="field"><label for="fPhys">Bloc physique</label><select id="fPhys">
                 <option>Auto</option><option>Cardio court</option><option>Plyométrie complète</option><option>Aucun</option></select></div>
             </div>
+            <div class="field"><label for="fTech">Bloc technique · contrôle et passe</label><select id="fTech">
+              <option>Intégré à la mise en route</option><option>8 min</option><option>12 min</option><option>Aucun</option></select></div>
+            <div class="field"><label for="fCpa">Coup de pied arrêté</label><select id="fCpa">
+              <option>Auto</option><option>8 min</option><option>12 min</option><option>Aucun</option></select>
+              <p class="hint">« Auto » place un bloc arrêté aux séances 4 et 8 de chaque cycle.</p></div>
 
             <details class="adv">
               <summary>Forcer un choix</summary>
@@ -638,6 +777,7 @@ ol.ateliers .cle::before{content:"Point clé : "; font-weight:700}
               <button class="btn btn-s" id="btnSave">Enregistrer</button>
               <button class="btn btn-s" id="btnTerrain">Mode terrain</button>
               <button class="btn btn-s" id="btnPrint">Imprimer</button>
+              <button class="btn btn-s" id="btnFiche">Fiche 1 page</button>
               <button class="btn btn-s" id="btnNoterPanel">Noter la séance</button>
             </div>
           </div>
@@ -645,6 +785,7 @@ ol.ateliers .cle::before{content:"Point clé : "; font-weight:700}
       </aside>
 
       <div id="seanceOut"></div>
+      <div id="ficheOut" class="fiche" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -939,6 +1080,1187 @@ ol.ateliers .cle::before{content:"Point clé : "; font-weight:700}
 }
 }
 </script>
+<script type="application/json" id="tech">{
+"T1": {
+ "nom": "Contrôle orienté",
+ "famille": "Contrôle",
+ "court": "Un ballon pour deux. Vous recevez toujours de côté, jamais face au ballon, et votre premier contact envoie le ballon là où vous voulez aller. Le contrôle compte, pas la passe.",
+ "ateliers": [
+  {"nom": "Contrôle en ouverture, sans opposition", "quoi": "Par deux à 8 m, une porte de 2 m ouverte sur le côté. Tu reçois, tu ouvres ton contrôle vers la porte, tu la traverses en conduite, tu redonnes. 12 ballons par joueuse, on change de côté à mi-parcours.", "cle": "Le pied qui contrôle est le pied éloigné du ballon qui arrive, pas le plus proche."},
+  {"nom": "Contrôle avec choix", "quoi": "Deux portes, une à gauche une à droite. La passeuse annonce la porte au moment où elle frappe. 12 ballons par joueuse.", "cle": "Elle regarde la porte avant que le ballon n'arrive, pas pendant le contrôle."}
+ ],
+ "critere": "Objectif : 9 contrôles sur 12 qui traversent la porte sans deuxième touche de correction. En dessous de 6, tu élargis la porte à 3 m.",
+ "erreurs": [
+  {"quoi": "Elle contrôle face au ballon, pieds parallèles, et doit faire une deuxième touche pour repartir.", "pourquoi": "C'est la position la plus sûre pour ne pas rater le contrôle, donc le réflexe naturel.", "corriger": "Tu lui demandes de se placer de profil AVANT que le ballon parte : une épaule vers la passeuse, une vers la porte. Tu vérifies la position, pas le contrôle."},
+  {"quoi": "Le contrôle est trop long, le ballon part à trois mètres et elle court après.", "pourquoi": "Elle contrôle avec le pied dur au lieu d'accompagner le ballon.", "corriger": "Tu poses un plot à 1,5 m : le ballon ne doit pas le dépasser. La contrainte de distance corrige le dosage sans explication technique."},
+  {"quoi": "Elle utilise toujours le même pied, même quand la porte est du mauvais côté.", "pourquoi": "Le pied faible fait peur, et à ce niveau il rate souvent.", "corriger": "Une série entière porte à gauche uniquement, contrôle pied gauche obligatoire. Tu acceptes que ce soit moins propre : c'est le but de la série."}
+ ],
+ "derive": "Signal : les passes arrivent mal et l'exercice devient un travail de passe au lieu d'un travail de contrôle. Tu fais servir le ballon à la main pendant deux minutes — le contrôle reste le seul objet du travail.",
+ "pourquoi": "Le contrôle orienté est ce qui débloque le plus de choses chez un groupe en difficulté technique : sans lui, la joueuse reçoit, s'arrête, se fait presser, et aucune intention tactique ne peut apparaître. Un contrôle qui ouvre le corps fait gagner une demi-seconde et c'est exactement ce que ton comportement « prendre l'information avant de recevoir » cherche à rendre visible.",
+ "schema": {"w": 22, "h": 12,
+  "portes": [{"x": 15, "y": 1.5, "o": "v", "l": 2}, {"x": 15, "y": 8.5, "o": "v", "l": 2}],
+  "joueuses": [{"x": 4, "y": 6, "eq": "A", "n": "1"}, {"x": 11, "y": 6, "eq": "B", "n": "2"}],
+  "ballons": [{"x": 4, "y": 6}],
+  "fleches": [{"pts": [[5.3, 6], [9.7, 6]], "type": "passe", "label": "8 m"}, {"pts": [[12, 5.2], [14.6, 2.8]], "type": "conduite"}]}
+},
+"T2": {
+ "nom": "Passe courte au sol",
+ "famille": "Passe",
+ "court": "Passe à ras de terre, sur le pied de la partenaire, avec l'intérieur. Le ballon doit arriver assez fort pour ne pas être interceptable, assez doux pour être contrôlé. C'est le geste le plus utilisé du match, on le travaille pour de vrai.",
+ "ateliers": [
+  {"nom": "Passe en carré", "quoi": "Quatre joueuses aux coins d'un carré de 10 m, un ballon. Passe puis suivre sa passe. 3 minutes en continu, puis 3 minutes en changeant de sens.", "cle": "Le pied d'appui pointe vers la cible, l'intérieur du pied frappe le milieu du ballon."},
+  {"nom": "Passe entre deux plots", "quoi": "Par deux à 10 m, deux plots au milieu écartés d'1 m. La passe doit traverser la porte. 15 passes chacune, puis on resserre à 60 cm.", "cle": "On vise la porte, pas la partenaire : ça force la précision."},
+  {"nom": "Passe sous contrainte de temps", "quoi": "Par deux, une touche obligatoire, on compte le nombre de passes justes en 45 secondes. Trois manches, on essaie de battre son score.", "cle": "Une passe est juste si la partenaire la contrôle sans bouger le pied d'appui."}
+ ],
+ "critere": "Objectif de référence : 25 passes justes à deux en 45 secondes sur 10 m. En dessous de 15, tu réduis la distance à 7 m avant d'ajouter la contrainte de temps.",
+ "erreurs": [
+  {"quoi": "La passe est frappée avec la pointe du pied ou le cou-de-pied, elle part trop fort ou de travers.", "pourquoi": "L'intérieur du pied paraît moins puissant, donc moins « sérieux ».", "corriger": "Tu fais faire dix passes en marchant, sans élan, uniquement à l'intérieur. La précision retrouvée les convainc mieux qu'un discours."},
+  {"quoi": "Le ballon lève et arrive en cloche sur le pied de la partenaire.", "pourquoi": "Elle frappe sous le ballon parce que son pied d'appui est trop loin ou trop en arrière.", "corriger": "Le pied d'appui doit se poser à côté du ballon, pas derrière. Tu poses un plot pour marquer où il doit atterrir sur les cinq premières passes."},
+  {"quoi": "Toutes les passes sont molles et arrivent en fin de course.", "pourquoi": "Elle a peur de rater, donc elle assure en dosant faible.", "corriger": "Tu ajoutes une adversaire passive au milieu : une passe molle se fait intercepter. La contrainte fait monter la puissance d'elle-même."}
+ ],
+ "derive": "Signal : l'atelier devient un échange sans intention, on discute en passant le ballon. Tu passes tout de suite au comptage chronométré : le score relance l'engagement en trente secondes.",
+ "pourquoi": "Chez un groupe à lacunes techniques, la passe courte ratée est la cause numéro un de perte de balle, et elle fausse toute la lecture tactique : tu crois que la joueuse n'a pas vu la solution alors qu'elle l'a vue et l'a manquée. Chaque minute passée ici rend visibles les comportements que tu travailles ensuite.",
+ "schema": {"w": 18, "h": 14,
+  "portes": [{"x": 9, "y": 6.5, "o": "h", "l": 1}],
+  "joueuses": [{"x": 4, "y": 3.5, "eq": "A", "n": "1"}, {"x": 14, "y": 3.5, "eq": "A", "n": "2"}, {"x": 4, "y": 10.5, "eq": "B", "n": "3"}, {"x": 14, "y": 10.5, "eq": "B", "n": "4"}],
+  "ballons": [{"x": 4, "y": 3.5}],
+  "fleches": [{"pts": [[5.3, 3.5], [12.7, 3.5]], "type": "passe", "label": "10 m"}, {"pts": [[14, 4.8], [14, 9.2]], "type": "course"}]}
+},
+"T3": {
+ "nom": "Contrôle en mouvement",
+ "famille": "Contrôle",
+ "court": "On ne reçoit plus à l'arrêt. Tu es en mouvement quand le ballon part, tu le prends en courant et tu continues. Personne ne s'arrête pour contrôler.",
+ "ateliers": [
+  {"nom": "Recevoir en venant", "quoi": "Par deux à 12 m. La receveuse démarre à 3 m derrière son plot, vient au ballon, contrôle en mouvement et repart en conduite sur 5 m. 12 ballons chacune.", "cle": "Elle est déjà lancée quand le ballon quitte le pied de la passeuse."},
+  {"nom": "Recevoir en courant latéralement", "quoi": "La receveuse se déplace latéralement entre deux plots écartés de 6 m ; la passeuse sert quand elle veut. Elle contrôle sans s'arrêter et rend. 12 ballons chacune.", "cle": "Le contrôle se fait du pied le plus éloigné du ballon, dans le sens du déplacement."},
+  {"nom": "Contrôle et enchaînement", "quoi": "Même chose, mais après le contrôle elle joue dans une des deux portes à 8 m. Tu annonces la porte quand le ballon roule. 10 ballons chacune.", "cle": "Un contrôle, une passe : pas de troisième touche."}
+ ],
+ "critere": "Objectif : 8 contrôles sur 12 pris sans arrêt, c'est-à-dire sans que le pied d'appui se pose deux fois au même endroit. Tu comptes à voix haute les arrêts, c'est le seul repère.",
+ "erreurs": [
+  {"quoi": "Elle s'arrête juste avant de recevoir, contrôle, puis repart.", "pourquoi": "Recevoir à l'arrêt est plus sûr, et c'est ce qu'elle a toujours fait.", "corriger": "Tu places un plot qu'elle doit contourner immédiatement après le contrôle : s'arrêter lui fait perdre le rythme et elle le sent."},
+  {"quoi": "Elle vient au ballon mais ralentit tellement que le contrôle se fait à l'arrêt quand même.", "pourquoi": "Le déplacement est une formalité pour respecter la consigne, pas une vraie course.", "corriger": "Tu chronomètres le trajet plot de départ → porte de sortie et tu annonces le temps. Le repère chiffré rend le ralentissement visible."},
+  {"quoi": "Le contrôle en mouvement part loin devant et devient une conduite subie.", "pourquoi": "Elle pousse le ballon au lieu de l'amortir dans son déplacement.", "corriger": "Tu réduis la distance de sortie à 3 m : impossible de pousser trop loin, elle est obligée d'amortir."}
+ ],
+ "derive": "Signal : le rythme tombe et l'atelier devient une file d'attente. Tu ajoutes un deuxième ballon par groupe : le temps d'attente disparaît et l'intensité remonte.",
+ "pourquoi": "En match, le ballon arrive presque toujours sur une joueuse en mouvement, et c'est exactement là que ton groupe perd le ballon. Travailler le contrôle à l'arrêt donne l'illusion que la technique est acquise ; c'est en mouvement qu'elle se juge. Cet atelier prépare directement les situations où la joueuse doit recevoir sous pression.",
+ "schema": {"w": 22, "h": 12,
+  "lignes": [{"x1": 6, "y1": 2, "x2": 6, "y2": 10}],
+  "joueuses": [{"x": 3, "y": 6, "eq": "A", "n": "1"}, {"x": 12, "y": 8.5, "eq": "B", "n": "2"}],
+  "ballons": [{"x": 3, "y": 6}],
+  "portes": [{"x": 19, "y": 2, "o": "v", "l": 2.5}, {"x": 19, "y": 8, "o": "v", "l": 2.5}],
+  "fleches": [{"pts": [[12, 7.3], [12, 5.2]], "type": "course"}, {"pts": [[4.3, 6], [10.7, 5]], "type": "passe"}, {"pts": [[13.2, 4.6], [18.6, 3]], "type": "passe"}]}
+},
+"T4": {
+ "nom": "Passe longue et contrôle du ballon rapide",
+ "famille": "Passe",
+ "court": "Passe de vingt mètres, à ras de terre ou à mi-hauteur, et surtout : la receveuse doit amortir un ballon qui arrive vite. On travaille les deux côtés du geste.",
+ "ateliers": [
+  {"nom": "Passe appuyée à 20 m", "quoi": "Par deux à 20 m, passe forte au sol avec l'intérieur du pied, pied d'appui bien orienté. 12 passes chacune.", "cle": "On cherche la vitesse du ballon, pas la hauteur : une passe longue au sol reste jouable."},
+  {"nom": "Amortir le ballon rapide", "quoi": "Même distance, mais la receveuse doit contrôler et immobiliser le ballon dans un carré de 2 m autour d'elle. 12 ballons chacune.", "cle": "Le pied recule au moment du contact : on accompagne le ballon, on ne le bloque pas."},
+  {"nom": "Changement d'aile", "quoi": "Quatre joueuses en carré de 20 m. Passe longue en diagonale, contrôle orienté, passe courte au voisin, puis nouvelle diagonale. 4 minutes.", "cle": "Le contrôle de la longue prépare déjà la courte qui suit."}
+ ],
+ "critere": "Objectif : 8 passes sur 12 qui arrivent dans un couloir de 2 m autour de la partenaire, et 8 contrôles sur 12 immobilisés dans le carré. En dessous, tu réduis à 15 m.",
+ "erreurs": [
+  {"quoi": "La passe longue part en cloche et devient injouable.", "pourquoi": "Elle frappe sous le ballon pour lui donner de la distance, faute de force sur une frappe tendue.", "corriger": "Tu ramènes la distance à 14 m et tu exiges le ballon au sol. On rallonge de 2 m à chaque série réussie."},
+  {"quoi": "Le contrôle du ballon rapide rebondit à trois mètres.", "pourquoi": "Le pied reste dur au contact, le ballon repart avec son énergie.", "corriger": "Tu fais contrôler cinq ballons de la semelle en reculant volontairement le pied. La sensation d'amorti se transfère ensuite à l'intérieur."},
+  {"quoi": "Elles se placent face au ballon long et le contrôlent en reculant.", "pourquoi": "Reculer paraît plus sûr sur un ballon qui arrive vite.", "corriger": "Tu poses un plot 1 m derrière la receveuse : interdiction de reculer au-delà. Elle est obligée d'amortir au lieu de fuir."}
+ ],
+ "derive": "Signal : plus une passe sur deux n'arrive et les joueuses passent leur temps à courir après les ballons. Tu ramènes tout le monde à 14 m sans discussion : mieux vaut réussir court que rater long.",
+ "pourquoi": "La passe longue est ce qui permet d'utiliser la largeur et de changer de côté — deux comportements de ton plan annuel qui restent inaccessibles tant que le geste n'est pas là. Et travailler l'amorti du ballon rapide est au moins aussi utile que la passe elle-même : c'est ce qui manque le plus souvent.",
+ "schema": {"w": 26, "h": 14,
+  "zones": [{"x": 20, "y": 5, "w": 2, "h": 4, "label": "carré", "style": "accent"}],
+  "joueuses": [{"x": 4, "y": 7, "eq": "A", "n": "1"}, {"x": 21, "y": 7, "eq": "B", "n": "2"}],
+  "ballons": [{"x": 4, "y": 7}],
+  "fleches": [{"pts": [[5.3, 7], [19.6, 7]], "type": "passe", "label": "20 m"}]}
+},
+"T5": {
+ "nom": "Passe dans la course",
+ "famille": "Passe",
+ "court": "On ne donne plus le ballon dans les pieds : on le donne devant, là où la partenaire va arriver. Elle ne doit pas s'arrêter pour le prendre.",
+ "ateliers": [
+  {"nom": "Donner devant, sans opposition", "quoi": "Par deux dans un couloir de 20 m. La receveuse part en course, la passeuse la sert devant elle. Elle contrôle sans ralentir et rend en revenant. 10 par joueuse.", "cle": "Le ballon arrive un mètre devant le pied, jamais dans les pieds."},
+  {"nom": "Servir au bon moment", "quoi": "Même chose, mais la receveuse part quand elle veut. La passeuse doit servir au démarrage, pas après. 10 par joueuse.", "cle": "Trop tôt le ballon la dépasse, trop tard elle est déjà arrêtée : le bon moment est le premier appui de la course."},
+  {"nom": "Passe dans la course vers une porte", "quoi": "Deux portes à 15 m. La receveuse annonce sa porte en partant, la passeuse la sert dedans. 8 par joueuse.", "cle": "La passe est bonne si la receveuse traverse la porte sans casser sa course."}
+ ],
+ "critere": "Objectif : 7 passes sur 10 reçues sans ralentir. Tu ne comptes pas la précision de la passe mais le fait que la receveuse garde sa vitesse — c'est le seul critère qui compte ici.",
+ "erreurs": [
+  {"quoi": "La passe arrive dans les pieds et la receveuse doit s'arrêter net.", "pourquoi": "Viser la joueuse est plus simple que viser un espace vide.", "corriger": "Tu poses un plot un mètre devant la trajectoire : c'est le plot qu'on vise, pas la joueuse. Le repère visuel suffit."},
+  {"quoi": "La passeuse attend que la receveuse soit lancée depuis longtemps et sert trop tard.", "pourquoi": "Elle veut être sûre de la trajectoire avant de frapper.", "corriger": "Tu comptes à voix haute : « part — passe ». Deux temps, pas trois. C'est le rythme qui se travaille, pas la décision."},
+  {"quoi": "La receveuse démarre au ralenti pour être sûre d'avoir le ballon.", "pourquoi": "Elle s'adapte à la passe au lieu d'obliger la passe à s'adapter à elle.", "corriger": "Tu chronomètres son trajet : elle doit battre son temps. Elle ne peut plus se permettre de gérer."}
+ ],
+ "derive": "Signal : les deux se sont mises d'accord sur un rythme confortable et l'exercice tourne à vide. Tu ajoutes une défenseure passive dans le couloir : le timing redevient une contrainte réelle.",
+ "pourquoi": "C'est le geste qui rend possible « donner de la profondeur » et « casser une ligne », deux comportements centraux de tes cycles C3 et C4. Sans lui, l'appel dans le dos ne sert à rien : la joueuse part, personne ne la sert au bon moment, et elle arrête de faire l'effort. Travailler la passe dans la course, c'est aussi entretenir la motivation à se démarquer.",
+ "schema": {"w": 24, "h": 12,
+  "lignes": [{"x1": 2, "y1": 2, "x2": 22, "y2": 2}, {"x1": 2, "y1": 10, "x2": 22, "y2": 10}],
+  "joueuses": [{"x": 4, "y": 8.5, "eq": "A", "n": "1"}, {"x": 9, "y": 4, "eq": "B", "n": "2"}],
+  "ballons": [{"x": 4, "y": 8.5}],
+  "portes": [{"x": 21, "y": 3, "o": "v", "l": 2.5}],
+  "fleches": [{"pts": [[10.2, 4], [17, 4]], "type": "course", "label": "elle part"}, {"pts": [[5.2, 8.2], [16, 4.6]], "type": "passe", "label": "devant"}]}
+},
+"T6": {
+ "nom": "Appui-remise à deux touches",
+ "famille": "Passe",
+ "court": "Jeu à deux touches : je donne, je bouge, je reçois. La joueuse en appui remet du premier contact, elle ne contrôle pas.",
+ "ateliers": [
+  {"nom": "Donne et va", "quoi": "Trois joueuses en triangle de 8 m. Passe, puis course vers la place de celle à qui on a passé. 3 minutes en continu, puis on inverse le sens.", "cle": "On part immédiatement après la passe, pas quand on voit que le ballon est arrivé."},
+  {"nom": "Remise du premier contact", "quoi": "Par trois : une passeuse, une en appui dos au jeu à 8 m, une cible. La passeuse sert l'appui, qui remet en une touche vers la cible. 10 par rôle.", "cle": "L'appui oriente son corps AVANT de recevoir, sinon la remise part n'importe où."},
+  {"nom": "Appui-remise et sortie", "quoi": "Même triangle, mais après la remise la passeuse conduit sur 5 m et traverse une porte. 8 par joueuse.", "cle": "La remise doit être jouable en courant : ni trop forte, ni dans les pieds."}
+ ],
+ "critere": "Objectif : 7 remises sur 10 jouables en une touche vers la cible. Si on tombe sous 4, tu autorises deux touches à l'appui le temps que le repère s'installe.",
+ "erreurs": [
+  {"quoi": "L'appui contrôle puis remet : deux touches au lieu d'une.", "pourquoi": "Remettre en une touche paraît risqué quand la technique est fragile.", "corriger": "Tu commences par des ballons servis à la main, plus lents et plus prévisibles. La remise du premier contact devient accessible tout de suite."},
+  {"quoi": "La remise part dans les pieds de la passeuse qui arrive lancée.", "pourquoi": "L'appui vise la joueuse au lieu de viser son espace d'arrivée.", "corriger": "Tu poses une porte à côté de la passeuse : la remise doit y aller. Elle apprend à donner dans l'espace sans qu'on lui explique."},
+  {"quoi": "Personne ne bouge après sa passe, le triangle devient statique.", "pourquoi": "L'exercice se réussit sans courir, donc on ne court pas.", "corriger": "Tu comptes les passes valides seulement si la passeuse a changé de sommet. Deux passes annulées suffisent."}
+ ],
+ "derive": "Signal : les remises s'enchaînent mais tout le monde est à l'arrêt, l'atelier devient un jeu de passes. Tu réduis le triangle à 6 m : à cette distance, rester statique ne marche plus.",
+ "pourquoi": "L'appui-remise est la solution la plus simple pour sortir d'une pression, et elle repose entièrement sur une compétence technique : remettre juste, du premier contact. C'est aussi le contenu qui donne le plus de confiance à un groupe fragile, parce que la réussite est immédiate et visible. Il prépare directement « combiner en appui-remise » et « fixer avant de passer ».",
+ "schema": {"w": 18, "h": 14,
+  "joueuses": [{"x": 4, "y": 11, "eq": "A", "n": "1"}, {"x": 4, "y": 3, "eq": "B", "n": "2"}, {"x": 13, "y": 7, "eq": "J", "n": "3"}],
+  "ballons": [{"x": 4, "y": 11}],
+  "fleches": [{"pts": [[5, 10.2], [11.9, 7.6]], "type": "passe"}, {"pts": [[12.4, 6.2], [5.4, 3.6]], "type": "passe"}, {"pts": [[4.6, 9.7], [4.6, 4.4]], "type": "course"}]}
+},
+"T7": {
+ "nom": "Conduite tête levée et protection",
+ "famille": "Conduite",
+ "court": "Conduire sans regarder le ballon, et garder le corps entre l'adversaire et le ballon quand elle arrive. Deux choses simples, jamais travaillées.",
+ "ateliers": [
+  {"nom": "Conduite et information", "quoi": "Conduite libre dans un carré de 15 m, un ballon chacune. Tu lèves un nombre de doigts, celle qui l'annonce en premier marque un point. 3 minutes.", "cle": "Petites touches rapprochées : le ballon reste à portée sans qu'on ait à le regarder."},
+  {"nom": "Protection du ballon", "quoi": "Par deux dans un cercle de 6 m. Une garde le ballon 20 secondes, l'autre essaie de le sortir sans tacle. On inverse. 4 fois chacune.", "cle": "Le corps entre l'adversaire et le ballon, le bras en appui, le ballon au pied éloigné."},
+  {"nom": "Conduire puis choisir", "quoi": "Conduite sur 10 m vers deux portes. Tu désignes la porte quand elle est à mi-chemin. 8 passages.", "cle": "Si elle regarde le ballon, elle ne verra pas ton signal : c'est le test."}
+ ],
+ "critere": "Objectif : sur l'atelier 1, chaque joueuse annonce au moins 6 chiffres en 3 minutes. Sur l'atelier 2, garder le ballon 15 secondes sur 20.",
+ "erreurs": [
+  {"quoi": "Elle conduit tête baissée et rate tous les signaux.", "pourquoi": "Ses touches sont trop longues, le ballon s'éloigne et elle doit le surveiller.", "corriger": "Tu imposes une touche tous les deux appuis. Le ballon reste collé, la tête se lève d'elle-même — c'est une conséquence, pas une consigne."},
+  {"quoi": "En protection, elle tourne le dos complètement et ne voit plus rien.", "pourquoi": "Elle protège en se coupant du jeu, ce qui est efficace pour garder mais inutile pour ressortir.", "corriger": "Tu ajoutes une cible qu'elle doit servir à la fin des 20 secondes : elle doit protéger tout en gardant un œil sur la sortie."},
+  {"quoi": "L'atelier 2 dégénère en corps à corps et quelqu'un se fait mal.", "pourquoi": "Sans règle claire, la récupération devient un duel physique.", "corriger": "Interdiction de pousser avec les mains, la défenseure doit jouer le ballon avec le pied uniquement. Tu arbitres les deux premières séries."}
+ ],
+ "derive": "Signal : dans le carré de conduite, tout le monde tourne dans le même sens sans jamais lever la tête. Tu réduis le carré de 2 m : les joueuses doivent s'éviter, donc regarder autour.",
+ "pourquoi": "Conduire tête levée est ce qui transforme une porteuse en joueuse capable de décider. Tant qu'elle regarde son ballon, aucun comportement de prise d'information ne peut apparaître, quelle que soit la situation que tu proposes. La protection, elle, est ce qui évite les pertes de balle sous pression et permet d'attendre le soutien — le comportement « protéger le ballon sous pression » de ta bibliothèque.",
+ "schema": {"w": 20, "h": 15,
+  "zones": [{"x": 0, "y": 0, "w": 9, "h": 15, "label": "conduite libre"}, {"x": 11, "y": 3, "w": 9, "h": 9, "label": "protection"}],
+  "joueuses": [{"x": 3, "y": 4, "eq": "A"}, {"x": 6.5, "y": 8, "eq": "A"}, {"x": 3, "y": 12, "eq": "A"}, {"x": 14, "y": 7.5, "eq": "B", "n": "1"}, {"x": 17, "y": 7.5, "eq": "J", "n": "2"}],
+  "ballons": [{"x": 3, "y": 4}, {"x": 6.5, "y": 8}, {"x": 3, "y": 12}, {"x": 14, "y": 7.5}]}
+},
+"T8": {
+ "nom": "Contrôle haut et remise au sol",
+ "famille": "Contrôle",
+ "court": "Un ballon qui arrive en l'air doit être au sol et sous contrôle en deux touches maximum. Cuisse, poitrine ou pied, peu importe, mais il ne rebondit pas trois fois.",
+ "ateliers": [
+  {"nom": "Contrôle de la cuisse", "quoi": "Par deux à 6 m, ballon servi à la main à hauteur de cuisse. Contrôle, le ballon tombe devant, deuxième touche pour rendre. 12 par joueuse.", "cle": "La cuisse recule au contact, elle n'attend pas le ballon comme un mur."},
+  {"nom": "Contrôle de la poitrine", "quoi": "Ballon servi à la main à hauteur de poitrine. Contrôle, ballon au sol devant, on rend au pied. 10 par joueuse.", "cle": "Buste légèrement en arrière, on souffle au moment du contact."},
+  {"nom": "Ballon aérien et sortie", "quoi": "Ballon envoyé au pied en cloche sur 15 m. Deux touches maximum pour l'amener au sol et le jouer dans une porte à 6 m. 8 par joueuse.", "cle": "La première touche amortit vers l'avant, pas en l'air."}
+ ],
+ "critere": "Objectif : 8 ballons sur 12 maîtrisés en deux touches. Compte simplement le nombre de rebonds : plus d'un rebond après le contrôle, c'est raté.",
+ "erreurs": [
+  {"quoi": "Le ballon rebondit haut après le contrôle et repart loin.", "pourquoi": "La surface de contact reste dure : elle bloque le ballon au lieu de l'accompagner.", "corriger": "Tu fais contrôler cinq ballons en reculant volontairement d'un pas au moment du contact. Le geste s'apprend par exagération."},
+  {"quoi": "Elle recule pour laisser le ballon rebondir plutôt que de le contrôler en l'air.", "pourquoi": "Le ballon aérien fait peur et le rebond au sol est plus rassurant.", "corriger": "Tu commences avec des ballons dégonflés ou servis très doucement à la main. La peur tombe en deux séries, et tu remontes progressivement."},
+  {"quoi": "Elle utilise systématiquement la poitrine, même sur un ballon à hauteur de cuisse.", "pourquoi": "C'est la surface la plus large, donc la plus sûre.", "corriger": "Tu annonces la surface avant chaque service. Elle n'a plus le choix et découvre que la cuisse est plus rapide."}
+ ],
+ "derive": "Signal : les services deviennent approximatifs et l'atelier tourne au jeu de volley. Tu reprends toi-même le service à la main pour une série : la qualité du ballon envoyé conditionne tout le reste.",
+ "pourquoi": "Chaque dégagement adverse, chaque touche longue, chaque ballon de la gardienne arrive en l'air. Un groupe qui ne sait pas amener ces ballons au sol perd la moitié des seconds ballons du match sans qu'aucun choix tactique ne soit en cause. C'est le contenu technique le plus rentable en football à 8, où le jeu long est fréquent.",
+ "schema": {"w": 20, "h": 12,
+  "joueuses": [{"x": 4, "y": 6, "eq": "A", "n": "1"}, {"x": 11, "y": 6, "eq": "B", "n": "2"}],
+  "ballons": [{"x": 4, "y": 6}],
+  "portes": [{"x": 18, "y": 4, "o": "v", "l": 3}],
+  "fleches": [{"pts": [[5.3, 6], [9.7, 6]], "type": "passe", "label": "en l'air"}, {"pts": [[12.2, 6], [17.6, 5.5]], "type": "passe", "label": "au sol"}]}
+}
+}
+</script>
+<script type="application/json" id="cpa">{
+ "A1": {
+  "nom": "Touche offensive",
+  "famille": "Touche",
+  "court": "La touche est la seule remise en jeu où personne ne peut vous prendre le ballon, et on en joue une trentaine par match. À chaque touche, trois joueuses bougent en même temps : une vient dans les pieds, une décroche en arrière, une part dans le dos. La lanceuse a toujours deux solutions avant de lever les bras.",
+  "ateliers": [
+   {
+    "nom": "Les trois appels, sans opposition",
+    "quoi": "Un couloir de 20 m le long d'une ligne. Une lanceuse, trois receveuses placées à 5, 10 et 15 m. Au signal de la lanceuse, les trois partent ensemble : la proche vient dans les pieds, la moyenne décroche vers l'arrière, la lointaine part dans le dos de la défense. La lanceuse choisit. Huit touches, puis on tourne les rôles.",
+    "cle": "Les trois partent en même temps. Si une seule bouge, la défenseure sait déjà où va le ballon."
+   },
+   {
+    "nom": "Touche avec une défenseure",
+    "quoi": "Même couloir, on ajoute une défenseure qui marque la receveuse proche. Huit touches. Le ballon doit ressortir du couloir en deux touches maximum après la réception.",
+    "cle": "Si la proche est marquée, elle part quand même : elle emmène sa défenseure et libère l'espace pour la suivante."
+   },
+   {
+    "nom": "Touche puis attaque",
+    "quoi": "On joue la touche à 25 m du but et l'action doit être finie en 8 secondes. Trois attaquantes contre deux défenseures après la remise. Six touches par côté.",
+    "cle": "La touche n'est pas la fin d'une action, c'est le début de la suivante."
+   }
+  ],
+  "principes": [
+   "Trois joueuses bougent à chaque touche, jamais zéro.",
+   "La lanceuse est toujours une solution : personne ne la marque, la remise vers elle est gratuite.",
+   "On joue vite plutôt que bien : une touche jouée en 3 secondes vaut mieux qu'une touche parfaite en 8."
+  ],
+  "critere": "Objectif : 8 touches sur 10 conservées dans le camp adverse. En dessous de 5, tu retires la défenseure et tu ne gardes que les trois appels.",
+  "erreurs": [
+   {
+    "quoi": "Personne ne bouge, la lanceuse cherche pendant cinq secondes et finit par la jouer en arrière.",
+    "pourquoi": "À cet âge la touche n'est vécue par personne comme une action de jeu : on attend simplement que le ballon revienne en jeu.",
+    "corriger": "Tu comptes à voix haute et la touche doit partir avant 4. La contrainte de temps déclenche le mouvement bien mieux que la consigne."
+   },
+   {
+    "quoi": "La receveuse proche prend le ballon dans les pieds, dos au jeu, et se fait reprendre aussitôt.",
+    "pourquoi": "Elle vient chercher le ballon sans avoir regardé ce qui se passe derrière elle.",
+    "corriger": "Tu lui demandes de recevoir de profil, une épaule vers la ligne, et de rendre en une touche à la lanceuse qui est déjà rentrée sur le terrain."
+   },
+   {
+    "quoi": "La lanceuse vise systématiquement la plus lointaine et le ballon est perdu une fois sur deux.",
+    "pourquoi": "La longue paraît la plus rentable et c'est la seule que personne ne conteste au moment du lancer.",
+    "corriger": "Tu interdis la longue sur une série entière. Elle redevient une option le jour où les deux courtes fonctionnent."
+   }
+  ],
+  "derive": "Signal : ça devient un concours de lancer et plus personne ne se déplace. Tu enchaînes alors trois touches d'affilée sans arrêt, chronométrées — le rythme remet du mouvement sans que tu aies à parler.",
+  "pourquoi": "C'est la remise en jeu la plus fréquente du match et la moins travaillée de toutes. Pour un groupe qui a des difficultés de contrôle et de passe, elle a un avantage rare : le ballon part d'un point fixe, sans pression sur la passeuse, ce qui permet de travailler la qualité de réception dans des conditions de match sans exiger une première passe parfaite. Deux séances suffisent à changer le nombre de ballons conservés.",
+  "schema": {
+   "w": 26,
+   "h": 13,
+   "zones": [
+    {
+     "x": 0,
+     "y": 0,
+     "w": 26,
+     "h": 2.0,
+     "label": "Ligne de touche"
+    }
+   ],
+   "joueuses": [
+    {
+     "x": 3.5,
+     "y": 1.0,
+     "eq": "A",
+     "n": "T"
+    },
+    {
+     "x": 7.8,
+     "y": 4.3,
+     "eq": "A",
+     "n": "1"
+    },
+    {
+     "x": 18.0,
+     "y": 2.7,
+     "eq": "A",
+     "n": "2"
+    },
+    {
+     "x": 2.6,
+     "y": 7.2,
+     "eq": "A",
+     "n": "3"
+    },
+    {
+     "x": 9.6,
+     "y": 6.6,
+     "eq": "B",
+     "n": "x"
+    }
+   ],
+   "ballons": [
+    {
+     "x": 3.5,
+     "y": 1.0
+    }
+   ],
+   "fleches": [
+    {
+     "pts": [
+      [
+       4.2,
+       1.6
+      ],
+      [
+       7.2,
+       3.7
+      ]
+     ],
+     "type": "passe"
+    },
+    {
+     "pts": [
+      [
+       18.2,
+       3.6
+      ],
+      [
+       22.5,
+       8.0
+      ]
+     ],
+     "type": "course"
+    },
+    {
+     "pts": [
+      [
+       7.4,
+       5.1
+      ],
+      [
+       3.4,
+       6.7
+      ]
+     ],
+     "type": "passe"
+    }
+   ]
+  }
+ },
+ "A2": {
+  "nom": "Corner offensif",
+  "famille": "Corner",
+  "court": "Un corner, c'est cinq joueuses avec un rôle écrit, pas onze qui attendent dans la surface. Deux attaquent le premier poteau, une prend le deuxième, une reste au point de penalty pour le ballon qui traverse, une est à l'entrée de la surface pour le deuxième ballon. On vise le premier poteau : c'est le seul ballon qu'une gardienne de cet âge ne peut pas venir chercher.",
+  "ateliers": [
+   {
+    "nom": "Placement et déclenchement, sans gardienne",
+    "quoi": "Cinq joueuses, cinq places marquées au sol par un plot. La tireuse lève le bras : les deux du premier poteau partent, les autres tiennent leur position. Dix corners, on tourne la tireuse toutes les cinq frappes.",
+    "cle": "On part au bras levé, pas quand le ballon est frappé. Partir trop tôt est mieux que partir trop tard."
+   },
+   {
+    "nom": "Corner avec gardienne et deux défenseures",
+    "quoi": "Même organisation, on ajoute la gardienne et deux défenseures. Dix corners. Un but marqué compte 1, un deuxième ballon récupéré à l'entrée de la surface compte aussi 1.",
+    "cle": "La joueuse à l'entrée de la surface ne rentre jamais : c'est elle qui récupère la moitié des ballons."
+   },
+   {
+    "nom": "Corner joué à deux",
+    "quoi": "Variante courte : une joueuse vient à 5 m de la tireuse, reçoit, remet, et le centre part de plus près avec un meilleur angle. Six répétitions. À utiliser quand la frappe longue n'arrive pas dans la surface.",
+    "cle": "Le corner à deux n'est pas un aveu de faiblesse : il crée un angle que le corner long n'a pas."
+   }
+  ],
+  "principes": [
+   "Cinq rôles fixes, appris une fois pour toutes : premier poteau ×2, deuxième poteau, point de penalty, entrée de surface.",
+   "On vise toujours le premier poteau — c'est là que la gardienne ne peut pas venir.",
+   "La joueuse de l'entrée de surface ne rentre jamais dans la surface : elle est là pour le deuxième ballon et pour le contre."
+  ],
+  "critere": "Objectif : 7 corners sur 10 qui arrivent dans la surface, et au moins 4 deuxièmes ballons récupérés. Si moins de 5 ballons arrivent dans la surface, tu passes au corner joué à deux — inutile d'insister sur une frappe qui ne porte pas.",
+  "erreurs": [
+   {
+    "quoi": "Toutes les joueuses sont déjà dans la surface au moment de la frappe et personne n'est en mouvement.",
+    "pourquoi": "Se placer tôt rassure : on est sûre d'avoir sa place.",
+    "corriger": "Tu marques les points de départ au sol, à trois mètres derrière la position d'arrivée. Un ballon qui arrive sur une joueuse à l'arrêt est un ballon pour la gardienne."
+   },
+   {
+    "quoi": "Le corner est frappé trop fort et trop loin, il traverse toute la surface.",
+    "pourquoi": "La tireuse frappe pour atteindre le deuxième poteau parce que c'est là que le but paraît le plus grand.",
+    "corriger": "Tu poses une zone de trois mètres au premier poteau et tu ne comptes que les ballons qui y tombent. La cible rapproche le geste."
+   },
+   {
+    "quoi": "Personne n'est à l'entrée de la surface, chaque ballon repoussé repart en contre-attaque adverse.",
+    "pourquoi": "Le rôle paraît ingrat : on ne marque jamais depuis là.",
+    "corriger": "Tu comptes les deuxièmes ballons comme des buts pendant tout l'atelier. Le rôle devient valorisant en une séance."
+   }
+  ],
+  "derive": "Signal : les corners n'arrivent plus dans la surface et l'atelier tourne à l'exercice de frappe. Tu rapproches le point de corner de deux mètres pendant cinq répétitions, le temps de retrouver des ballons exploitables, puis tu reviens au vrai point.",
+  "pourquoi": "Sur une saison, un corner travaillé rapporte plus de buts que n'importe quelle combinaison de jeu à ce niveau, parce qu'il ne dépend ni de la qualité de passe ni de la conservation. C'est aussi un des rares moments où une joueuse peu à l'aise techniquement peut être décisive par son placement et son courage.",
+  "schema": {
+   "w": 24,
+   "h": 13,
+   "buts": [
+    {
+     "x": 8.5,
+     "y": 0,
+     "o": "h",
+     "l": 7,
+     "dir": "-"
+    }
+   ],
+   "zones": [
+    {
+     "x": 5.5,
+     "y": 0,
+     "w": 13,
+     "h": 5.5
+    },
+    {
+     "x": 7.4,
+     "y": 1.7,
+     "w": 3.2,
+     "h": 2.8,
+     "style": "accent",
+     "label": "Cible"
+    }
+   ],
+   "joueuses": [
+    {
+     "x": 0.8,
+     "y": 0.8,
+     "eq": "A",
+     "n": "C"
+    },
+    {
+     "x": 12.6,
+     "y": 6.4,
+     "eq": "A",
+     "n": "1"
+    },
+    {
+     "x": 15.8,
+     "y": 2.9,
+     "eq": "A",
+     "n": "2"
+    },
+    {
+     "x": 9.0,
+     "y": 6.0,
+     "eq": "A",
+     "n": "3"
+    },
+    {
+     "x": 12.0,
+     "y": 10.4,
+     "eq": "A",
+     "n": "4"
+    },
+    {
+     "x": 3.0,
+     "y": 3.4,
+     "eq": "A",
+     "n": "5"
+    },
+    {
+     "x": 13.8,
+     "y": 1.9,
+     "eq": "B",
+     "n": "x"
+    },
+    {
+     "x": 17.4,
+     "y": 4.6,
+     "eq": "B",
+     "n": "x"
+    }
+   ],
+   "ballons": [
+    {
+     "x": 0.8,
+     "y": 0.8
+    }
+   ],
+   "fleches": [
+    {
+     "pts": [
+      [
+       1.5,
+       1.2
+      ],
+      [
+       6.9,
+       2.6
+      ]
+     ],
+     "type": "passe"
+    },
+    {
+     "pts": [
+      [
+       12.3,
+       5.5
+      ],
+      [
+       10.2,
+       3.7
+      ]
+     ],
+     "type": "course"
+    },
+    {
+     "pts": [
+      [
+       15.6,
+       3.8
+      ],
+      [
+       13.6,
+       5.0
+      ]
+     ],
+     "type": "course"
+    }
+   ]
+  }
+ },
+ "A3": {
+  "nom": "Corner défensif",
+  "famille": "Corner",
+  "court": "Sur corner adverse, chaque joueuse sait avant la frappe ce qu'elle défend : une joueuse ou une zone, jamais les deux. Deux tiennent les poteaux, trois prennent une adversaire, une couvre l'entrée de la surface, une reste devant pour la ressortie. On dégage sur le côté et vers le haut, jamais au milieu.",
+  "ateliers": [
+   {
+    "nom": "Attribution des rôles, à l'arrêt",
+    "quoi": "Tu poses six adversaires factices (plots ou joueuses immobiles) dans la surface. Le groupe se place en dix secondes, tu vérifies, tu recommences. Six répétitions avec des placements adverses différents.",
+    "cle": "Chacune annonce à voix haute ce qu'elle défend avant la frappe. Le silence, c'est un ballon encaissé."
+   },
+   {
+    "nom": "Corner réel avec dégagement imposé",
+    "quoi": "Corner joué normalement. Le ballon dégagé ne compte que s'il sort de la surface par le côté et au-dessus de la hauteur des épaules. Dix corners.",
+    "cle": "Loin, haut, sur le côté. Un dégagement au sol vers le milieu revient toujours."
+   },
+   {
+    "nom": "Dégager puis ressortir",
+    "quoi": "Après le dégagement, l'équipe a 6 secondes pour amener le ballon au-delà de la ligne médiane, avec l'attaquante restée devant. Huit répétitions.",
+    "cle": "Une joueuse reste toujours devant : c'est elle qui empêche l'adversaire de rejouer un deuxième corner."
+   }
+  ],
+  "principes": [
+   "Chacune annonce ce qu'elle défend avant la frappe — une adversaire ou une zone, pas les deux.",
+   "Deux joueuses sur les poteaux, elles n'en bougent pas tant que le ballon n'est pas dégagé.",
+   "On dégage loin, haut, sur le côté ; jamais au sol dans l'axe."
+  ],
+  "critere": "Objectif : 8 corners sur 10 dégagés hors de la surface au premier ballon. Si la moitié des ballons retombe dans la surface, tu enlèves l'opposition et tu refais l'atelier de placement.",
+  "erreurs": [
+   {
+    "quoi": "Deux joueuses suivent la même adversaire et une autre est totalement libre.",
+    "pourquoi": "Chacune prend la joueuse la plus proche d'elle au moment de la frappe, sans répartition préalable.",
+    "corriger": "Tu fais annoncer les prises à voix haute avant la frappe. C'est l'annonce qui répartit, pas la proximité."
+   },
+   {
+    "quoi": "La joueuse au premier poteau quitte sa position dès que le ballon est frappé.",
+    "pourquoi": "Elle veut aller vers le ballon, c'est le réflexe naturel.",
+    "corriger": "Tu poses un plot sur lequel elle a un pied posé jusqu'au dégagement. La contrainte physique tient mieux que la consigne verbale."
+   },
+   {
+    "quoi": "Le dégagement part au sol vers le milieu du terrain et l'adversaire rejoue immédiatement.",
+    "pourquoi": "Dégager en force fait peur quand on n'a pas confiance dans sa frappe : on pousse le ballon.",
+    "corriger": "Tu ne valides que les ballons qui franchissent une ligne de plots posée à 15 m sur les côtés. On compte les dégagements valides, pas les autres."
+   }
+  ],
+  "derive": "Signal : les joueuses se gênent et personne n'ose attaquer le ballon. Tu enlèves les attaquantes deux minutes et tu fais dégager des ballons lancés à la main, pour retrouver le geste avant de remettre l'opposition.",
+  "pourquoi": "À ce niveau, une part importante des buts encaissés vient des corners et des seconds ballons qui suivent. C'est aussi la situation où le manque d'organisation coûte le plus cher : la solution n'est pas technique mais tient à des rôles clairs, ce qui la rend accessible à un groupe en difficulté technique.",
+  "schema": {
+   "w": 26,
+   "h": 15,
+   "buts": [
+    {
+     "x": 9.5,
+     "y": 0,
+     "o": "h",
+     "l": 7,
+     "dir": "-"
+    }
+   ],
+   "zones": [
+    {
+     "x": 6.5,
+     "y": 0,
+     "w": 13,
+     "h": 5.5
+    }
+   ],
+   "joueuses": [
+    {
+     "x": 10.2,
+     "y": 1.3,
+     "eq": "A",
+     "n": "P"
+    },
+    {
+     "x": 16.0,
+     "y": 1.3,
+     "eq": "A",
+     "n": "P"
+    },
+    {
+     "x": 11.6,
+     "y": 3.6,
+     "eq": "A",
+     "n": "1"
+    },
+    {
+     "x": 14.6,
+     "y": 3.4,
+     "eq": "A",
+     "n": "2"
+    },
+    {
+     "x": 13.0,
+     "y": 6.2,
+     "eq": "A",
+     "n": "3"
+    },
+    {
+     "x": 13.0,
+     "y": 9.2,
+     "eq": "A",
+     "n": "4"
+    },
+    {
+     "x": 22.0,
+     "y": 11.4,
+     "eq": "A",
+     "n": "5"
+    },
+    {
+     "x": 0.8,
+     "y": 0.8,
+     "eq": "B",
+     "n": "C"
+    },
+    {
+     "x": 11.2,
+     "y": 5.3,
+     "eq": "B",
+     "n": "x"
+    },
+    {
+     "x": 15.4,
+     "y": 5.1,
+     "eq": "B",
+     "n": "x"
+    }
+   ],
+   "ballons": [
+    {
+     "x": 0.8,
+     "y": 0.8
+    }
+   ],
+   "fleches": [
+    {
+     "pts": [
+      [
+       1.6,
+       1.2
+      ],
+      [
+       11.2,
+       3.4
+      ]
+     ],
+     "type": "passe"
+    },
+    {
+     "pts": [
+      [
+       12.3,
+       3.9
+      ],
+      [
+       21.4,
+       10.4
+      ]
+     ],
+     "type": "passe"
+    },
+    {
+     "pts": [
+      [
+       22.4,
+       12.4
+      ],
+      [
+       24.5,
+       14.2
+      ]
+     ],
+     "type": "course"
+    }
+   ]
+  }
+ },
+ "A4": {
+  "nom": "Coup franc excentré",
+  "famille": "Coup franc",
+  "court": "Sur un coup franc sur le côté, on ne cherche pas le but directement : on cherche le premier poteau avec trois joueuses qui arrivent lancées. Trois partent en même temps depuis la même ligne, une vers le premier poteau, une au point de penalty, une au deuxième. La tireuse annonce, on part au bras levé.",
+  "ateliers": [
+   {
+    "nom": "Le départ groupé, sans opposition",
+    "quoi": "Trois joueuses alignées à 20 m du but, épaule contre épaule. Au bras levé, elles se séparent : une coupe devant, une reste, une part dans le dos. Le ballon arrive au premier poteau. Huit répétitions par côté.",
+    "cle": "Elles partent de la même ligne, en même temps. C'est le départ groupé qui rend le marquage impossible."
+   },
+   {
+    "nom": "Coup franc avec ligne de défense",
+    "quoi": "On ajoute trois défenseures et la gardienne. Dix coups francs, alternés à gauche et à droite. Un but compte 2, un ballon touché dans la surface compte 1.",
+    "cle": "Le premier poteau est toujours la première option : c'est le ballon le plus court et le plus dur à défendre."
+   },
+   {
+    "nom": "Coup franc joué court",
+    "quoi": "Variante à deux : une joueuse vient recevoir à 6 m, remet en une touche, et le centre part avec un angle ouvert. Six répétitions. Utile quand la ligne adverse est bien montée.",
+    "cle": "Deux touches maximum, sinon la défense a le temps de se replacer et la variante ne sert plus à rien."
+   }
+  ],
+  "principes": [
+   "On vise le premier poteau, jamais la lucarne.",
+   "Trois joueuses partent ensemble de la même ligne, au bras levé de la tireuse.",
+   "Une joueuse reste toujours en dehors de la surface, pour le deuxième ballon et pour couvrir le contre."
+  ],
+  "critere": "Objectif : 6 ballons sur 10 touchés par une attaquante dans la surface. En dessous de 3, tu rapproches le point de frappe de 3 m avant de conclure quoi que ce soit sur les appels.",
+  "erreurs": [
+   {
+    "quoi": "Les trois joueuses sont déjà écartées avant la frappe, chacune est marquée individuellement.",
+    "pourquoi": "S'écarter tôt donne l'impression d'être disponible.",
+    "corriger": "Tu les fais démarrer épaule contre épaule, sur une ligne de plots. Le départ groupé crée à lui seul le décalage."
+   },
+   {
+    "quoi": "La tireuse cherche le but directement à chaque fois.",
+    "pourquoi": "Le coup franc est vécu comme une occasion de marquer seule, et c'est la version la plus gratifiante.",
+    "corriger": "Tu n'accordes le tir direct qu'à moins de 20 m et dans l'axe. Ailleurs, seul le ballon dans la zone du premier poteau est compté."
+   },
+   {
+    "quoi": "Tout le monde entre dans la surface et le ballon repoussé donne un contre.",
+    "pourquoi": "Personne ne veut être celle qui ne participe pas à l'action.",
+    "corriger": "Tu désignes la joueuse restée devant avant chaque frappe, à voix haute. Le rôle doit être attribué, pas espéré."
+   }
+  ],
+  "derive": "Signal : les ballons n'arrivent pas et l'atelier devient une séance de frappe pour deux joueuses. Tu passes au coup franc joué court pendant cinq répétitions : le centre part de plus près et redevient exploitable.",
+  "pourquoi": "Le coup franc excentré est le deuxième coup de pied arrêté le plus fréquent après la touche, et il se travaille avec la même logique que le corner : des rôles, un départ commun et une cible unique. Pour un groupe fragile techniquement, c'est un moyen de créer du danger sans dépendre d'une séquence de passes réussie.",
+  "schema": {
+   "w": 30,
+   "h": 18,
+   "buts": [
+    {
+     "x": 11.5,
+     "y": 0,
+     "o": "h",
+     "l": 7,
+     "dir": "-"
+    }
+   ],
+   "zones": [
+    {
+     "x": 8.5,
+     "y": 0,
+     "w": 13,
+     "h": 5.5
+    },
+    {
+     "x": 10.2,
+     "y": 2.0,
+     "w": 3.2,
+     "h": 2.8,
+     "style": "accent",
+     "label": "Cible"
+    }
+   ],
+   "joueuses": [
+    {
+     "x": 3.6,
+     "y": 9.0,
+     "eq": "A",
+     "n": "T"
+    },
+    {
+     "x": 12.6,
+     "y": 8.2,
+     "eq": "A",
+     "n": "1"
+    },
+    {
+     "x": 15.0,
+     "y": 8.2,
+     "eq": "A",
+     "n": "2"
+    },
+    {
+     "x": 17.4,
+     "y": 8.2,
+     "eq": "A",
+     "n": "3"
+    },
+    {
+     "x": 22.0,
+     "y": 12.2,
+     "eq": "A",
+     "n": "4"
+    },
+    {
+     "x": 12.2,
+     "y": 5.6,
+     "eq": "B",
+     "n": "x"
+    },
+    {
+     "x": 15.6,
+     "y": 5.4,
+     "eq": "B",
+     "n": "x"
+    },
+    {
+     "x": 19.0,
+     "y": 5.6,
+     "eq": "B",
+     "n": "x"
+    }
+   ],
+   "ballons": [
+    {
+     "x": 3.6,
+     "y": 9.0
+    }
+   ],
+   "fleches": [
+    {
+     "pts": [
+      [
+       4.5,
+       8.5
+      ],
+      [
+       9.8,
+       4.4
+      ]
+     ],
+     "type": "passe"
+    },
+    {
+     "pts": [
+      [
+       12.4,
+       7.2
+      ],
+      [
+       11.4,
+       5.0
+      ]
+     ],
+     "type": "course"
+    },
+    {
+     "pts": [
+      [
+       17.7,
+       7.2
+      ],
+      [
+       19.4,
+       4.8
+      ]
+     ],
+     "type": "course"
+    }
+   ]
+  }
+ },
+ "A5": {
+  "nom": "Coup franc défensif — mur et marquage",
+  "famille": "Coup franc",
+  "court": "Sur coup franc adverse, deux choses seulement : un mur placé en trois secondes et une ligne de défense qui tient à la même hauteur. Le mur est monté par la joueuse la plus grande, alignée par la gardienne. Derrière, personne ne recule pendant que le ballon est encore posé.",
+  "ateliers": [
+   {
+    "nom": "Monter le mur en trois secondes",
+    "quoi": "Ballon posé à 22 m, gardienne dans le but. Au coup de sifflet, le mur de trois se monte et la gardienne l'aligne à la voix. Tu chronomètres. Huit répétitions depuis des angles différents.",
+    "cle": "La gardienne est la seule à parler pendant le placement du mur. Deux voix, et le mur est mal placé."
+   },
+   {
+    "nom": "Mur plus ligne de défense",
+    "quoi": "On ajoute quatre défenseures et trois attaquantes. Le mur se monte, la ligne se place à la même hauteur, personne ne recule. Dix coups francs.",
+    "cle": "La ligne tient sa hauteur tant que le ballon n'est pas frappé. Reculer, c'est offrir la surface."
+   },
+   {
+    "nom": "Après le dégagement",
+    "quoi": "Le ballon repoussé doit être amené au-delà de la ligne médiane en 8 secondes, avec les joueuses restées devant. Six répétitions.",
+    "cle": "Le mur se défait immédiatement après la frappe : il ne sert plus à rien et les joueuses manquent partout ailleurs."
+   }
+  ],
+  "principes": [
+   "La gardienne place le mur, seule, à la voix.",
+   "Le mur est monté en trois secondes, sinon il ne sert à rien.",
+   "La ligne de défense ne recule pas tant que le ballon n'est pas frappé."
+  ],
+  "critere": "Objectif : mur en place en moins de 3 secondes sur 8 essais sur 10, et aucune joueuse en retrait de la ligne au moment de la frappe. Si le mur met plus de 5 secondes, tu réduis à deux joueuses : un petit mur bien placé vaut mieux qu'un grand mur en retard.",
+  "erreurs": [
+   {
+    "quoi": "Trois joueuses parlent en même temps et le mur se replace trois fois.",
+    "pourquoi": "Tout le monde voit que le mur est décalé et personne n'a été désignée pour le dire.",
+    "corriger": "Une seule voix, celle de la gardienne. Tu sanctionnes toute autre voix pendant le placement, même juste."
+   },
+   {
+    "quoi": "La ligne de défense recule pendant que l'adversaire pose le ballon.",
+    "pourquoi": "Reculer donne le sentiment d'être plus en sécurité près du but.",
+    "corriger": "Tu poses une ligne de plots et personne ne la franchit avant la frappe. Le repère visuel remplace la décision individuelle."
+   },
+   {
+    "quoi": "Le mur reste groupé après la frappe et personne ne défend le deuxième ballon.",
+    "pourquoi": "Le mur est vécu comme une position à tenir, pas comme un geste ponctuel.",
+    "corriger": "Tu ajoutes systématiquement un deuxième ballon deux secondes après la frappe. Le mur apprend à se défaire parce que la situation l'exige."
+   }
+  ],
+  "derive": "Signal : les joueuses ont peur du ballon et se retournent dans le mur. Tu fais frapper au sol pendant cinq répétitions et tu expliques que la douleur d'un ballon dans le dos est le prix d'un but évité — puis tu remontes progressivement la hauteur de frappe.",
+  "pourquoi": "Le coup franc défensif est la situation où une équipe jeune perd le plus de temps et de repères. Un mur monté en trois secondes et une ligne qui tient, cela ne demande aucune qualité technique : c'est de l'organisation pure, donc c'est le premier endroit où un groupe en difficulté peut devenir solide.",
+  "schema": {
+   "w": 32,
+   "h": 20,
+   "buts": [
+    {
+     "x": 12.5,
+     "y": 0,
+     "o": "h",
+     "l": 7,
+     "dir": "-"
+    }
+   ],
+   "zones": [
+    {
+     "x": 9.5,
+     "y": 0,
+     "w": 13,
+     "h": 5.5
+    },
+    {
+     "x": 0,
+     "y": 8.6,
+     "w": 32,
+     "h": 1.8,
+     "label": "Ligne de défense"
+    }
+   ],
+   "joueuses": [
+    {
+     "x": 16.0,
+     "y": 1.7,
+     "eq": "GB",
+     "n": "G"
+    },
+    {
+     "x": 14.7,
+     "y": 5.5,
+     "eq": "A",
+     "n": "M"
+    },
+    {
+     "x": 16.0,
+     "y": 5.5,
+     "eq": "A",
+     "n": "M"
+    },
+    {
+     "x": 17.3,
+     "y": 5.5,
+     "eq": "A",
+     "n": "M"
+    },
+    {
+     "x": 5.0,
+     "y": 9.5,
+     "eq": "A",
+     "n": "1"
+    },
+    {
+     "x": 9.0,
+     "y": 9.5,
+     "eq": "A",
+     "n": "2"
+    },
+    {
+     "x": 23.0,
+     "y": 9.5,
+     "eq": "A",
+     "n": "3"
+    },
+    {
+     "x": 27.0,
+     "y": 9.5,
+     "eq": "A",
+     "n": "4"
+    },
+    {
+     "x": 17.0,
+     "y": 14.6,
+     "eq": "B",
+     "n": "T"
+    },
+    {
+     "x": 11.0,
+     "y": 11.6,
+     "eq": "B",
+     "n": "x"
+    },
+    {
+     "x": 21.0,
+     "y": 11.6,
+     "eq": "B",
+     "n": "x"
+    }
+   ],
+   "ballons": [
+    {
+     "x": 16.0,
+     "y": 14.2
+    }
+   ],
+   "fleches": [
+    {
+     "pts": [
+      [
+       16.0,
+       13.3
+      ],
+      [
+       16.0,
+       6.7
+      ]
+     ],
+     "type": "passe"
+    }
+   ],
+   "cotes": false
+  }
+ },
+ "A6": {
+  "nom": "Sortie de but courte",
+  "famille": "Relance",
+  "court": "On arrête de dégager devant. Sur six pieds de but, on en joue au moins quatre à la main ou au sol vers une défenseure écartée. Les deux défenseures centrales s'ouvrent aux angles de la surface, les latérales montent sur la ligne de touche, une joueuse vient toujours dans l'axe pour donner la troisième solution.",
+  "ateliers": [
+   {
+    "nom": "Les cinq places, sans opposition",
+    "quoi": "Gardienne, deux défenseures centrales, deux latérales, une joueuse d'axe. La gardienne relance au sol vers une centrale, qui joue vers la latérale ou remet dans l'axe. Huit relances, on tourne.",
+    "cle": "Les deux centrales s'écartent au moment où la gardienne pose le ballon, pas après."
+   },
+   {
+    "nom": "Relance avec une attaquante",
+    "quoi": "On ajoute une attaquante qui presse la gardienne. Elle ne peut presser qu'un côté : le ballon se joue de l'autre. Dix relances, la relance est réussie si le ballon franchit la ligne médiane.",
+    "cle": "On joue toujours à l'opposé de la joueuse qui presse. C'est la seule règle de la relance courte."
+   },
+   {
+    "nom": "Relance sous pression réelle",
+    "quoi": "Trois attaquantes pressent. La gardienne a le droit de dégager long si les trois solutions sont fermées — mais elle doit annoncer « long » avant. Huit relances.",
+    "cle": "Le dégagement long n'est pas une faute : c'est une option annoncée. La faute, c'est de le faire par défaut."
+   }
+  ],
+  "principes": [
+   "Les centrales s'écartent quand la gardienne pose le ballon, pas quand elle le frappe.",
+   "On joue toujours du côté opposé à la joueuse qui presse.",
+   "Le dégagement long reste autorisé, mais il s'annonce."
+  ],
+  "critere": "Objectif : 7 relances sur 10 qui franchissent la ligne médiane avec le ballon encore à l'équipe. En dessous de 4, tu retires une attaquante — la contrainte de pression est trop forte pour le niveau de conduite du groupe.",
+  "erreurs": [
+   {
+    "quoi": "La gardienne dégage devant systématiquement, quel que soit le pressing.",
+    "pourquoi": "Le dégagement long ne peut jamais être reproché à la gardienne, la relance courte oui.",
+    "corriger": "Tu ne comptes que les relances courtes pendant tout l'atelier. Tu rends explicitement la perte du ballon acceptable : c'est ce qui débloque la gardienne."
+   },
+   {
+    "quoi": "Les défenseures centrales restent dans la surface et reçoivent dos au jeu.",
+    "pourquoi": "Rester près du but paraît plus sûr quand on n'a pas confiance dans son contrôle.",
+    "corriger": "Tu poses deux plots aux angles de la surface et le ballon ne peut partir que si les deux plots sont occupés. Le repère au sol règle le placement sans discussion."
+   },
+   {
+    "quoi": "La joueuse d'axe se place derrière l'attaquante adverse et n'est jamais jouable.",
+    "pourquoi": "Elle se place par rapport au but, pas par rapport à l'adversaire.",
+    "corriger": "Tu lui demandes de se déplacer d'un mètre au moment où la gardienne lève la tête : ce petit décalage suffit à sortir de l'ombre de l'attaquante."
+   }
+  ],
+  "derive": "Signal : les ballons sont perdus dans la surface et le groupe se crispe. Tu remontes le point de départ de la relance au niveau de la ligne des 16 m et tu enlèves une pressante : on retrouve des relances réussies avant de revenir aux conditions réelles.",
+  "pourquoi": "C'est la situation qui relie directement les deux choses à corriger dans ce groupe : le contrôle et la première passe. La sortie de but courte est un coup de pied arrêté, donc un moment sans surprise, où l'on peut exiger un contrôle orienté et une passe propre sans que la vitesse du jeu ne serve d'excuse. Ce qui est gagné ici se voit ensuite dans tout le jeu de position.",
+  "schema": {
+   "w": 30,
+   "h": 21,
+   "buts": [
+    {
+     "x": 12.5,
+     "y": 0,
+     "o": "h",
+     "l": 7,
+     "dir": "-"
+    }
+   ],
+   "zones": [
+    {
+     "x": 5,
+     "y": 0,
+     "w": 20,
+     "h": 8
+    }
+   ],
+   "joueuses": [
+    {
+     "x": 15.0,
+     "y": 2.2,
+     "eq": "GB",
+     "n": "G"
+    },
+    {
+     "x": 6.4,
+     "y": 7.4,
+     "eq": "A",
+     "n": "2"
+    },
+    {
+     "x": 23.6,
+     "y": 7.4,
+     "eq": "A",
+     "n": "5"
+    },
+    {
+     "x": 2.0,
+     "y": 13.2,
+     "eq": "A",
+     "n": "3"
+    },
+    {
+     "x": 28.0,
+     "y": 13.2,
+     "eq": "A",
+     "n": "4"
+    },
+    {
+     "x": 15.0,
+     "y": 11.4,
+     "eq": "A",
+     "n": "6"
+    },
+    {
+     "x": 15.0,
+     "y": 7.0,
+     "eq": "B",
+     "n": "x"
+    },
+    {
+     "x": 9.4,
+     "y": 11.4,
+     "eq": "B",
+     "n": "x"
+    }
+   ],
+   "ballons": [
+    {
+     "x": 15.0,
+     "y": 2.2
+    }
+   ],
+   "fleches": [
+    {
+     "pts": [
+      [
+       14.0,
+       3.0
+      ],
+      [
+       7.3,
+       6.7
+      ]
+     ],
+     "type": "passe"
+    },
+    {
+     "pts": [
+      [
+       6.0,
+       8.3
+      ],
+      [
+       2.6,
+       12.2
+      ]
+     ],
+     "type": "passe"
+    },
+    {
+     "pts": [
+      [
+       15.0,
+       10.4
+      ],
+      [
+       15.4,
+       8.4
+      ]
+     ],
+     "type": "course"
+    }
+   ],
+   "cotes": false
+  }
+ }
+}</script>
 <script>/* ================= SCHÉMAS DE TERRAIN =================
    Une description déclarative par exercice, en mètres, origine en haut à gauche.
    Rendu en SVG aux couleurs de la charte, lisible en clair comme en sombre.      */
@@ -1088,6 +2410,51 @@ const fiche = id => FICHES[String(id)] || null;
 let PHYS = {};
 try { PHYS = JSON.parse(document.getElementById('phys').textContent); } catch (e) { }
 const fichePhys = id => PHYS[String(id)] || null;
+let TECH = {};
+try { TECH = JSON.parse(document.getElementById('tech').textContent); } catch (e) { }
+let CPA = {};
+try { CPA = JSON.parse(document.getElementById('cpa').textContent); } catch (e) { }
+
+/* Coups de pied arrêtés : deux séances par cycle, sur un ordre qui suit le carnet.
+   La touche ouvre la saison parce que c'est la remise en jeu la plus fréquente ;
+   la sortie de but tombe sur le cycle « sortir de pression » ; les corners arrivent
+   quand le groupe attaque et défend déjà en bloc. */
+const CPA_PLAN = {
+  'C0': ['A1', 'A6'], 'C1': ['A1', 'A4'], 'C2': ['A6', 'A1'], 'C3': ['A4', 'A6'],
+  'C4': ['A2', 'A4'], 'C5': ['A3', 'A5'], 'C6': ['A5', 'A3'], 'C7': ['A3', 'A6'],
+  'C8': ['A2', 'A4'], 'C9': ['A2', 'A1'], 'C10': ['A1', 'A2']
+};
+/* séances du cycle où un bloc arrêté est inséré en mode Auto */
+const CPA_SEANCES = [4, 8];
+function blocCpa(cycle, nCap, forceId) {
+  const cle = (cycle || '').split(' ')[0];
+  if (forceId && CPA[forceId]) return { id: forceId, source: 'ton choix' };
+  const plan = CPA_PLAN[cle] || ['A1', 'A2'];
+  const rang = CPA_SEANCES.indexOf(nCap);
+  const id = plan[rang >= 0 ? rang : 0];
+  return { id, source: 'le plan de la saison : ' + cle + ', séance ' + nCap + ' sur 8' };
+}
+
+/* Le bloc technique sert le comportement du jour : on le déduit de la « technique associée »
+   du comportement. Quand cette technique est défensive ou de course, on tourne sur les trois
+   fondamentaux contrôle / passe, qui sont le besoin réel du groupe. */
+const REGLES_TECH = [
+  [/passe longue|courte et longue/i, 'T4'],
+  [/dans la course/i, 'T5'],
+  [/remise/i, 'T6'],
+  [/conduite|semelle|utilisation du corps/i, 'T7'],
+  [/rebond|aérien|deuxième ballon/i, 'T8'],
+  [/contrôle orienté|orientation du corps|pied éloigné|contrôle vers l.avant|posture et orientation/i, 'T1'],
+  [/qualité de passe|passe simple|passe de sécurité|passe appuyée|passe rapide/i, 'T2'],
+  [/contrôle/i, 'T3']
+];
+const FONDAMENTAUX = ['T1', 'T2', 'T3'];
+function blocTechnique(comportement, nCap) {
+  const c = COMPS.find(x => x.nom === comportement);
+  const t = (c && c.technique) || '';
+  for (const [re, id] of REGLES_TECH) if (re.test(t)) return { id, source: 'la technique associée au comportement : « ' + t + ' »' };
+  return { id: FONDAMENTAUX[(nCap - 1) % 3], source: 'une rotation sur les trois fondamentaux contrôle et passe, la technique associée à ce comportement étant défensive (« ' + (t || 'non renseignée') + ' »)' };
+}
 const BLOC = {}; DATA.blocs.forEach(b => BLOC[b.id] = b);
 const COMPS = DATA.comportements;
 const FAMILLES = ['Avec ballon', 'Dernier tiers', 'Sans ballon', 'Transition attaque', 'Transition défense', 'Collectif'];
@@ -1306,13 +2673,40 @@ function genererSeance(ctx) {
   else if ((cyc === CYCLES[1] || cyc === CYCLES[2]) && nCap === 8) dPhys = 8;
   else dPhys = 6;
   if (choixPhys === 'Aucun') dPhys = 0;
+  /* séance courte : 15 min de physique sur 45, c'est un tiers de la séance. En « Auto »
+     on ramène le bloc à sa version courte et on rend le temps au football. */
+  let physRabattu = false;
+  if (choixPhys === 'Auto' && ctx.duree < 70 && dPhys > 8) { dPhys = 8; typePhys = 'Cardio'; physRabattu = true; }
 
   const idPhys = typePhys === 'Cardio'
     ? (dPhys === 6 ? rotation : 3 + rotation)
     : 6 + ((nCap + rotation - 2) % 6) + 1;
 
+  /* bloc technique */
+  let choixTech = ctx.technique || 'Intégré à la mise en route';
+  const limitePrec = derniere && derniere.bilan && derniere.bilan.limiteTechnique;
+  if (limitePrec && choixTech === 'Aucun') choixTech = 'Intégré à la mise en route';
+  let dTechSepare = choixTech === '8 min' ? 8 : choixTech === '12 min' ? 12 : 0;
+  /* un bloc technique séparé sur une séance courte étouffe le football : on le réintègre
+     à la mise en route, où il ne coûte rien. */
+  let techRabattu = false;
+  if (dTechSepare > 0 && ctx.duree - dPhys - 5 - dTechSepare < 30) {
+    dTechSepare = 0; choixTech = 'Intégré à la mise en route'; techRabattu = true;
+  }
+  const techInfo = choixTech === 'Aucun' ? null : blocTechnique(comportement, nCap);
+
+  /* bloc coup de pied arrêté — « Auto » ne l'insère qu'aux séances 4 et 8 du cycle */
+  const choixCpa = ctx.cpa || 'Auto';
+  let dCpa = choixCpa === '8 min' ? 8 : choixCpa === '12 min' ? 12 : 0;
+  let cpaAuto = false;
+  if (choixCpa === 'Auto') { cpaAuto = CPA_SEANCES.indexOf(nCap) >= 0; dCpa = cpaAuto ? 10 : 0; }
+  /* une séance courte n'a pas la place : le football passe avant les coups de pied arrêtés */
+  if (dCpa > 0 && ctx.duree - dPhys - 5 - dTechSepare - dCpa < 45) dCpa = 0;
+  const cpaInfo = dCpa > 0 ? blocCpa(cyc, nCap, ctx.cpaId) : null;
+  if (cpaInfo) cpaInfo.duree = dCpa;
+
   /* découpage du temps — en dessous de 45 min de football, quatre blocs ne tiennent plus */
-  const tempsFoot = ctx.duree - dPhys - 5;
+  const tempsFoot = ctx.duree - dPhys - 5 - dTechSepare - dCpa;
   const tot = ['Découvrir', 'Comprendre', 'Stabiliser'].indexOf(etape) >= 0;
   const format3 = tempsFoot < 45;
   let dMR, dS1, dS2, dMatch;
@@ -1413,7 +2807,9 @@ function genererSeance(ctx) {
         + (ctx.rotation && ctx.rotation !== 'Auto' ? 'Rotation forcée sur ' + rotation + '.'
           : memeComp.length + ' séance(s) déjà faite(s) sur ce comportement, donc rotation ' + rotation + ' : de quoi changer d’échauffement et de match d’une fois sur l’autre.') },
     { t: 'Répartition du temps sur ' + ctx.duree + ' minutes',
-      d: (dPhys ? 'Bloc physique ' + typePhys.toLowerCase() + ' de ' + dPhys + ' min (imposé par le cycle et le rang de la séance), ' : 'Pas de bloc physique, ')
+      d: (dPhys ? 'Bloc physique ' + typePhys.toLowerCase() + ' de ' + dPhys + ' min '
+            + (physRabattu ? '(ramené à sa version courte : sur une séance de ' + ctx.duree + ' min, 15 min de physique prendraient un tiers du temps), ' : '(imposé par le cycle et le rang de la séance), ')
+          : 'Pas de bloc physique, ')
         + '5 min de retour au calme, il reste ' + tempsFoot + ' min de football. '
         + (format3
           ? 'C’est trop court pour quatre blocs : à moins de 45 min de football, deux situations donneraient des séquences de 6 à 8 minutes, inexploitables. On passe donc à trois blocs — mise en route ' + dMR + ' min, une seule situation ' + (dS1 || dS2) + ' min, match ' + dMatch + ' min — en gardant '
@@ -1423,8 +2819,27 @@ function genererSeance(ctx) {
             : 'À l’étape ' + etape + ' on cherche le transfert : la situation 2 passe devant avec 30 % (' + dS2 + ' min) contre 25 % à la situation 1 (' + dS1 + ' min).')
             + ' Mise en route 15 % (' + dMR + ' min), le match récupère le reste (' + dMatch + ' min).') },
     ligneEx('mr', stdMR, cpMR, dMR, 'Adresse calculée : famille n°' + fi + ' × rotation ' + rotation + ' → module ' + stdMR),
+    ...(techInfo ? [{
+      t: 'Bloc technique : ' + TECH[techInfo.id].nom,
+      d: 'Ton groupe a des lacunes en contrôle et en passe, donc chaque séance embarque un bloc technique. '
+        + 'Celui-ci a été choisi d’après ' + techInfo.source + '. '
+        + (limitePrec ? 'Le bilan précédent a signalé une limite technique, donc le bloc est maintenu même si tu l’avais coupé. ' : '')
+        + (techRabattu ? 'Tu l’avais demandé en bloc séparé, mais la séance est trop courte pour ça : il aurait laissé moins de 30 min de football. Il est réintégré à la mise en route, où il ne coûte rien. '
+          : '')
+        + (choixTech === 'Intégré à la mise en route'
+          ? 'Il remplace la mise en route (' + dMR + ' min) : le temps de football n’est pas entamé, et l’échauffement sert directement le geste de la séance.'
+          : 'Il s’ajoute après la mise en route (' + dTechSepare + ' min), pris sur le temps de football.')
+    }] : []),
     ...(dS1 > 0 ? [ligneEx('s1', stdS1, cpS1, dS1, 'La bibliothèque ne contient qu’une situation 1 par comportement : celle de « ' + comportement + ' » est le module ' + stdS1)] : []),
     ...(dS2 > 0 ? [ligneEx('s2', stdS2, cpS2, dS2, 'La bibliothèque ne contient qu’une situation 2 par comportement : celle de « ' + comportement + ' » est le module ' + stdS2)] : []),
+    ...(cpaInfo ? [{
+      t: 'Coup de pied arrêté : ' + CPA[cpaInfo.id].nom,
+      d: (cpaAuto
+        ? 'Le carnet place un bloc arrêté aux séances 4 et 8 de chaque cycle — assez pour que ça rentre, assez peu pour ne pas manger le jeu. '
+        : 'Bloc arrêté forcé à ' + dCpa + ' min. ')
+        + 'Celui-ci vient de ' + cpaInfo.source + '. '
+        + 'Il est placé juste avant le match à thème (' + dCpa + ' min pris sur le temps de football) : ce qui vient d’être répété se rejoue immédiatement en situation.'
+    }] : []),
     ligneEx('match', stdMa, cpMa, dMatch, 'Adresse calculée : famille n°' + fi + ' × rotation ' + rotation + ' → module ' + stdMa),
     { t: 'Réglage : ' + reglage,
       d: reglage === 'Standard'
@@ -1437,6 +2852,9 @@ function genererSeance(ctx) {
     nCycle, nCap, comportement, famille: fam, source, etape, rotation, reglage,
     durees: { mr: dMR, s1: dS1, s2: dS2, match: dMatch, phys: dPhys, retour: 5 },
     modules: ids, raisons, variantes,
+    technique: choixTech,
+    tech: techInfo ? { id: techInfo.id, source: techInfo.source, integre: choixTech === 'Intégré à la mise en route', duree: dTechSepare } : null,
+    cpa: cpaInfo ? { id: cpaInfo.id, source: cpaInfo.source, duree: dCpa, auto: cpaAuto } : null,
     phys: { id: idPhys, type: typePhys, duree: dPhys, placement: typePhys === 'Cardio' ? 'après le match' : 'après la mise en route' },
     alerte, alerteCourt, alerteNiveau, noteEspace, format3,
     diagnostic: derniere && derniere.bilan ? derniere.bilan.diagnostic : '',
@@ -1451,10 +2869,14 @@ function blocsDeSeance(s) {
   let t = 0;
   const push = (kind, dur, extra) => { out.push(Object.assign({ kind, debut: t, duree: dur }, extra)); t += dur; };
   const avecPhys = s.durees.phys > 0;
-  push('mr', s.durees.mr, { mod: MOD[s.modules.mr] });
+  const bt = s.tech;
+  if (bt && bt.integre) push('tech', s.durees.mr, { tech: TECH[bt.id] });
+  else push('mr', s.durees.mr, { mod: MOD[s.modules.mr] });
+  if (bt && !bt.integre && bt.duree > 0) push('tech', bt.duree, { tech: TECH[bt.id] });
   if (avecPhys && s.phys.type !== 'Cardio') push('phys', s.durees.phys, { bloc: BLOC[s.phys.id] });
   if (s.durees.s1 > 0) push('s1', s.durees.s1, { mod: MOD[s.modules.s1] });
   if (s.durees.s2 > 0) push('s2', s.durees.s2, { mod: MOD[s.modules.s2] });
+  if (s.cpa && s.cpa.duree > 0 && CPA[s.cpa.id]) push('cpa', s.cpa.duree, { cpa: CPA[s.cpa.id] });
   push('match', s.durees.match, { mod: MOD[s.modules.match] });
   if (avecPhys && s.phys.type === 'Cardio') push('phys', s.durees.phys, { bloc: BLOC[s.phys.id] });
   push('retour', s.durees.retour, {});
@@ -1467,10 +2889,10 @@ const LIB_PHASE = {
   s2: ['Situation 2', 'Situation compacte 2'],
   match: ['Match à thème', 'Match compact']
 };
-const NOM_PHASE = { mr: 'Mise en route', s1: 'Situation 1', s2: 'Situation 2', match: 'Match à thème', phys: 'Bloc physique', retour: 'Retour au calme' };
+const NOM_PHASE = { mr: 'Mise en route', tech: 'Bloc technique', s1: 'Situation 1', s2: 'Situation 2', match: 'Match à thème', phys: 'Bloc physique', cpa: 'Coup de pied arrêté', retour: 'Retour au calme' };
 
 /* ================= BILAN (port de modEvaluationV18) ================= */
-function calcBilan(n, texte, historiqueScore) {
+function calcBilan(n, texte, historiqueScore, technique) {
   const { mr, s1, s2, match, groupe } = n;
   const score = Math.round((mr * .1 + s1 * .2 + s2 * .2 + match * .3 + groupe * .2) * 20);
   const mini = Math.min(mr, s1, s2, match, groupe);
@@ -1492,7 +2914,7 @@ function calcBilan(n, texte, historiqueScore) {
   if (brute === 'REVOIR' && h != null && h >= 80 && match >= 3) decision = 'CONSOLIDER';
   if (brute === 'CONSOLIDER' && h != null && h >= 82 && match >= 4) decision = 'AVANCER AVEC RAPPEL';
 
-  let diagnostic;
+  let diagnostic, action;
   if (match <= 2) diagnostic = 'Le comportement ne ressort pas encore suffisamment dans le match à thème.';
   else if (miniSitu <= 2 && match >= 4 && groupe >= 3) diagnostic = 'Le contenu semble compris, mais une situation était mal calibrée.';
   else if (groupe <= 2) diagnostic = "Le groupe n'a pas assez adhéré ou compris pour avancer sereinement.";
@@ -1519,15 +2941,22 @@ function calcBilan(n, texte, historiqueScore) {
   else
     pourquoi = 'Le match à thème (' + match + '/5) et le groupe (' + groupe + '/5) confirment que le comportement est suffisamment installé.';
 
-  let action;
   if (decision === 'REVOIR') action = 'Reprendre le même comportement avec une seule règle, plus d’espace ou un surnombre, puis vérifier de nouveau dans le match.';
   else if (decision === 'CONSOLIDER') action = 'Garder le même comportement mais changer la situation ou le niveau de difficulté. Objectif : plus de répétitions réussies.';
   else if (decision === 'AVANCER AVEC RAPPEL') action = 'Passer à l’étape suivante en gardant 5 à 10 minutes de rappel sur ' + pointFaible + '.';
   else action = 'Passer à la suite. Garder un rappel seulement si le comportement disparaît dans le jeu libre.';
 
+  /* la note technique ne change pas le score — elle dit si l'échec vient de l'exécution
+     plutôt que de la compréhension, ce qui appelle une réponse différente */
+  const limiteTechnique = technique > 0 && technique <= 2 && Math.min(s1, s2, match) <= 3;
+  if (limiteTechnique) {
+    diagnostic = 'Le comportement n’est pas apparu, mais la note technique (' + technique + '/5) dit que c’est l’exécution qui a bloqué, pas la compréhension.';
+    pourquoi = 'Simplifier la consigne tactique ne changerait rien : les joueuses ont vu la solution, elles ont raté le geste. On garde le comportement et on attaque le contrôle et la passe.';
+    action = 'Garde le même comportement et augmente le volume technique : passe le bloc technique en « intégré » et allonge-le si besoin. Simplifier la consigne tactique ne servirait à rien.';
+  }
   return {
     notes: n, texte: texte || '', score, pointFaible, decision, decisionBrute: brute,
-    diagnostic, reglage, pourquoi, action,
+    diagnostic, reglage, pourquoi, action, technique: technique || 0, limiteTechnique,
     confiance: (texte || '').trim() ? 'Élevée' : 'Moyenne'
   };
 }
@@ -1607,6 +3036,66 @@ function blocHTML(b, s, i) {
   const fin = b.debut + b.duree;
   const rail = '<div class="rail"><span class="t num">' + b.debut + '′</span><span class="t2 num">→ ' + fin + '′</span>'
     + '<span class="dur num">' + b.duree + ' min</span></div>';
+
+  if (b.kind === 'tech') {
+    const t = b.tech;
+    if (!t) return '';
+    const note = (store.read().notes || {})['T' + t.nom];
+    return '<article class="blk" data-kind="tech">' + rail + '<div class="blk-b">'
+      + '<div class="blk-h"><div class="line1"><span class="eyebrow">Bloc technique · ' + esc(t.famille) + '</span>'
+      + pill(s.tech.integre ? 'À la place de la mise en route' : 'Ajouté', 'accent')
+      + (note ? pill('Ta note', 'ok') : '') + '</div><h4>' + esc(t.nom) + '</h4>'
+      + '<p class="hint">Choisi d’après ' + esc(s.tech.source) + '.</p></div>'
+      + '<div class="sc-wrap"><button class="sc-zoom" data-zoomt="' + esc(t.nom) + '" aria-label="Agrandir le schéma">'
+      + dessinerSchema(t.schema) + '</button>' + legendeSchema(t.schema)
+      + '<p class="sc-hint no-print">Toucher pour agrandir</p></div>'
+      + '<div class="rule"><b>À annoncer aux joueuses</b>' + esc(t.court) + '</div>'
+      + '<ol class="ateliers">' + t.ateliers.map((a, k) => '<li><b>Atelier ' + (k + 1) + ' — ' + esc(a.nom) + '</b>'
+          + '<span class="quoi">' + esc(a.quoi) + '</span><span class="cle">' + esc(a.cle) + '</span></li>').join('') + '</ol>'
+      + '<div class="rule"><b>Critère de réussite</b>' + esc(t.critere) + '</div>'
+      + (note ? '<div class="ma-note"><b>Ta note</b>' + esc(note.texte) + '</div>' : '')
+      + '<details class="manual"><summary>Mode d’emploi · 2 minutes</summary><div class="manual-b">'
+      + '<section><h5>Erreurs fréquentes</h5><ul class="err">'
+      + t.erreurs.map(e => '<li><b>' + esc(e.quoi) + '</b><span class="cause">' + esc(e.pourquoi)
+          + '</span><span class="corr">' + esc(e.corriger) + '</span></li>').join('') + '</ul></section>'
+      + '<section><h5>Si ça part en vrille</h5><p>' + esc(t.derive) + '</p></section>'
+      + '<section><h5>Pourquoi ce bloc</h5><p>' + esc(t.pourquoi) + '</p></section>'
+      + '</div></details>'
+      + '<div class="blk-foot no-print"><button class="btn btn-s" data-notet="' + esc(t.nom) + '">'
+      + (note ? 'Modifier ma note' : 'Noter ce bloc') + '</button></div>'
+      + '</div></article>';
+  }
+
+  if (b.kind === 'cpa') {
+    const a = b.cpa; if (!a) return '';
+    const note = (store.read().notes || {})['A' + a.nom];
+    return '<article class="blk" data-kind="cpa">' + rail + '<div class="blk-b">'
+      + '<div class="blk-h"><div class="line1"><span class="eyebrow">Coup de pied arrêté · ' + esc(a.famille) + '</span>'
+      + pill(s.cpa && s.cpa.auto ? 'Placé par le plan' : 'Choisi', 'accent')
+      + (note ? pill('Ta note', 'ok') : '') + '</div><h4>' + esc(a.nom) + '</h4>'
+      + '<p class="hint">Choisi d’après ' + esc(s.cpa ? s.cpa.source : '') + '.</p></div>'
+      + (a.schema ? '<div class="sc-wrap"><button class="sc-zoom" data-zooma="' + esc(a.nom) + '" aria-label="Agrandir le schéma">'
+        + dessinerSchema(a.schema) + '</button>' + legendeSchema(a.schema)
+        + '<p class="sc-hint no-print">Toucher pour agrandir</p></div>' : '')
+      + '<div class="rule"><b>À annoncer aux joueuses</b>' + esc(a.court) + '</div>'
+      + '<ul class="principes"><li class="pr-t">Les trois règles à ne pas négocier</li>'
+      + a.principes.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>'
+      + '<ol class="ateliers">' + a.ateliers.map((x, k) => '<li><b>Atelier ' + (k + 1) + ' — ' + esc(x.nom) + '</b>'
+        + '<span class="quoi">' + esc(x.quoi) + '</span><span class="cle">' + esc(x.cle) + '</span></li>').join('') + '</ol>'
+      + '<div class="rule"><b>Critère de réussite</b>' + esc(a.critere) + '</div>'
+      + (note ? '<div class="ma-note"><b>Ta note</b>' + esc(note.texte) + '</div>' : '')
+      + '<details class="manual"><summary>Mode d’emploi · 2 minutes</summary><div class="manual-b">'
+      + '<section><h5>Erreurs fréquentes</h5><ul class="err">'
+      + a.erreurs.map(e => '<li><b>' + esc(e.quoi) + '</b><span class="cause">' + esc(e.pourquoi)
+        + '</span><span class="corr">' + esc(e.corriger) + '</span></li>').join('') + '</ul></section>'
+      + '<section><h5>Si ça part en vrille</h5><p>' + esc(a.derive) + '</p></section>'
+      + '<section><h5>Pourquoi ce bloc</h5><p>' + esc(a.pourquoi) + '</p></section>'
+      + '</div></details>'
+      + '<div class="blk-foot no-print"><button class="btn btn-s" data-swapa="1">Changer de coup de pied arrêté</button>'
+      + '<button class="btn btn-s" data-notea="' + esc(a.nom) + '">'
+      + (note ? 'Modifier ma note' : 'Noter ce bloc') + '</button></div>'
+      + '</div></article>';
+  }
 
   if (b.kind === 'phys') {
     const p = b.bloc;
@@ -1766,7 +3255,97 @@ function renderSeance(s) {
   out.querySelectorAll('[data-zoom]').forEach(btn => btn.onclick = () => ouvrirSchema(+btn.dataset.zoom));
   out.querySelectorAll('[data-zoomp]').forEach(btn => btn.onclick = () => ouvrirSchemaPhys(+btn.dataset.zoomp));
   out.querySelectorAll('[data-notep]').forEach(btn => btn.onclick = () => ouvrirNoteExercice('P' + btn.dataset.notep));
+  out.querySelectorAll('[data-notet]').forEach(btn => btn.onclick = () => ouvrirNoteExercice('T' + btn.dataset.notet));
+  out.querySelectorAll('[data-zoomt]').forEach(btn => btn.onclick = () => ouvrirSchemaTech(btn.dataset.zoomt));
+  out.querySelectorAll('[data-zooma]').forEach(btn => btn.onclick = () => ouvrirSchemaCpa(btn.dataset.zooma));
+  out.querySelectorAll('[data-notea]').forEach(btn => btn.onclick = () => ouvrirNoteExercice('A' + btn.dataset.notea));
+  out.querySelectorAll('[data-swapa]').forEach(btn => btn.onclick = ouvrirSwapCpa);
   const bn = out.querySelector('#btnNoter'); if (bn) bn.onclick = noterCourante;
+  renderFiche(s, blocs, c, et, materiel);
+}
+
+/* ============ FICHE TERRAIN — une page, à glisser dans la poche ============
+   Rendu séparé du déroulé complet : ici on ne garde que ce qu'on relit
+   entre deux exercices, plot en main.                                        */
+function ligneFiche(b, s, motCleSeance) {
+  const t = b.debut + '′<i>' + b.duree + '′</i>';
+  const bloc = (kind, eyebrow, titre, meta, ateliers, dire, oeil, sp) =>
+    '<div class="fb" data-kind="' + kind + '">'
+    + '<div class="fbt num">' + t + '</div>'
+    + '<div class="fbs">' + (sp ? dessinerSchema(sp) : '') + '</div>'
+    + '<div class="fbc"><p class="fbe">' + esc(eyebrow) + '</p><h4>' + esc(titre) + '</h4>'
+    + (meta ? '<p class="fbm">' + esc(meta) + '</p>' : '')
+    + (dire ? '<p class="fba">' + esc(dire) + '</p>' : '')
+    + (ateliers && ateliers.length
+      ? '<p class="fbn">' + ateliers.map((a, k) => '<span><i>' + (k + 1) + '</i>' + esc(a) + '</span>').join('') + '</p>' : '')
+    + (oeil && oeil.length
+      ? '<p class="fbw"><b>À voir</b>' + oeil.filter(Boolean).map(x => '<span>' + esc(x) + '</span>').join('') + '</p>' : '')
+    + '</div></div>';
+
+  if (b.kind === 'tech') {
+    const t2 = b.tech; if (!t2) return '';
+    return bloc('tech', 'Technique · ' + t2.famille, t2.nom,
+      t2.ateliers.length + ' ateliers · rotation',
+      t2.ateliers.map(a => a.nom), t2.court, [t2.critere], t2.schema);
+  }
+  if (b.kind === 'phys') {
+    const p = b.bloc, fp = fichePhys(p.id);
+    const org = s.effectif <= 8 ? p.org68 : s.effectif <= 14 ? p.org914 : p.org1522;
+    return bloc('phys', 'Physique · ' + p.type, p.nom,
+      p.format + ' · ' + org + ' · ' + p.espace,
+      fp && fp.ateliers.length > 1 ? fp.ateliers.map(a => a.nom) : null,
+      fp ? fp.court : p.consignes, [p.consignes], fp && fp.schema);
+  }
+  if (b.kind === 'cpa') {
+    const a = b.cpa; if (!a) return '';
+    return bloc('cpa', 'Coup de pied arrêté · ' + a.famille, a.nom,
+      a.ateliers.map((x, k) => (k + 1) + '. ' + x.nom).join(' · '),
+      a.principes, a.court, [a.critere.replace(/^Objectif : /, '').split('.')[0]], a.schema);
+  }
+  if (b.kind === 'retour') {
+    const ref = MOD[s.modules.s1] || {};
+    return bloc('retour', 'Retour au calme', 'Fermer sur le comportement', '', null,
+      ref.question || 'Qu’est-ce qui vous a aidées à réussir aujourd’hui ?',
+      ['Valoriser un fait précis', 'Noter la séance']);
+  }
+  const mod = b.mod, f = fiche(mod.id);
+  const oeil = [mod.critere1, mod.critere2];
+  if (mod.motCle && mod.motCle !== motCleSeance) oeil.push('« ' + mod.motCle + ' »');
+  return bloc(b.kind, NOM_PHASE[b.kind], mod.nom,
+    mod.dimensions + ' · ' + mod.organisation, null,
+    f ? f.court : mod.consignes, oeil, f && f.schema);
+}
+
+function renderFiche(s, blocs, c, et, materiel) {
+  const el = $('#ficheOut'); if (!el) return;
+  /* au-delà de six blocs la page se resserre d'un cran plutôt que de déborder */
+  el.className = 'fiche' + (blocs.length >= 7 ? ' dense' : '');
+  const mq = Object.assign({}, MARQUE_DEF, store.read().marque || {});
+  /* on fusionne les listes de matériel : « plots » et « 16 plots » ne font qu'une ligne,
+     et on garde celle qui porte la quantité, plus utile pour préparer le sac. */
+  const brut = materiel.map(m => m.split(' — ')[1]).filter(Boolean)
+    .join(', ').split(/\s*[,;]\s*/).map(x => x.trim().toLowerCase()).filter(Boolean);
+  const par = {};
+  brut.forEach(x => {
+    const cle = x.replace(/^\d+\s*(?:[àa-]\s*\d+\s*)?/, '').replace(/s\b/g, '');
+    const chiffre = /^\d/.test(x);
+    if (!par[cle] || (chiffre && !/^\d/.test(par[cle]))) par[cle] = x;
+  });
+  const mat = Object.values(par);
+  el.innerHTML =
+    '<div class="fh">' + (mq.logo ? '<img src="' + mq.logo + '" alt="">' : '')
+    + '<div class="fh-t"><b>' + esc(mq.nom) + '</b><span>' + esc(mq.sous) + '</span></div>'
+    + '<div class="fh-d num"><b>' + frDate(s.date) + '</b>'
+    + '<span>' + s.effectif + ' joueuses · ' + s.duree + ' min · ' + esc(s.espace) + '</span></div></div>'
+    + '<div class="fo"><div class="fo-l"><p class="fbe">' + esc(s.cycle) + ' · séance ' + s.nCap + '/8 · '
+    + esc(s.etape) + (s.reglage !== 'Standard' ? ' · réglage ' + esc(s.reglage.toLowerCase()) : '') + '</p>'
+    + '<h3>' + esc(s.comportement) + '</h3>'
+    + '<p class="fo-w">' + esc(c.observe || '') + '</p></div>'
+    + '<div class="fo-k"><span>Mot-clé</span><b>' + esc(c.motCle || '') + '</b></div></div>'
+    + '<div class="fbs-l">' + blocs.map(b => ligneFiche(b, s, c.motCle)).join('') + '</div>'
+    + '<div class="ff"><div><b>Matériel à sortir</b>' + esc(mat.join(' · ') || '—') + '</div>'
+    + '<div><b>Notes du jour · à reporter dans le carnet</b>'
+    + '<span class="ff-l"></span><span class="ff-l"></span><span class="ff-l"></span></div></div>';
 }
 
 /* ce que le bilan de cette séance impose à la suivante */
@@ -1784,7 +3363,8 @@ function blocNotation(s) {
   if (!b) {
     return '<div class="seance-head"><h3>Après la séance</h3></div>'
       + '<div class="cta"><div><p class="cta-t">Note la séance en cinq critères</p>'
-      + '<p class="hint">Mise en route, situation 1, situation 2, match à thème, groupe — de 1 à 5. '
+      + '<p class="hint">Mise en route, situation 1, situation 2, match à thème, groupe — de 1 à 5, '
+      + 'plus la qualité technique du jour, qui ne compte pas dans le score mais garde le bloc contrôle et passe quand il faut. '
       + 'Le carnet en tire un score, une décision pédagogique et le réglage de la séance suivante. '
       + 'Sans notation, il se contente d’avancer dans le cycle.</p></div>'
       + '<button class="btn btn-primary" id="btnNoter">Noter la séance</button></div>';
@@ -1793,7 +3373,9 @@ function blocNotation(s) {
   return '<div class="seance-head"><h3>Bilan de la séance</h3></div>'
     + '<div class="cta"><div><div class="d-top" style="margin-bottom:7px">'
     + pill(b.score + '/100') + pill(b.decision, cls) + pill('Réglage : ' + b.reglage, 'accent')
-    + pill('Point faible : ' + b.pointFaible) + '</div>'
+    + pill('Point faible : ' + b.pointFaible)
+    + (b.limiteTechnique ? pill('Limite technique', 'warn') : '')
+    + (b.technique ? pill('Technique ' + b.technique + '/5') : '') + '</div>'
     + '<p class="hint">' + esc(b.diagnostic) + ' ' + esc(implicationBilan(Object.assign({ comportement: s.comportement }, b))) + '</p></div>'
     + '<button class="btn" id="btnNoter">Modifier</button></div>';
 }
@@ -1879,6 +3461,51 @@ function ouvrirSchema(id) {
     [{ label: 'Fermer', primary: true, onClick: fermerDialog }]);
 }
 
+function ouvrirSchemaTech(nom) {
+  const t = Object.values(TECH).find(x => x.nom === nom);
+  if (!t) return;
+  ouvrirDialog(t.nom,
+    '<div class="sc-wrap">' + dessinerSchema(t.schema) + legendeSchema(t.schema) + '</div>'
+    + '<div class="rule"><b>À annoncer aux joueuses</b>' + esc(t.court) + '</div>'
+    + '<ol class="ateliers">' + t.ateliers.map((a, k) => '<li><b>Atelier ' + (k + 1) + ' — ' + esc(a.nom) + '</b>'
+        + '<span class="quoi">' + esc(a.quoi) + '</span><span class="cle">' + esc(a.cle) + '</span></li>').join('') + '</ol>'
+    + '<div class="rule"><b>Critère de réussite</b>' + esc(t.critere) + '</div>',
+    [{ label: 'Fermer', primary: true, onClick: fermerDialog }]);
+}
+
+function ouvrirSchemaCpa(nom) {
+  const a = Object.values(CPA).find(x => x.nom === nom);
+  if (!a) return;
+  ouvrirDialog(a.nom,
+    '<div class="sc-wrap">' + dessinerSchema(a.schema) + legendeSchema(a.schema) + '</div>'
+    + '<div class="rule"><b>À annoncer aux joueuses</b>' + esc(a.court) + '</div>'
+    + '<ul class="principes"><li class="pr-t">Les trois règles à ne pas négocier</li>'
+    + a.principes.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>'
+    + '<ol class="ateliers">' + a.ateliers.map((x, k) => '<li><b>Atelier ' + (k + 1) + ' — ' + esc(x.nom) + '</b>'
+      + '<span class="quoi">' + esc(x.quoi) + '</span><span class="cle">' + esc(x.cle) + '</span></li>').join('') + '</ol>'
+    + '<div class="rule"><b>Critère de réussite</b>' + esc(a.critere) + '</div>',
+    [{ label: 'Fermer', primary: true, onClick: fermerDialog }]);
+}
+
+/* remplacer le coup de pied arrêté du jour par un autre de la bibliothèque */
+function ouvrirSwapCpa() {
+  if (!courante || !courante.cpa) return;
+  const actuel = courante.cpa.id;
+  ouvrirDialog('Changer de coup de pied arrêté',
+    '<p class="hint">Le carnet a placé « ' + esc(CPA[actuel].nom) + ' » d’après ' + esc(courante.cpa.source)
+    + '. Tu peux en prendre un autre : la durée du bloc ne change pas.</p>'
+    + '<div class="lib">' + Object.keys(CPA).map(k => '<button class="card swapc' + (k === actuel ? ' actif' : '')
+      + '" data-cpa="' + k + '"><div class="meta">' + pill(CPA[k].famille) + (k === actuel ? pill('Actuel', 'accent') : '') + '</div>'
+      + '<h4>' + esc(CPA[k].nom) + '</h4><p class="txt">' + esc(CPA[k].principes[0]) + '</p></button>').join('') + '</div>',
+    [{ label: 'Fermer', onClick: fermerDialog }],
+    body => body.querySelectorAll('[data-cpa]').forEach(b => b.onclick = () => {
+      courante.cpa.id = b.dataset.cpa;
+      courante.cpa.source = 'ton choix, en remplacement de ce que le plan proposait';
+      courante.cpa.auto = false;
+      fermerDialog(); renderSeance(courante); toast('Bloc arrêté remplacé');
+    }));
+}
+
 function ouvrirSchemaPhys(id) {
   const p = BLOC[id], fp = fichePhys(id);
   if (!p || !fp) return;
@@ -1893,8 +3520,11 @@ function ouvrirSchemaPhys(id) {
 
 /* ================= NOTE PERSONNELLE SUR UN EXERCICE ================= */
 function ouvrirNoteExercice(id) {
-  const phys = String(id).charAt(0) === 'P';
-  const mod = phys ? BLOC[+String(id).slice(1)] : MOD[id];
+  const c0 = String(id).charAt(0);
+  const mod = c0 === 'P' ? BLOC[+String(id).slice(1)]
+    : c0 === 'T' && isNaN(+String(id).slice(1)) ? Object.values(TECH).find(x => x.nom === String(id).slice(1))
+    : c0 === 'A' && isNaN(+String(id).slice(1)) ? Object.values(CPA).find(x => x.nom === String(id).slice(1))
+    : MOD[id];
   if (!mod) return;
   const db = store.read();
   const cur = (db.notes || {})[id];
@@ -2006,19 +3636,23 @@ function ouvrirEval(id) {
   const s = db.seances.find(x => x.id === id); if (!s) return;
   const n = (s.bilan && s.bilan.notes) || { mr: 0, s1: 0, s2: 0, match: 0, groupe: 0 };
   const lignes = [['mr', 'Mise en route'], ['s1', 'Situation 1'], ['s2', 'Situation 2'], ['match', 'Match à thème'], ['groupe', 'Joueuses / groupe']];
+  let tech = (s.bilan && s.bilan.technique) || 0;
   ouvrirDialog('Bilan express · ' + frDate(s.date),
     '<p class="hint">Note chaque bloc de 1 (fragile) à 5 (autonome). Le carnet en déduit la décision pédagogique et le réglage de la séance suivante.</p>'
     + '<div class="stack">'
     + lignes.map(l => '<div class="field"><label>' + l[1] + '</label><div class="scale" data-k="' + l[0] + '">'
       + [1, 2, 3, 4, 5].map(v => '<button type="button" data-v="' + v + '" aria-pressed="' + (n[l[0]] === v) + '">' + v + '</button>').join('')
       + '</div></div>').join('')
+    + '<div class="field"><label>Qualité technique · contrôle et passe <span class="opt">hors score</span></label>'
+    + '<div class="scale" data-k="tech">' + [1,2,3,4,5].map(v => '<button type="button" data-v="' + v + '" aria-pressed="' + (tech === v) + '">' + v + '</button>').join('') + '</div>'
+    + '<p class="hint">Ne compte pas dans la note sur 100 — elle sert à savoir si le comportement a manqué par incompréhension ou par exécution.</p></div>'
     + '<div class="field"><label for="eTxt">Ressenti / faits observés</label><textarea id="eTxt" placeholder="Ce qui a marché, ce qui a bloqué…">' + esc((s.bilan && s.bilan.texte) || '') + '</textarea></div>'
     + '<div id="eOut"></div></div>',
     [{ label: 'Annuler', onClick: fermerDialog },
     {
       label: 'Enregistrer le bilan', primary: true, onClick: () => {
         if (Object.values(n).some(v => !v)) { toast('Note les 5 blocs'); return; }
-        s.bilan = calcBilan(n, $('#eTxt').value, scoreHistorique(s));
+        s.bilan = calcBilan(n, $('#eTxt').value, scoreHistorique(s), tech);
         s.statut = 'Réalisée';
         store.save(); fermerDialog(); renderHistorique();
         if (courante && courante.id === s.id) renderSeance(courante);
@@ -2028,15 +3662,16 @@ function ouvrirEval(id) {
     body => {
       const apercu = () => {
         if (Object.values(n).some(v => !v)) { $('#eOut').innerHTML = ''; return; }
-        const b = calcBilan(n, $('#eTxt').value, scoreHistorique(s));
+        const b = calcBilan(n, $('#eTxt').value, scoreHistorique(s), tech);
         $('#eOut').innerHTML = '<div class="decision"><div class="d-top">' + pill(b.score + '/100')
           + pill(b.decision, b.decision === 'REVOIR' ? 'alert' : b.decision === 'CONSOLIDER' ? 'warn' : 'ok')
-          + pill('Réglage : ' + b.reglage, 'accent') + '</div>'
+          + pill('Réglage : ' + b.reglage, 'accent')
+          + (b.limiteTechnique ? pill('Limite technique', 'warn') : '') + '</div>'
           + '<p class="why">' + esc(b.diagnostic) + ' ' + esc(b.pourquoi) + '</p>'
           + '<p class="why"><b>Prochaine séance :</b> ' + esc(b.action) + '</p></div>';
       };
       body.querySelectorAll('.scale').forEach(sc => sc.querySelectorAll('button').forEach(b => b.onclick = () => {
-        n[sc.dataset.k] = +b.dataset.v;
+        if (sc.dataset.k === 'tech') tech = +b.dataset.v; else n[sc.dataset.k] = +b.dataset.v;
         sc.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
         apercu();
       }));
@@ -2045,13 +3680,56 @@ function ouvrirEval(id) {
     });
 }
 
+/* ================= CALENDRIER RÉEL ================= */
+/* Estimations zone B (Nantes / Angers) à vérifier : Pablo peut les corriger dans l'onglet Saison. */
+const COUPURES_DEF = [
+  { nom: 'Vacances de la Toussaint', debut: '2026-10-17', fin: '2026-11-02' },
+  { nom: 'Vacances de Noël',         debut: '2026-12-19', fin: '2027-01-04' },
+  { nom: 'Vacances d’hiver',         debut: '2027-02-13', fin: '2027-02-28' },
+  { nom: 'Vacances de printemps',    debut: '2027-04-10', fin: '2027-04-26' }
+];
+const coupures = () => { const db = store.read(); return db.coupures || (db.coupures = COUPURES_DEF.map(c => Object.assign({}, c))); };
+const parSemaine = () => (store.read().parSemaine || 2);
+
+function bornesCycle(c) {
+  const m = c.periode.match(/(\d{1,2})\/(\d{1,2})\s*[-–]\s*(\d{1,2})\/(\d{1,2})/);
+  if (!m) return null;
+  const anDeb = +m[2] >= 8 ? 2026 : 2027, anFin = +m[4] >= 8 ? 2026 : 2027;
+  return [new Date(anDeb, +m[2] - 1, +m[1]), new Date(anFin, +m[4] - 1, +m[3])];
+}
+
+/* combien de séances ce cycle peut-il réellement accueillir, coupures déduites */
+function capaciteCycle(c) {
+  const b = bornesCycle(c);
+  if (!b) return { possibles: 8, perdues: 0, coupures: [] };
+  const jour = 864e5;
+  let jours = Math.round((b[1] - b[0]) / jour) + 1, perdus = 0;
+  const touchees = [];
+  coupures().forEach(v => {
+    const d = new Date(v.debut + 'T00:00:00'), f = new Date(v.fin + 'T00:00:00');
+    const deb = new Date(Math.max(b[0], d)), fin = new Date(Math.min(b[1], f));
+    const n = Math.round((fin - deb) / jour) + 1;
+    if (n > 0) { perdus += n; touchees.push(v.nom); }
+  });
+  const possibles = Math.floor((jours - perdus) / 7 * parSemaine());
+  return { possibles, perdues: Math.round(perdus / 7 * parSemaine()), coupures: touchees, jours };
+}
+
 /* ================= VUE SAISON ================= */
 function renderSaison() {
   const db = store.read();
   const faites = db.seances.filter(s => s.statut === 'Réalisée');
   const cycleActuel = cycleParDate(iso(new Date()));
+  const cap = DATA.cycles.map(capaciteCycle);
+  const totPoss = cap.reduce((a, x) => a + x.possibles, 0);
   $('#v-saison').innerHTML =
-    '<div class="seance-head"><h3>Plan annuel</h3><span class="hint">11 cycles · 8 séances par cycle · comportement collectif recherché</span></div>'
+    '<div class="seance-head"><h3>Plan annuel</h3><span class="hint">11 cycles · 8 comportements prévus par cycle</span>'
+    + '<span style="margin-left:auto" class="no-print"><button class="btn btn-s" id="btnCal">Calendrier et coupures</button></span></div>'
+    + '<div class="cta" style="margin-bottom:12px"><div>'
+    + '<p class="cta-t">' + totPoss + ' séances réellement possibles sur les 88 prévues</p>'
+    + '<p class="hint">À ' + parSemaine() + (parSemaine() > 1 ? ' séances par semaine' : ' séance par semaine') + ', coupures déduites. '
+    + (totPoss < 88 ? 'Le plan est calibré pour une saison sans interruption : environ ' + (88 - totPoss) + ' séances ne trouveront pas de créneau. Les comportements concernés sont marqués « hors calendrier » ci-dessous.' : '')
+    + '</p></div></div>'
     + '<div class="cycles">' + DATA.cycles.map(c => {
       const sc = faites.filter(s => s.cycle === c.nom);
       const n = Math.min(sc.length, 8);
@@ -2059,9 +3737,11 @@ function renderSaison() {
       const path = DATA.referentiel.filter(r => r.cycle === c.nom);
       const couverts = [...new Set(sc.map(s => s.comportement))];
       const sautes = path.filter(r => r.n <= sc.length && couverts.indexOf(r.comportement) < 0).map(r => r.comportement);
+      const cap = capaciteCycle(c);
       return '<details class="cyc' + (est ? ' current' : '') + '"' + (est ? ' open' : '') + '>'
         + '<summary class="cyc-h"><h4>' + esc(c.nom) + '</h4>'
         + pill(c.periode) + (est ? pill('En cours', 'accent') : '')
+        + (cap.possibles < 8 ? pill(cap.possibles + (cap.possibles > 1 ? ' séances possibles' : ' séance possible'), 'warn') : '')
         + '<span class="bar"><i style="width:' + (n / 8 * 100) + '%"></i></span>'
         + '<span class="hint num">' + sc.length + '/8</span></summary>'
         + '<div class="cyc-b">'
@@ -2071,29 +3751,128 @@ function renderSaison() {
         + kv('Technique', c.technique) + kv('Tactique', c.tactique)
         + kv('Physique', c.physique) + kv('Mental', c.mental)
         + '</div>'
+        + (cap.possibles < 8
+          ? '<p class="alerte-cal">Ce cycle ne contient que <b>' + cap.possibles + (cap.possibles > 1 ? ' créneaux' : ' créneau') + '</b> à ' + parSemaine() + (parSemaine() > 1 ? ' séances par semaine' : ' séance par semaine')
+            + (cap.coupures.length ? ', ' + esc(cap.coupures.join(' et ').toLowerCase()) + ' déduites' : '')
+            + '. ' + (8 - cap.possibles === 1
+              ? 'Le dernier comportement ne sera pas travaillé si tu suis le plan tel quel.'
+              : 'Les ' + (8 - cap.possibles) + ' derniers comportements ne seront pas travaillés si tu suis le plan tel quel.') + '</p>'
+          : '')
         + (sc.length ? '<p class="hint">' + sc.length + ' séance(s) réalisée(s) · ' + couverts.length + ' comportement(s) travaillé(s)'
           + (sautes.length ? ' · non abordé(s) pour l’instant : ' + esc(sautes.join(', ')) + ' — la boucle « revoir / consolider » a gardé le groupe sur le même objectif' : '') + '</p>' : '')
         + '<div class="path">' + path.map(r => {
           const nb = sc.filter(s => s.comportement === r.comportement).length;
           const saute = r.n <= sc.length && nb === 0;
           const now = est && r.n === sc.length + 1;
-          return '<div class="step' + (nb ? ' done' : '') + (now ? ' now' : '') + '">'
+          const horsCal = r.n > cap.possibles;
+          return '<div class="step' + (nb ? ' done' : '') + (now ? ' now' : '') + (horsCal && !nb ? ' hors' : '') + '">'
             + '<span class="n">' + r.n + '</span><span class="lbl">' + esc(r.comportement) + '</span>'
-            + '<span>' + (now ? pill('Prochaine', 'accent') : nb ? pill(nb > 1 ? 'Faite ×' + nb : 'Faite', 'ok') : saute ? pill('Non abordée', 'warn') : '') + '</span>'
+            + '<span>' + (now ? pill('Prochaine', 'accent') : nb ? pill(nb > 1 ? 'Faite ×' + nb : 'Faite', 'ok')
+                : saute ? pill('Non abordée', 'warn') : horsCal ? pill('Hors calendrier') : '') + '</span>'
             + '<span class="logic">' + esc(r.logique) + '</span></div>';
         }).join('') + '</div>'
         + '</div></details>';
     }).join('') + '</div>';
+  const bc = $('#btnCal'); if (bc) bc.onclick = ouvrirCalendrier;
+}
+
+function ouvrirCalendrier() {
+  const db = store.read();
+  const cs = coupures();
+  ouvrirDialog('Calendrier et coupures',
+    '<p class="hint">Vacances scolaires, trêve hivernale, tournois : tout ce qui supprime des séances. '
+    + 'Les dates ci-dessous sont une estimation zone B — corrige-les avec ton vrai calendrier.</p>'
+    + '<div class="field"><label for="calSem">Séances par semaine</label>'
+    + '<input type="number" id="calSem" min="1" max="4" value="' + parSemaine() + '"></div>'
+    + '<div id="calListe">' + cs.map((c, i) => '<div class="coupure" data-i="' + i + '">'
+      + '<input type="text" class="cn" value="' + esc(c.nom) + '" aria-label="Nom de la coupure">'
+      + '<input type="date" class="cd" value="' + c.debut + '" aria-label="Début">'
+      + '<input type="date" class="cf" value="' + c.fin + '" aria-label="Fin">'
+      + '<button class="icon-btn csup" aria-label="Supprimer">✕</button></div>').join('') + '</div>'
+    + '<button class="btn btn-s" id="calAdd">+ Ajouter une coupure</button>',
+    [{ label: 'Annuler', onClick: fermerDialog },
+     { label: 'Enregistrer', primary: true, onClick: () => {
+        db.parSemaine = Math.max(1, Math.min(4, +$('#calSem').value || 2));
+        db.coupures = [...document.querySelectorAll('#calListe .coupure')].map(el => ({
+          nom: el.querySelector('.cn').value.trim() || 'Coupure',
+          debut: el.querySelector('.cd').value, fin: el.querySelector('.cf').value
+        })).filter(c => c.debut && c.fin && c.debut <= c.fin);
+        store.save(); fermerDialog(); renderSaison(); toast('Calendrier mis à jour');
+      } }],
+    body => {
+      const brancher = () => body.querySelectorAll('.csup').forEach(b => b.onclick = () => { b.closest('.coupure').remove(); });
+      brancher();
+      body.querySelector('#calAdd').onclick = () => {
+        const d = document.createElement('div');
+        d.className = 'coupure';
+        d.innerHTML = '<input type="text" class="cn" value="Coupure" aria-label="Nom de la coupure">'
+          + '<input type="date" class="cd" aria-label="Début"><input type="date" class="cf" aria-label="Fin">'
+          + '<button class="icon-btn csup" aria-label="Supprimer">✕</button>';
+        body.querySelector('#calListe').appendChild(d); brancher();
+      };
+    });
 }
 
 /* ================= VUE EXERCICES ================= */
+/* les blocs annexes — technique, physique, coups de pied arrêtés — vivent hors des
+   208 modules du carnet. La bibliothèque les affiche avec les mêmes cartes.        */
+const PHASES_ANNEXES = ['Bloc technique', 'Bloc physique', 'Coup de pied arrêté'];
+function carteAnnexe(o) {
+  const err = (o.erreurs || []).map(e => '<li><b>' + esc(e.quoi) + '</b><span class="cause">' + esc(e.pourquoi)
+    + '</span><span class="corr">' + esc(e.corriger) + '</span></li>').join('');
+  return '<article class="card"><h4>' + esc(o.nom) + '</h4>'
+    + '<div class="meta">' + pill(o.phase, 'accent') + (o.famille ? pill(o.famille) : '')
+    + (o.meta || []).map(x => pill(x)).join('') + '</div>'
+    + (o.schema ? '<div class="sc-wrap">' + dessinerSchema(o.schema) + legendeSchema(o.schema) + '</div>' : '')
+    + '<p class="txt">' + esc(o.court) + '</p>'
+    + (o.principes ? '<ul class="principes"><li class="pr-t">Les trois règles à ne pas négocier</li>'
+      + o.principes.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '')
+    + (o.ateliers && o.ateliers.length ? '<ol class="ateliers">' + o.ateliers.map((a, k) => '<li><b>'
+      + (o.ateliers.length > 1 ? 'Atelier ' + (k + 1) + ' — ' : '') + esc(a.nom) + '</b>'
+      + '<span class="quoi">' + esc(a.quoi) + '</span><span class="cle">' + esc(a.cle) + '</span></li>').join('') + '</ol>' : '')
+    + (o.critere ? '<p class="hint">' + esc(o.critere) + '</p>' : '')
+    + (err || o.derive || o.pourquoi
+      ? '<details class="manual"><summary>Mode d’emploi · 2 minutes</summary><div class="manual-b">'
+        + (err ? '<section><h5>Erreurs fréquentes</h5><ul class="err">' + err + '</ul></section>' : '')
+        + (o.derive ? '<section><h5>Si ça part en vrille</h5><p>' + esc(o.derive) + '</p></section>' : '')
+        + (o.securite ? '<section><h5>Sécurité</h5><p>' + esc(o.securite) + '</p></section>' : '')
+        + (o.pourquoi ? '<section><h5>Pourquoi ce bloc</h5><p>' + esc(o.pourquoi) + '</p></section>' : '')
+        + '</div></details>' : '')
+    + '</article>';
+}
+function annexes(q, ph) {
+  const out = [];
+  const veut = t => ph === 'Toutes' || ph === t;
+  const ok = txt => !q || txt.toLowerCase().indexOf(q) >= 0;
+  if (veut('Bloc technique')) Object.keys(TECH).forEach(k => {
+    const t = TECH[k];
+    if (ok(t.nom + ' ' + t.famille + ' ' + t.court + ' ' + t.ateliers.map(a => a.nom + ' ' + a.quoi).join(' ')))
+      out.push(carteAnnexe(Object.assign({ phase: 'Bloc technique' }, t)));
+  });
+  if (veut('Bloc physique')) DATA.blocs.forEach(p => {
+    const fp = fichePhys(p.id); if (!fp) return;
+    if (ok(p.nom + ' ' + p.type + ' ' + p.format + ' ' + fp.court + ' ' + fp.ateliers.map(a => a.nom + ' ' + a.quoi).join(' ')))
+      out.push(carteAnnexe(Object.assign({}, fp, {
+        phase: 'Bloc physique', nom: p.nom, famille: p.type,
+        meta: [p.intensite, p.duree + ' min', p.espace], critere: p.objectif
+      })));
+  });
+  if (veut('Coup de pied arrêté')) Object.keys(CPA).forEach(k => {
+    const a = CPA[k];
+    if (ok(a.nom + ' ' + a.famille + ' ' + a.court + ' ' + a.principes.join(' ') + ' ' + a.ateliers.map(x => x.nom + ' ' + x.quoi).join(' ')))
+      out.push(carteAnnexe(Object.assign({ phase: 'Coup de pied arrêté' }, a)));
+  });
+  return out;
+}
+
 function renderExercices() {
   const el = $('#v-exercices');
   el.innerHTML =
     '<div class="filters no-print">'
     + '<div class="field"><label for="xQ">Recherche</label><input type="text" id="xQ" placeholder="nom, consigne, matériel…"></div>'
     + '<div class="field"><label for="xPhase">Phase</label><select id="xPhase"><option>Toutes</option>'
-    + [...new Set(DATA.modules.map(m => m.phase))].map(p => '<option>' + esc(p) + '</option>').join('') + '</select></div>'
+    + [...new Set(DATA.modules.map(m => m.phase))].map(p => '<option>' + esc(p) + '</option>').join('')
+    + PHASES_ANNEXES.map(p => '<option>' + esc(p) + '</option>').join('') + '</select></div>'
     + '<div class="field"><label for="xFam">Famille</label><select id="xFam"><option>Toutes</option>'
     + FAMILLES.map(f => '<option>' + esc(f) + '</option>').join('') + '</select></div>'
     + '<div class="field"><label for="xFmt">Format</label><select id="xFmt"><option>Tous</option><option>Standard</option><option>Compact</option></select></div>'
@@ -2102,10 +3881,13 @@ function renderExercices() {
   const draw = () => {
     const q = $('#xQ').value.toLowerCase().trim();
     const ph = $('#xPhase').value, fa = $('#xFam').value, fm = $('#xFmt').value;
-    const res = DATA.modules.filter(m =>
+    const annexe = PHASES_ANNEXES.indexOf(ph) >= 0;
+    /* les blocs annexes n'ont ni famille ni format : ces deux filtres ne s'y appliquent pas */
+    const cartes = (annexe || (ph === 'Toutes' && fa === 'Toutes' && fm === 'Tous')) ? annexes(q, ph) : [];
+    const res = annexe ? [] : DATA.modules.filter(m =>
       (ph === 'Toutes' || m.phase === ph) && (fa === 'Toutes' || m.famille === fa) && (fm === 'Tous' || m.format === fm)
       && (!q || (m.nom + ' ' + m.consignes + ' ' + m.materiel + ' ' + m.comportement + ' ' + m.organisation).toLowerCase().indexOf(q) >= 0));
-    $('#xOut').innerHTML = (res.length ? res.slice(0, 60).map(m =>
+    $('#xOut').innerHTML = cartes.join('') + (res.length ? res.slice(0, 60).map(m =>
       '<article class="card"><h4>' + esc(m.nom) + '</h4>'
       + '<div class="meta">' + pill(m.phase) + pill(m.format) + pill(m.effMin + '–' + m.effMax + ' j.')
       + pill(m.dureeMin + '–' + m.dureeMax + ' min') + pill('Diff. ' + m.difficulte + '/5') + '</div>'
@@ -2113,7 +3895,7 @@ function renderExercices() {
       + '<p class="txt">' + esc((fiche(m.id) && fiche(m.id).court) || m.consignes) + '</p>'
       + '<p class="hint">' + esc(m.dimensions + ' · ' + m.materiel) + '</p>'
       + renderManual(m) + '</article>').join('')
-      : '<div class="empty-state">Aucun exercice ne correspond.</div>')
+      : (cartes.length ? '' : '<div class="empty-state">Aucun exercice ne correspond.</div>'))
       + (res.length > 60 ? '<p class="hint">' + res.length + ' résultats — affine la recherche.</p>' : '');
   };
   ['#xQ', '#xPhase', '#xFam', '#xFmt'].forEach(s => { $(s).oninput = draw; $(s).onchange = draw; });
@@ -2144,9 +3926,30 @@ function drawTerrain() {
   $('#tEffVal').textContent = s.effectif;
   $('#tSteps').innerHTML = T.blocs.map((x, i) => '<i class="' + (i < T.i ? 'done' : i === T.i ? 'now' : '') + '"></i>').join('');
   $('#tPhase').textContent = NOM_PHASE[b.kind] + ' · ' + b.duree + ' min · ' + b.debut + '′ → ' + (b.debut + b.duree) + '′';
-  $('#tName').textContent = b.mod ? b.mod.nom : b.bloc ? b.bloc.nom : 'Retour au calme et bilan';
+  $('#tName').textContent = b.mod ? b.mod.nom : b.bloc ? b.bloc.nom : b.tech ? b.tech.nom : b.cpa ? b.cpa.nom : 'Retour au calme et bilan';
   $('#tClock').textContent = mmss(T.reste); $('#tClock').classList.toggle('over', T.reste < 0);
   const fb = b.mod ? fiche(b.mod.id) : null;
+  const finBloc = () => {
+    const nx0 = T.blocs[T.i + 1];
+    $('#tNext').textContent = nx0 ? 'Ensuite : ' + NOM_PHASE[nx0.kind] : '';
+    $('#tNextBtn').textContent = nx0 ? 'Suivant ▶' : 'Noter la séance';
+    $('#tPlay').textContent = T.run ? 'Pause' : 'Démarrer';
+  };
+  if (b.tech) {
+    $('#tRule').innerHTML = '<b>À annoncer</b>' + esc(b.tech.court);
+    $('#tWatch').innerHTML = pill('Critère : ' + b.tech.critere.split('.')[0], 'accent');
+    $('#tKv').innerHTML = b.tech.ateliers.map((a, k) => kv('Atelier ' + (k + 1) + ' · ' + a.nom, a.quoi)).join('');
+    finBloc();
+    return;
+  }
+  if (b.cpa) {
+    $('#tRule').innerHTML = '<b>À annoncer</b>' + esc(b.cpa.court);
+    $('#tWatch').innerHTML = b.cpa.principes.map((x, k) => pill((k + 1) + '. ' + x, k === 0 ? 'accent' : '')).join('');
+    $('#tKv').innerHTML = b.cpa.ateliers.map((a, k) => kv('Atelier ' + (k + 1) + ' · ' + a.nom, a.quoi)).join('')
+      + kv('Critère de réussite', b.cpa.critere);
+    finBloc();
+    return;
+  }
   $('#tRule').innerHTML = b.mod ? '<b>' + (fb ? 'À annoncer' : 'Règle essentielle') + '</b>' + esc(fb ? fb.court : b.mod.consignes)
     : b.bloc ? '<b>Consignes clés</b>' + esc(b.bloc.consignes)
       : '<b>Question aux joueuses</b>' + esc((COMPS.find(c => c.nom === s.comportement) || {}).question || '');
@@ -2190,14 +3993,35 @@ function lireFormulaire() {
     etape: $('#fEtape').value,
     rotation: $('#fVar').value,
     varier: $('#fVarier').value,
-    physique: $('#fPhys').value
+    physique: $('#fPhys').value,
+    technique: $('#fTech').value,
+    cpa: $('#fCpa') ? $('#fCpa').value : 'Auto'
   };
+}
+
+/* les réglages du panneau sont conservés d'une séance à l'autre */
+function sauverReglages() {
+  const db = store.read();
+  db.reglages = { varier: $('#fVarier').value, physique: $('#fPhys').value, technique: $('#fTech').value,
+                  cpa: $('#fCpa') ? $('#fCpa').value : 'Auto',
+                  duree: $('#fDuree').value, effectif: $('#fEffectif').value, espace: $('#fEspace').value,
+                  gardiennes: $('#fGard').value };
+  store.save();
+}
+function chargerReglages() {
+  const r = store.read().reglages;
+  if (!r) return;
+  const set = (sel, v) => { if (v != null && $(sel)) $(sel).value = v; };
+  set('#fVarier', r.varier); set('#fPhys', r.physique); set('#fTech', r.technique); set('#fCpa', r.cpa);
+  set('#fDuree', r.duree); set('#fEffectif', r.effectif); set('#fEspace', r.espace); set('#fGard', r.gardiennes);
 }
 function remplirFormulaire(s) {
   $('#fDate').value = s.date; $('#fCycle').value = s.cycle; $('#fEffectif').value = s.effectif;
   $('#fGard').value = s.gardiennes; $('#fDuree').value = s.duree; $('#fEspace').value = s.espace;
   $('#fComportement').value = 'Auto'; $('#fEtape').value = 'Auto'; $('#fVar').value = 'Auto';
   $('#fVarier').value = s.varier || 'Carnet'; $('#fPhys').value = s.physique || 'Auto';
+  $('#fTech').value = s.technique || 'Intégré à la mise en route';
+  if ($('#fCpa')) $('#fCpa').value = (s.cpa && s.cpa.auto === false) ? (s.cpa.duree + ' min') : 'Auto';
 }
 
 /* recalcule les exercices avec l'effectif réellement présent, sans toucher au reste */
@@ -2476,11 +4300,13 @@ function init() {
   const today = iso(new Date());
   $('#fDate').value = today;
   $('#fEspace').value = 'Quart de terrain';
+  chargerReglages();
   const cy = cycleParDate(today); if (cy) $('#fCycle').value = cy;
   $('#fDate').onchange = () => { const c = cycleParDate($('#fDate').value); if (c) $('#fCycle').value = c; };
 
   $('#tabs').onclick = e => { const b = e.target.closest('.tab'); if (b) setView(b.dataset.view); };
   $('#btnGen').onclick = () => {
+    sauverReglages();
     courante = genererSeance(lireFormulaire());
     renderSeance(courante);
     if (window.innerWidth < 901) $('#seanceOut').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2488,6 +4314,15 @@ function init() {
   $('#btnSave').onclick = () => sauverCourante(false);
   $('#btnNoterPanel').onclick = noterCourante;
   $('#btnPrint').onclick = () => { if (!courante) { toast('Génère d’abord une séance'); return; } window.print(); };
+  $('#btnFiche').onclick = () => {
+    if (!courante) { toast('Génère d’abord une séance'); return; }
+    const body = document.body;
+    body.classList.add('print-fiche');
+    const off = () => { body.classList.remove('print-fiche'); window.removeEventListener('afterprint', off); };
+    window.addEventListener('afterprint', off);
+    window.print();
+    setTimeout(off, 1200);           /* filet si afterprint ne se déclenche pas */
+  };
   $('#btnTerrain').onclick = ouvrirTerrain;
   $('#tClose').onclick = fermerTerrain;
   $('#tPrev').onclick = () => gotoBloc(T.i - 1);
