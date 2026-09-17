@@ -348,6 +348,40 @@ td.num,th.num{font-variant-numeric:tabular-nums}
   background:var(--accent-soft); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:9px 12px;
 }
 .alerte-cal b{color:var(--accent-ink); font-weight:700}
+.alerte-cal.ok{background:var(--field-soft); border-left-color:var(--field)}
+.alerte-cal.ok b{color:var(--field)}
+.step.reserve{opacity:.6}
+.step.reserve .lbl{font-style:italic}
+
+/* atelier gardienne, en parallèle du premier bloc */
+.gb-note{
+  border:1px solid var(--line); border-left:3px solid var(--warn); border-radius:0 var(--r-s) var(--r-s) 0;
+  padding:10px 12px; display:grid; gap:8px; background:var(--surface);
+}
+.gb-h{font-size:10.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--warn)}
+.gb-a{display:grid; gap:2px}
+.gb-a b{font-size:14px; font-weight:700}
+.gb-a span{font-family:var(--f-read); font-size:13.5px; line-height:1.5; color:var(--ink-2)}
+.gb-a i{font-style:normal; font-size:12.5px; color:var(--muted)}
+.gb-a i::before{content:"Clé : "; font-weight:700}
+.gb-f{font-size:12px; color:var(--muted)}
+@media print{
+  .gb-note{border-color:#bbb; border-left-color:#555; padding:5px 8px; gap:4px; break-inside:avoid}
+  .gb-a b, .gb-a span{font-size:9pt}
+  .gb-a i, .gb-f{font-size:8pt}
+}
+
+/* observation de match */
+.obs{display:grid; gap:5px; padding:8px 0; border-bottom:1px solid var(--line)}
+.obs:last-of-type{border-bottom:0}
+.obs p{font-size:14px; line-height:1.4}
+.obs-seg{display:flex; gap:5px}
+.obs-seg button{
+  appearance:none; cursor:pointer; flex:1; padding:7px 4px; border-radius:var(--r-s);
+  border:1px solid var(--line-2); background:var(--ground); font-size:12px; font-weight:700;
+}
+.obs-seg button[aria-pressed="true"]{background:var(--field); border-color:var(--field); color:var(--surface)}
+.obs-seg button[data-v="0"][aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
 .coupure{display:grid; grid-template-columns:1fr 140px 140px 32px; gap:7px; align-items:center; margin-bottom:7px}
 .coupure input{
   width:100%; font:inherit; font-size:14px; color:var(--ink); background:var(--surface);
@@ -386,6 +420,10 @@ dialog::backdrop{background:rgba(10,16,13,.55); backdrop-filter:blur(2px)}
 }
 .opt:hover{border-color:var(--accent)}
 .opt.cur{border-color:var(--accent); background:var(--accent-soft)}
+/* le même nom sert d'annotation dans les intitulés de champ : pas de boîte là-dedans */
+label .opt, label .opt:hover{
+  width:auto; display:inline; border:0; background:none; padding:0; cursor:inherit; border-radius:0;
+}
 .opt .t{font-size:15px; font-weight:700}
 .opt .m{display:flex; flex-wrap:wrap; gap:5px}
 
@@ -646,6 +684,9 @@ button.card:hover{border-color:var(--line-2)}
   .fo-k{flex:none; border:1.2pt solid #000; border-radius:4px; padding:3px 9px; text-align:center}
   .fo-k span{display:block; font-size:6.4pt; letter-spacing:.09em; text-transform:uppercase; color:#555}
   .fo-k b{font-size:10.5pt; line-height:1.1}
+  .fgb{font-size:7.8pt; color:#333; padding:3px 0 4px; border-bottom:.6pt solid #999}
+  .fgb b{font-size:7.8pt}
+  .fgb span{color:#777}
 
   .fbs-l{display:flex; flex-direction:column}
   .fb{
@@ -35242,6 +35283,141 @@ button.card:hover{border-color:var(--line-2)}
   }
  }
 }</script>
+<script type="application/json" id="gb">{
+"C0": {
+  "theme": "Prises de balle — les mains avant tout",
+  "materiel": "4 ballons, 2 plots",
+  "ateliers": [
+    { "nom": "Prise en W",
+      "quoi": "Avec une serveuse à 6 m qui sert à la main, à mi-hauteur. 10 ballons : mains en W derrière le ballon, coudes souples, on ramène au corps. On monte la vitesse seulement si dix prises sont propres.",
+      "cle": "Les pouces se touchent presque derrière le ballon. Si le ballon claque dans les gants, les mains sont trop en avant." },
+    { "nom": "Ballon roulé, corps derrière",
+      "quoi": "Serveuse au pied, ballons roulés à droite et à gauche. La gardienne se déplace pour mettre le corps entier derrière le ballon avant de le ramasser. 10 ballons.",
+      "cle": "Un genou frôle le sol, jamais les deux. Le ballon ne doit jamais pouvoir passer entre les jambes." }
+  ]
+},
+"C1": {
+  "theme": "Ballons aériens simples",
+  "materiel": "4 ballons",
+  "ateliers": [
+    { "nom": "Prise au point le plus haut",
+      "quoi": "Serveuse à 8 m qui lance en cloche. La gardienne attaque le ballon en avançant et le prend au-dessus de la tête, un genou monté pour se protéger. 10 ballons.",
+      "cle": "On attrape le ballon devant soi, jamais au-dessus de la nuque. Si elle recule pour le prendre, le service était bon : c'est le départ qui est en retard." },
+    { "nom": "Cloche puis annonce",
+      "quoi": "Même service, mais la gardienne annonce fort « J'ai ! » avant de toucher le ballon. Une prise silencieuse ne compte pas, même réussie.",
+      "cle": "L'annonce part quand le ballon est encore en l'air, pas au moment de la prise." }
+  ]
+},
+"C2": {
+  "theme": "Relance courte — première attaquante",
+  "materiel": "4 ballons, 2 plots pour une porte de 3 m",
+  "ateliers": [
+    { "nom": "Relance à la main précise",
+      "quoi": "Une porte de 3 m à 12 m. La gardienne bloque un ballon servi, puis relance à la main, roulé au sol, dans la porte. 10 ballons, on compte les réussites.",
+      "cle": "Le ballon arrive au sol, jamais en cloche : une relance qui rebondit est une relance perdue à ce niveau." },
+    { "nom": "Contrôle-passe du pied",
+      "quoi": "La serveuse passe au sol, la gardienne contrôle du pied éloigné et redonne dans la porte en deux touches. 8 ballons de chaque côté.",
+      "cle": "Même consigne que le groupe : contrôle orienté, tête levée avant la passe. Elle travaille la même chose que les autres, avec ses contraintes." }
+  ]
+},
+"C3": {
+  "theme": "Jeu au pied sous pression légère",
+  "materiel": "4 ballons, 2 plots",
+  "ateliers": [
+    { "nom": "Passe en retrait, relance opposée",
+      "quoi": "La serveuse donne une passe en retrait puis vient presser en trottinant. La gardienne joue en deux touches maximum vers le côté opposé à la pression. 10 ballons.",
+      "cle": "Le premier contact oriente déjà loin de la presseuse. Si elle contrôle vers la pression, on recommence sans courir." },
+    { "nom": "Long ou court, elle annonce",
+      "quoi": "Même départ, mais la gardienne annonce « courte » ou « longue » avant de jouer, et fait ce qu'elle a annoncé. 8 ballons.",
+      "cle": "Un dégagement paniqué non annoncé compte zéro. Un long annoncé et assumé compte plein." }
+  ]
+},
+"C4": {
+  "theme": "Face au tir",
+  "materiel": "4 ballons, 2 plots",
+  "ateliers": [
+    { "nom": "Position d'attente au déclenchement",
+      "quoi": "Serveuse à 10 m qui frappe au signal, mi-hauteur. Au moment de la frappe : appuis écartés, mains devant, poids sur l'avant. 10 frappes à vitesse moyenne.",
+      "cle": "Elle doit être arrêtée et équilibrée quand la frappe part. Une gardienne en mouvement au déclenchement arrive toujours en retard." },
+    { "nom": "Plongeon au sol près du corps",
+      "quoi": "Ballons roulés à 1-2 m du corps, de chaque côté. Chute latérale sur l'épaule et la hanche, jamais sur le ventre, mains l'une derrière l'autre. 6 de chaque côté, sur herbe correcte uniquement.",
+      "cle": "On descend sur le côté du corps, le ballon se bloque avec la main du bas derrière et celle du haut dessus." }
+  ]
+},
+"C5": {
+  "theme": "Diriger sa défense",
+  "materiel": "2 ballons",
+  "ateliers": [
+    { "nom": "Trois mots qui commandent",
+      "quoi": "Pendant l'échauffement du groupe, la gardienne s'entraîne à trois annonces : « J'ai ! », « Sors ! », « Gauche/Droite ! ». La serveuse joue des situations à la main et la gardienne doit répondre par le bon mot, fort, avant de toucher le ballon.",
+      "cle": "Un mot, fort, tôt. Une phrase entière arrive toujours trop tard." },
+    { "nom": "Placement sur centre annoncé",
+      "quoi": "La serveuse se déplace le long d'une ligne imaginaire de touche avec un ballon. La gardienne ajuste sa position sur la largeur du but et annonce « centre ! » quand la serveuse arme. 8 répétitions.",
+      "cle": "Premier poteau fermé en priorité — c'est la même règle que les corners du groupe." }
+  ]
+},
+"C6": {
+  "theme": "Sortie dans les pieds",
+  "materiel": "4 ballons, 2 plots",
+  "ateliers": [
+    { "nom": "Réduire l'angle en avançant",
+      "quoi": "La serveuse part en conduite de 15 m vers le but. La gardienne sort en avançant tant que le ballon est loin du pied, s'arrête dès qu'il est contrôlé. 8 répétitions sans plongeon d'abord.",
+      "cle": "On avance quand le ballon voyage, on se fige quand il est au pied. Sortir en courant sur un ballon contrôlé, c'est se faire éliminer." },
+    { "nom": "Sortie au sol dans les pieds",
+      "quoi": "Même départ, la gardienne termine en s'allongeant sur le ballon au moment où la serveuse le pousse trop loin. Mains en premier, tête derrière les bras. 6 répétitions à vitesse réduite.",
+      "cle": "On attaque le ballon, jamais les jambes. Le déclencheur, c'est le ballon qui s'éloigne du pied." }
+  ]
+},
+"C7": {
+  "theme": "Lire la contre-attaque",
+  "materiel": "3 ballons",
+  "ateliers": [
+    { "nom": "Position haute, ballon perdu",
+      "quoi": "La gardienne se place à 12-15 m de sa ligne, comme quand son équipe attaque. Au signal « perdu ! », la serveuse lance un ballon long : la gardienne choisit — sortir le jouer ou reculer vers son but. 8 répétitions.",
+      "cle": "Ballon devant la défense : elle sort. Ballon derrière elle en cloche : elle recule en regardant le ballon. L'erreur, c'est l'entre-deux." },
+    { "nom": "Dégagement de secours",
+      "quoi": "Ballon roulé dans son espace, une presseuse arrive : dégagement long du pied, en premier temps, vers la touche. 6 ballons de chaque pied.",
+      "cle": "Vers la touche, jamais dans l'axe : même règle que le mur du groupe. Un dégagement axial revient toujours." }
+  ]
+},
+"C8": {
+  "theme": "Relancer vite après la prise",
+  "materiel": "4 ballons, 2 plots pour une porte à 20 m",
+  "ateliers": [
+    { "nom": "Bloquer puis lancer en 3 secondes",
+      "quoi": "La gardienne bloque une frappe molle, puis a 3 secondes pour relancer à la main vers une porte à 20 m, bras roulé au ras du sol. 10 ballons, on compte porte + délai.",
+      "cle": "Le regard part vers l'avant pendant la prise, pas après. La contre-attaque commence dans ses gants." },
+    { "nom": "Choix de relance",
+      "quoi": "Deux portes, une à 12 m et une à 25 m. La serveuse en condamne une en s'y plaçant après la frappe : la gardienne relance dans l'autre. 8 ballons.",
+      "cle": "On relance là où l'adversaire n'est pas — le même principe que la sortie de but courte du groupe." }
+  ]
+},
+"C9": {
+  "theme": "Centres et ballons croisés",
+  "materiel": "4 ballons",
+  "ateliers": [
+    { "nom": "Sortie sur centre à mi-hauteur",
+      "quoi": "La serveuse centre à la main depuis le côté, entre la ligne de but et 6 m. La gardienne juge : elle sort et prend au point le plus haut, ou elle reste et défend son but. Elle annonce son choix. 10 centres.",
+      "cle": "« J'ai ! » = elle y va jusqu'au bout. Une sortie interrompue à mi-chemin est pire que rester." },
+    { "nom": "Poing de dégagement",
+      "quoi": "Centres plus appuyés : quand la prise à deux mains est risquée, elle dégage du poing, loin et sur le côté. 6 répétitions.",
+      "cle": "Le poing traverse le ballon vers l'extérieur du terrain, pas vers l'axe." }
+  ]
+},
+"C10": {
+  "theme": "Elle construit sa séquence",
+  "materiel": "au choix",
+  "ateliers": [
+    { "nom": "Son point fort, son point faible",
+      "quoi": "La gardienne choisit deux ateliers vus dans la saison : un qu'elle réussit, un qu'elle rate encore. Elle installe, explique à sa serveuse, et annonce son objectif chiffré avant de commencer.",
+      "cle": "C'est elle qui annonce le critère de réussite. Toi, tu vérifies juste qu'il est mesurable." },
+    { "nom": "Elle coache la serveuse",
+      "quoi": "Les rôles s'inversent cinq minutes : la gardienne fait travailler sa partenaire sur les prises de base et corrige ce qu'elle voit.",
+      "cle": "Expliquer un geste, c'est le comprendre. Ce qu'elle corrige chez l'autre, elle le corrigera chez elle." }
+  ]
+}
+}
+</script>
 <script>/* ================= SCHÉMAS DE TERRAIN =================
    Une description déclarative par exercice, en mètres, origine en haut à gauche.
    Rendu en SVG aux couleurs de la charte, lisible en clair comme en sombre.      */
@@ -35395,6 +35571,76 @@ let TECH = {};
 try { TECH = JSON.parse(document.getElementById('tech').textContent); } catch (e) { }
 let CPA = {};
 try { CPA = JSON.parse(document.getElementById('cpa').textContent); } catch (e) { }
+let GB = {};
+try { GB = JSON.parse(document.getElementById('gb').textContent); } catch (e) { }
+const gbDuCycle = cycle => GB[(cycle || '').split(' ')[0]] || null;
+
+/* Observation de match : trois questions par cycle, chacune reliée à un comportement
+   du référentiel de ce cycle. « Pas vu » désigne le chantier de la semaine. */
+const OBS_MATCH = {
+  'C0': [
+    ['La porteuse avait-elle au moins une solution de passe ?', 'Créer une solution autour de la porteuse'],
+    ['Les filles regardaient-elles autour d’elles avant de recevoir ?', 'Prendre l’information avant de recevoir'],
+    ['Y avait-il une réaction immédiate après une perte ?', 'Réagir immédiatement à la perte']
+  ],
+  'C1': [
+    ['La porteuse avait-elle deux solutions, une devant et une en soutien ?', 'Créer une solution autour de la porteuse'],
+    ['Y avait-il toujours une joueuse en soutien derrière le ballon ?', 'Soutenir derrière le ballon'],
+    ['Le terrain était-il utilisé dans toute sa largeur ?', 'Utiliser la largeur']
+  ],
+  'C2': [
+    ['Les relances courtes ressortaient-elles proprement ?', 'Prendre l’information avant de recevoir'],
+    ['Sous pression, le ballon était-il protégé plutôt que dégagé au hasard ?', 'Protéger le ballon sous pression'],
+    ['Le choix entre jouer court et jouer long était-il assumé ?', 'Choisir court ou direct']
+  ],
+  'C3': [
+    ['L’espace libre devant était-il attaqué en conduite ?', 'Conduire dans l’espace libre'],
+    ['Des passes ont-elles traversé une ligne adverse ?', 'Casser une ligne'],
+    ['La défense adverse était-elle fixée avant la passe ?', 'Fixer avant de passer']
+  ],
+  'C4': [
+    ['Y avait-il des appels derrière la défense adverse ?', 'Donner de la profondeur'],
+    ['Y avait-il du monde dans la surface sur les centres et les frappes ?', 'Attaquer la surface'],
+    ['Les occasions étaient-elles conclues rapidement ?', 'Finir rapidement']
+  ],
+  'C5': [
+    ['L’axe du terrain était-il fermé ?', 'Protéger l’axe'],
+    ['La porteuse adverse était-elle cadrée sans se faire éliminer ?', 'Cadrer la porteuse'],
+    ['Y avait-il une couverture derrière celle qui attaquait le ballon ?', 'Couvrir la partenaire']
+  ],
+  'C6': [
+    ['Le pressing partait-il ensemble, sur un signal identifiable ?', 'Déclencher le pressing'],
+    ['Les duels étaient-ils gagnés debout, sans se jeter ?', 'Gagner le duel sans se jeter'],
+    ['La ligne défensive avançait-elle pendant le pressing ?', 'Défendre en avançant']
+  ],
+  'C7': [
+    ['À la perte, les plus proches pressaient-elles tout de suite ?', 'Proche je presse'],
+    ['Les plus éloignées protégeaient-elles l’axe et la profondeur ?', 'Loin je protège'],
+    ['La réaction à la perte était-elle immédiate ?', 'Réagir immédiatement à la perte']
+  ],
+  'C8': [
+    ['Après récupération, la première intention allait-elle vers l’avant ?', 'Première intention vers l’avant'],
+    ['La récupératrice était-elle soutenue immédiatement ?', 'Soutenir la récupération'],
+    ['Quand rien n’était ouvert, le ballon était-il sécurisé ?', 'Sécuriser si rien n’est ouvert']
+  ],
+  'C9': [
+    ['Les renversements de jeu ont-ils créé des décalages ?', 'Renverser le jeu'],
+    ['Des appuis-remises ont-elles cassé des lignes ?', 'Combiner en appui-remise'],
+    ['La défense était-elle fixée avant les passes décisives ?', 'Fixer avant de passer']
+  ],
+  'C10': [
+    ['Les décisions venaient-elles des joueuses, sans regarder le banc ?', 'Prendre une décision autonome'],
+    ['La communication était-elle précoce et positive ?', 'Communiquer tôt et positivement'],
+    ['L’engagement a-t-il tenu jusqu’au bout, même menées ?', 'Rester engagée jusqu’à la fin']
+  ]
+};
+const obsDuCycle = cycle => OBS_MATCH[(cycle || '').split(' ')[0]] || OBS_MATCH['C0'];
+/* les noms du référentiel utilisent l'apostrophe droite : on aligne les deux graphies */
+const nomComp = x => {
+  const n = String(x || '').replace(/’/g, "'");
+  const c = COMPS.find(y => y.nom.replace(/’/g, "'") === n);
+  return c ? c.nom : x;
+};
 
 /* Coups de pied arrêtés : deux séances par cycle, sur un ordre qui suit le carnet.
    La touche ouvre la saison parce que c'est la remise en jeu la plus fréquente ;
@@ -35405,13 +35651,23 @@ const CPA_PLAN = {
   'C4': ['A2', 'A4'], 'C5': ['A3', 'A5'], 'C6': ['A5', 'A3'], 'C7': ['A3', 'A6'],
   'C8': ['A2', 'A4'], 'C9': ['A2', 'A1'], 'C10': ['A1', 'A2']
 };
-/* séances du cycle où un bloc arrêté est inséré en mode Auto */
+/* séances du cycle où un bloc arrêté est inséré en mode Auto.
+   En plan resserré, les créneaux suivent la capacité réelle du cycle. */
 const CPA_SEANCES = [4, 8];
+function cpaSlots(cycle) {
+  if (!store.read().planResserre) return CPA_SEANCES;
+  const c = DATA.cycles.find(x => x.nom === cycle);
+  const k = c ? Math.min(8, capaciteCycle(c).possibles) : 8;
+  if (k >= 8) return CPA_SEANCES;
+  if (k >= 4) return [Math.ceil(k / 2), k];
+  if (k === 3) return [3];
+  return [];
+}
 function blocCpa(cycle, nCap, forceId) {
   const cle = (cycle || '').split(' ')[0];
   if (forceId && CPA[forceId]) return { id: forceId, source: 'ton choix' };
   const plan = CPA_PLAN[cle] || ['A1', 'A2'];
-  const rang = CPA_SEANCES.indexOf(nCap);
+  const rang = cpaSlots(cycle).indexOf(nCap);
   const id = plan[rang >= 0 ? rang : 0];
   return { id, source: 'le plan de la saison : ' + cle + ', séance ' + nCap + ' sur 8' };
 }
@@ -35606,7 +35862,10 @@ function genererSeance(ctx) {
   if (ctx.comportement && ctx.comportement !== 'Auto') {
     comportement = ctx.comportement; source = 'Choix manuel';
   } else if (dernierMatch && depuisMatch < 2) {
-    comportement = dernierMatch.priorite; source = 'Priorité du dernier match (' + frDate(dernierMatch.date) + ')';
+    comportement = dernierMatch.priorite;
+    source = dernierMatch.motif && dernierMatch.motif !== 'choix manuel'
+      ? 'Observation du match du ' + frDate(dernierMatch.date) + (dernierMatch.adversaire ? ' contre ' + dernierMatch.adversaire : '') + ' : ' + dernierMatch.motif
+      : 'Priorité du dernier match (' + frDate(dernierMatch.date) + ')';
   } else if (derniere && derniere.cycle === ctx.cycle && revoirOuConsolider) {
     comportement = derniere.comportement;
     source = decisionPrec === 'REVOIR' ? 'Séance précédente à revoir' : 'Séance précédente à consolider';
@@ -35680,7 +35939,8 @@ function genererSeance(ctx) {
   const choixCpa = ctx.cpa || 'Auto';
   let dCpa = choixCpa === '8 min' ? 8 : choixCpa === '12 min' ? 12 : 0;
   let cpaAuto = false;
-  if (choixCpa === 'Auto') { cpaAuto = CPA_SEANCES.indexOf(nCap) >= 0; dCpa = cpaAuto ? 10 : 0; }
+  const slotsCpa = cpaSlots(cyc);
+  if (choixCpa === 'Auto') { cpaAuto = slotsCpa.indexOf(nCap) >= 0; dCpa = cpaAuto ? 10 : 0; }
   /* une séance courte n'a pas la place : le football passe avant les coups de pied arrêtés */
   if (dCpa > 0 && ctx.duree - dPhys - 5 - dTechSepare - dCpa < 45) dCpa = 0;
   const cpaInfo = dCpa > 0 ? blocCpa(cyc, nCap, ctx.cpaId) : null;
@@ -35816,7 +36076,7 @@ function genererSeance(ctx) {
     ...(cpaInfo ? [{
       t: 'Coup de pied arrêté : ' + CPA[cpaInfo.id].nom,
       d: (cpaAuto
-        ? 'Le carnet place un bloc arrêté aux séances 4 et 8 de chaque cycle — assez pour que ça rentre, assez peu pour ne pas manger le jeu. '
+        ? 'Le carnet place un bloc arrêté aux séances ' + slotsCpa.join(' et ') + ' de ce cycle — assez pour que ça rentre, assez peu pour ne pas manger le jeu. '
         : 'Bloc arrêté forcé à ' + dCpa + ' min. ')
         + 'Celui-ci vient de ' + cpaInfo.source + '. '
         + 'Il est placé juste avant le match à thème (' + dCpa + ' min pris sur le temps de football) : ce qui vient d’être répété se rejoue immédiatement en situation.'
@@ -36013,6 +36273,25 @@ function renderManual(mod, effectif) {
     + '</div></details>';
 }
 
+/* atelier gardienne : affiché dans le premier bloc de la séance, en parallèle du groupe */
+function gbKv(b, s) {
+  if (!b || b.debut !== 0 || !s.gardiennes || s.gardiennes < 1) return '';
+  const g = gbDuCycle(s.cycle); if (!g) return '';
+  return kv('Gardienne · ' + g.theme, g.ateliers.map((a, k) => (k + 1) + '. ' + a.nom).join(' — '));
+}
+function gbNote(b, s) {
+  if (b.debut !== 0 || !s.gardiennes || s.gardiennes < 1) return '';
+  const g = gbDuCycle(s.cycle); if (!g) return '';
+  const pl = s.gardiennes > 1 ? 's' : '';
+  return '<aside class="gb-note">'
+    + '<p class="gb-h">Pendant ce bloc · gardienne' + pl + ' — ' + esc(g.theme) + '</p>'
+    + g.ateliers.map((a, k) => '<div class="gb-a"><b>' + (k + 1) + '. ' + esc(a.nom) + '</b>'
+      + '<span>' + esc(a.quoi) + '</span><i>' + esc(a.cle) + '</i></div>').join('')
+    + '<p class="gb-f">Matériel : ' + esc(g.materiel) + ' · avec une partenaire qui sert, en tournant. '
+    + 'Elle' + (pl ? 's' : '') + ' rejoi' + (pl ? 'gnent' : 'nt') + ' le groupe pour les situations et le match.</p>'
+    + '</aside>';
+}
+
 function blocHTML(b, s, i) {
   const fin = b.debut + b.duree;
   const rail = '<div class="rail"><span class="t num">' + b.debut + '′</span><span class="t2 num">→ ' + fin + '′</span>'
@@ -36034,6 +36313,7 @@ function blocHTML(b, s, i) {
       + '<ol class="ateliers">' + t.ateliers.map((a, k) => '<li><b>Atelier ' + (k + 1) + ' — ' + esc(a.nom) + '</b>'
           + '<span class="quoi">' + esc(a.quoi) + '</span><span class="cle">' + esc(a.cle) + '</span></li>').join('') + '</ol>'
       + '<div class="rule"><b>Critère de réussite</b>' + esc(t.critere) + '</div>'
+      + gbNote(b, s)
       + (note ? '<div class="ma-note"><b>Ta note</b>' + esc(note.texte) + '</div>' : '')
       + '<details class="manual"><summary>Mode d’emploi · 2 minutes</summary><div class="manual-b">'
       + '<section><h5>Erreurs fréquentes</h5><ul class="err">'
@@ -36174,6 +36454,7 @@ function blocHTML(b, s, i) {
     + (note ? '<div class="ma-note"><b>Ta note</b>' + esc(note.texte) + '</div>' : '')
     + '<div class="adj"><div><strong>Si c’est trop dur</strong>' + esc(ajusteTexte(mod, s, 'dur')) + '</div>'
     + '<div><strong>Si c’est trop facile</strong>' + esc(ajusteTexte(mod, s, 'facile')) + '</div></div>'
+    + gbNote(b, s)
     + renderManual(mod, s.effectif)
     + '<div class="blk-foot no-print"><button class="btn btn-s" data-swap="' + b.kind + '">Changer d’exercice</button>'
     + '<button class="btn btn-s" data-note="' + mod.id + '">' + (note ? 'Modifier ma note' : 'Noter cet exercice') + '</button>'
@@ -36224,6 +36505,8 @@ function renderSeance(s) {
     + (s.durees.phys > 0
       ? '<li>Bloc physique ' + esc(s.phys.type.toLowerCase()) + ' (' + s.phys.duree + ' min) placé ' + esc(s.phys.placement) + '</li>'
       : '<li>Pas de bloc physique : tout le temps est rendu au football</li>')
+    + (s.gardiennes >= 1 && gbDuCycle(s.cycle)
+      ? '<li>Atelier gardienne pendant la mise en route : ' + esc(gbDuCycle(s.cycle).theme.toLowerCase()) + ' — ' + esc(gbDuCycle(s.cycle).materiel) + '</li>' : '')
     + '</ul>'
     + '<p class="hint">Posture attendue à l’étape « ' + esc(s.etape) + ' » : ' + esc(et.posture || '') + '</p></div>'
 
@@ -36323,6 +36606,10 @@ function renderFiche(s, blocs, c, et, materiel) {
     + '<h3>' + esc(s.comportement) + '</h3>'
     + '<p class="fo-w">' + esc(c.observe || '') + '</p></div>'
     + '<div class="fo-k"><span>Mot-clé</span><b>' + esc(c.motCle || '') + '</b></div></div>'
+    + (s.gardiennes >= 1 && gbDuCycle(s.cycle)
+      ? '<p class="fgb"><b>Gardienne' + (s.gardiennes > 1 ? 's' : '') + ' · ' + esc(gbDuCycle(s.cycle).theme) + '</b> — '
+        + gbDuCycle(s.cycle).ateliers.map((a, k) => (k + 1) + '. ' + esc(a.nom)).join('  ·  ')
+        + ' <span>(pendant la mise en route)</span></p>' : '')
     + '<div class="fbs-l">' + blocs.map(b => ligneFiche(b, s, c.motCle)).join('') + '</div>'
     + '<div class="ff"><div><b>Matériel à sortir</b>' + esc(mat.join(' · ') || '—') + '</div>'
     + '<div><b>Notes du jour · à reporter dans le carnet</b>'
@@ -36575,7 +36862,9 @@ function renderHistorique() {
     + (db.matchs.length ? '<div class="tablewrap"><table><thead><tr><th>Date</th><th>Adversaire</th><th>Score</th><th>Priorité retenue</th><th></th></tr></thead><tbody>'
       + db.matchs.slice().sort((a, b) => a.date < b.date ? 1 : -1).map(m => '<tr>'
         + '<td class="num">' + frDate(m.date) + '</td><td>' + esc(m.adversaire || '—') + '</td><td>' + esc(m.score || '—') + '</td>'
-        + '<td>' + esc(m.priorite || '—') + '</td>'
+        + '<td>' + (m.priorite
+          ? esc(m.priorite) + (m.motif ? '<br><span class="hint">' + esc(m.motif === 'choix manuel' ? 'choisie à la main' : 'déduite : ' + m.motif) + '</span>' : '')
+          : '<span class="hint">rien à corriger — le plan continue</span>') + '</td>'
         + '<td class="no-print"><button class="btn btn-s" data-delm="' + m.id + '">✕</button></td></tr>').join('')
       + '</tbody></table></div>'
       : '<div class="empty-state">Aucun match enregistré.</div>');
@@ -36595,21 +36884,79 @@ function renderHistorique() {
 }
 
 function ouvrirMatch() {
+  const cycle = cycleParDate(iso(new Date()));
+  const items = obsDuCycle(cycle);
+  const seg = (i) =>
+    '<div class="obs" data-i="' + i + '"><p>' + esc(items[i][0]) + '</p>'
+    + '<div class="obs-seg" role="group">'
+    + [['0', 'Pas vu'], ['1', 'Par moments'], ['2', 'Vu']].map(([v, l]) =>
+      '<button type="button" data-v="' + v + '" aria-pressed="false">' + l + '</button>').join('')
+    + '</div></div>';
   ouvrirDialog('Ajouter un match',
     '<div class="stack">'
     + '<div class="grid-2"><div class="field"><label for="mDate">Date</label><input type="date" id="mDate" value="' + iso(new Date()) + '"></div>'
     + '<div class="field"><label for="mScore">Score</label><input type="text" id="mScore" placeholder="2 - 1"></div></div>'
     + '<div class="field"><label for="mAdv">Adversaire</label><input type="text" id="mAdv"></div>'
-    + '<div class="field"><label for="mPrio">Priorité observée</label><select id="mPrio">'
-    + '<option value="">Aucune</option>' + COMPS.map(c => '<option>' + esc(c.nom) + '</option>').join('') + '</select></div>'
-    + '<p class="hint">Si une priorité est retenue, elle devient le comportement des deux prochaines séances.</p></div>',
+    + '<div class="field"><label>Ce que tu as vu · repères du cycle en cours <span class="opt">30 secondes</span></label>'
+    + '<p class="hint" style="margin-bottom:6px">' + esc(cycle) + ' — réponds à ce que tu as pu observer, laisse le reste vide. '
+    + 'Le carnet en déduit le comportement des deux prochaines séances.</p>'
+    + items.map((x, i) => seg(i)).join('') + '</div>'
+    + '<p class="hint" id="mVerdict"></p>'
+    + '<details class="adv"><summary>Choisir la priorité moi-même</summary>'
+    + '<div class="field" style="margin-top:10px"><label for="mPrio">Priorité imposée</label><select id="mPrio">'
+    + '<option value="">Laisser le carnet déduire</option>' + COMPS.map(c => '<option>' + esc(c.nom) + '</option>').join('') + '</select></div></details>'
+    + '</div>',
     [{ label: 'Annuler', onClick: fermerDialog }, {
       label: 'Enregistrer', primary: true, onClick: () => {
         const db = store.read();
-        db.matchs.push({ id: uid(), date: $('#mDate').value, adversaire: $('#mAdv').value, score: $('#mScore').value, priorite: $('#mPrio').value });
-        store.save(); fermerDialog(); renderHistorique(); toast('Match enregistré');
+        const d = deduireObs(items);
+        const manuel = $('#mPrio').value;
+        db.matchs.push({
+          id: uid(), date: $('#mDate').value, adversaire: $('#mAdv').value, score: $('#mScore').value,
+          priorite: manuel || d.priorite,
+          motif: manuel ? 'choix manuel' : d.motif,
+          obs: d.obs
+        });
+        store.save(); fermerDialog(); renderHistorique();
+        toast(manuel || d.priorite ? 'Match enregistré — priorité : ' + (manuel || d.priorite) : 'Match enregistré');
       }
-    }]);
+    }],
+    body => {
+      const lire = () => {
+        const vals = [...body.querySelectorAll('.obs')].map(el => {
+          const b = el.querySelector('[aria-pressed="true"]');
+          return b ? +b.dataset.v : null;
+        });
+        const d = deduireVals(items, vals);
+        $('#mVerdict').innerHTML = d.priorite
+          ? 'Priorité déduite : <b>' + esc(d.priorite) + '</b> — travaillée sur les deux prochaines séances.'
+          : vals.some(v => v !== null) ? 'Rien d’alarmant : le plan du cycle continue normalement.' : '';
+      };
+      body.querySelectorAll('.obs-seg button').forEach(b => b.onclick = () => {
+        const dej = b.getAttribute('aria-pressed') === 'true';
+        b.closest('.obs-seg').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+        if (!dej) b.setAttribute('aria-pressed', 'true');
+        lire();
+      });
+    });
+}
+
+/* la question la moins réussie désigne le chantier ; à égalité, l'ordre du cycle tranche */
+function deduireVals(items, vals) {
+  let best = -1, note = 3;
+  vals.forEach((v, i) => { if (v !== null && v < note) { note = v; best = i; } });
+  const obs = items.map((x, i) => ({ q: x[0], comp: nomComp(x[1]), v: vals[i] }));
+  if (best < 0 || note >= 2) return { priorite: '', motif: '', obs };
+  return { priorite: nomComp(items[best][1]),
+           motif: '« ' + items[best][0] + ' » — ' + (note === 0 ? 'pas vu' : 'vu par moments seulement'),
+           obs };
+}
+function deduireObs(items) {
+  const vals = [...document.querySelectorAll('#dlgBody .obs')].map(el => {
+    const b = el.querySelector('[aria-pressed="true"]');
+    return b ? +b.dataset.v : null;
+  });
+  return deduireVals(items, vals);
 }
 
 function ouvrirEval(id) {
@@ -36699,18 +37046,28 @@ function capaciteCycle(c) {
 /* ================= VUE SAISON ================= */
 function renderSaison() {
   const db = store.read();
+  const rs = !!db.planResserre;
   const faites = db.seances.filter(s => s.statut === 'Réalisée');
   const cycleActuel = cycleParDate(iso(new Date()));
   const cap = DATA.cycles.map(capaciteCycle);
-  const totPoss = cap.reduce((a, x) => a + x.possibles, 0);
+  const totPoss = cap.reduce((a, x) => a + Math.min(8, x.possibles), 0);
+  const enReserve = cap.reduce((a, x) => a + Math.max(0, 8 - x.possibles), 0);
   $('#v-saison').innerHTML =
     '<div class="seance-head"><h3>Plan annuel</h3><span class="hint">11 cycles · 8 comportements prévus par cycle</span>'
-    + '<span style="margin-left:auto" class="no-print"><button class="btn btn-s" id="btnCal">Calendrier et coupures</button></span></div>'
+    + '<span style="margin-left:auto" class="no-print btn-row">'
+    + '<button class="btn btn-s" id="btnResserre" aria-pressed="' + rs + '">' + (rs ? '✓ Plan resserré' : 'Resserrer le plan') + '</button>'
+    + '<button class="btn btn-s" id="btnCal">Calendrier et coupures</button></span></div>'
     + '<div class="cta" style="margin-bottom:12px"><div>'
-    + '<p class="cta-t">' + totPoss + ' séances réellement possibles sur les 88 prévues</p>'
-    + '<p class="hint">À ' + parSemaine() + (parSemaine() > 1 ? ' séances par semaine' : ' séance par semaine') + ', coupures déduites. '
-    + (totPoss < 88 ? 'Le plan est calibré pour une saison sans interruption : environ ' + (88 - totPoss) + ' séances ne trouveront pas de créneau. Les comportements concernés sont marqués « hors calendrier » ci-dessous.' : '')
-    + '</p></div></div>'
+    + (rs
+      ? '<p class="cta-t">Plan resserré : ' + totPoss + ' comportements planifiés pour ' + totPoss + ' créneaux réels</p>'
+        + '<p class="hint">Chaque cycle vise ses ' + '' + 'premiers comportements — la progression du référentiel — et met les ' + enReserve + ' autres en réserve. '
+        + 'Si tu fais plus de séances que prévu dans un cycle, ses comportements en réserve reviennent automatiquement. '
+        + 'Les coups de pied arrêtés suivent aussi ce rythme.</p>'
+      : '<p class="cta-t">' + totPoss + ' séances réellement possibles sur les 88 prévues</p>'
+        + '<p class="hint">À ' + parSemaine() + (parSemaine() > 1 ? ' séances par semaine' : ' séance par semaine') + ', coupures déduites. '
+        + (totPoss < 88 ? 'Le plan est calibré pour une saison sans interruption : environ ' + (88 - totPoss) + ' séances ne trouveront pas de créneau. Les comportements concernés sont marqués « hors calendrier » ci-dessous — ou active « Resserrer le plan » pour que le carnet s\'adapte à ton calendrier.' : '')
+        + '</p>')
+    + '</div></div>'
     + '<div class="cycles">' + DATA.cycles.map(c => {
       const sc = faites.filter(s => s.cycle === c.nom);
       const n = Math.min(sc.length, 8);
@@ -36719,12 +37076,15 @@ function renderSaison() {
       const couverts = [...new Set(sc.map(s => s.comportement))];
       const sautes = path.filter(r => r.n <= sc.length && couverts.indexOf(r.comportement) < 0).map(r => r.comportement);
       const cap = capaciteCycle(c);
+      const kCap = rs ? Math.max(1, Math.min(8, cap.possibles)) : 8;
       return '<details class="cyc' + (est ? ' current' : '') + '"' + (est ? ' open' : '') + '>'
         + '<summary class="cyc-h"><h4>' + esc(c.nom) + '</h4>'
         + pill(c.periode) + (est ? pill('En cours', 'accent') : '')
-        + (cap.possibles < 8 ? pill(cap.possibles + (cap.possibles > 1 ? ' séances possibles' : ' séance possible'), 'warn') : '')
-        + '<span class="bar"><i style="width:' + (n / 8 * 100) + '%"></i></span>'
-        + '<span class="hint num">' + sc.length + '/8</span></summary>'
+        + (cap.possibles < 8
+          ? (rs ? pill(kCap + ' sur 8, resserré', 'ok') : pill(cap.possibles + (cap.possibles > 1 ? ' séances possibles' : ' séance possible'), 'warn'))
+          : '')
+        + '<span class="bar"><i style="width:' + (Math.min(n, kCap) / kCap * 100) + '%"></i></span>'
+        + '<span class="hint num">' + sc.length + '/' + kCap + '</span></summary>'
         + '<div class="cyc-b">'
         + '<div class="kv" style="margin-top:12px">'
         + kv('Problème de jeu', c.probleme) + kv('Comportement collectif', c.comportement)
@@ -36733,11 +37093,15 @@ function renderSaison() {
         + kv('Physique', c.physique) + kv('Mental', c.mental)
         + '</div>'
         + (cap.possibles < 8
-          ? '<p class="alerte-cal">Ce cycle ne contient que <b>' + cap.possibles + (cap.possibles > 1 ? ' créneaux' : ' créneau') + '</b> à ' + parSemaine() + (parSemaine() > 1 ? ' séances par semaine' : ' séance par semaine')
-            + (cap.coupures.length ? ', ' + esc(cap.coupures.join(' et ').toLowerCase()) + ' déduites' : '')
-            + '. ' + (8 - cap.possibles === 1
-              ? 'Le dernier comportement ne sera pas travaillé si tu suis le plan tel quel.'
-              : 'Les ' + (8 - cap.possibles) + ' derniers comportements ne seront pas travaillés si tu suis le plan tel quel.') + '</p>'
+          ? (rs
+            ? '<p class="alerte-cal ok">Plan resserré : <b>' + kCap + (kCap > 1 ? ' comportements visés' : ' comportement visé') + '</b> sur les ' + kCap + (kCap > 1 ? ' créneaux' : ' créneau') + ' de ce cycle'
+              + (cap.coupures.length ? ' (' + esc(cap.coupures.join(' et ')) + ' déduites)' : '')
+              + '. ' + (8 - kCap) + ' en réserve : ils reviennent si des séances s\'ajoutent, et les plus importants sont repris par les cycles suivants.</p>'
+            : '<p class="alerte-cal">Ce cycle ne contient que <b>' + cap.possibles + (cap.possibles > 1 ? ' créneaux' : ' créneau') + '</b> à ' + parSemaine() + (parSemaine() > 1 ? ' séances par semaine' : ' séance par semaine')
+              + (cap.coupures.length ? ', ' + esc(cap.coupures.join(' et ')) + ' déduites' : '')
+              + '. ' + (8 - cap.possibles === 1
+                ? 'Le dernier comportement ne sera pas travaillé si tu suis le plan tel quel.'
+                : 'Les ' + (8 - cap.possibles) + ' derniers comportements ne seront pas travaillés si tu suis le plan tel quel.') + '</p>')
           : '')
         + (sc.length ? '<p class="hint">' + sc.length + ' séance(s) réalisée(s) · ' + couverts.length + ' comportement(s) travaillé(s)'
           + (sautes.length ? ' · non abordé(s) pour l’instant : ' + esc(sautes.join(', ')) + ' — la boucle « revoir / consolider » a gardé le groupe sur le même objectif' : '') + '</p>' : '')
@@ -36746,15 +37110,26 @@ function renderSaison() {
           const saute = r.n <= sc.length && nb === 0;
           const now = est && r.n === sc.length + 1;
           const horsCal = r.n > cap.possibles;
-          return '<div class="step' + (nb ? ' done' : '') + (now ? ' now' : '') + (horsCal && !nb ? ' hors' : '') + '">'
+          const reserve = rs && r.n > kCap;
+          return '<div class="step' + (nb ? ' done' : '') + (now ? ' now' : '')
+            + (reserve && !nb ? ' reserve' : !rs && horsCal && !nb ? ' hors' : '') + '">'
             + '<span class="n">' + r.n + '</span><span class="lbl">' + esc(r.comportement) + '</span>'
             + '<span>' + (now ? pill('Prochaine', 'accent') : nb ? pill(nb > 1 ? 'Faite ×' + nb : 'Faite', 'ok')
-                : saute ? pill('Non abordée', 'warn') : horsCal ? pill('Hors calendrier') : '') + '</span>'
+                : saute ? pill('Non abordée', 'warn')
+                : reserve ? pill('En réserve') : !rs && horsCal ? pill('Hors calendrier') : '') + '</span>'
             + '<span class="logic">' + esc(r.logique) + '</span></div>';
         }).join('') + '</div>'
         + '</div></details>';
     }).join('') + '</div>';
   const bc = $('#btnCal'); if (bc) bc.onclick = ouvrirCalendrier;
+  const br = $('#btnResserre'); if (br) br.onclick = () => {
+    const d = store.read();
+    d.planResserre = !d.planResserre;
+    store.save(); renderSaison();
+    toast(d.planResserre
+      ? 'Plan resserré : le carnet vise ce que ton calendrier permet'
+      : 'Plan complet : les 88 comportements sont de nouveau visés');
+  };
 }
 
 function ouvrirCalendrier() {
@@ -36919,7 +37294,7 @@ function drawTerrain() {
   if (b.tech) {
     $('#tRule').innerHTML = '<b>À annoncer</b>' + esc(b.tech.court);
     $('#tWatch').innerHTML = pill('Critère : ' + b.tech.critere.split('.')[0], 'accent');
-    $('#tKv').innerHTML = b.tech.ateliers.map((a, k) => kv('Atelier ' + (k + 1) + ' · ' + a.nom, a.quoi)).join('');
+    $('#tKv').innerHTML = b.tech.ateliers.map((a, k) => kv('Atelier ' + (k + 1) + ' · ' + a.nom, a.quoi)).join('') + gbKv(b, s);
     finBloc();
     return;
   }
@@ -36935,14 +37310,14 @@ function drawTerrain() {
     : b.bloc ? '<b>Consignes clés</b>' + esc(b.bloc.consignes)
       : '<b>Question aux joueuses</b>' + esc((COMPS.find(c => c.nom === s.comportement) || {}).question || '');
   $('#tWatch').innerHTML = b.mod ? pill('👁 ' + b.mod.critere1) + pill('👁 ' + b.mod.critere2) + pill('« ' + b.mod.motCle + ' »', 'accent') : '';
-  $('#tKv').innerHTML = b.mod
+  $('#tKv').innerHTML = gbKv(b, s) + (b.mod
     ? kv('Dimensions', b.mod.dimensions) + kv('Organisation', b.mod.organisation) + kv('Si trop dur', ajusteTexte(b.mod, s, 'dur')) + kv('Si trop facile', ajusteTexte(b.mod, s, 'facile'))
     : b.bloc ? (function () {
         const fp = fichePhys(b.bloc.id);
         return kv('Format', b.bloc.format)
           + kv('Organisation', s.effectif <= 8 ? b.bloc.org68 : s.effectif <= 14 ? b.bloc.org914 : b.bloc.org1522)
           + (fp ? fp.ateliers.map((a, k) => kv((fp.ateliers.length > 1 ? 'Atelier ' + (k + 1) + ' · ' : '') + a.nom, a.quoi)).join('') : '');
-      })() : '';
+      })() : '');
   const nx = T.blocs[T.i + 1];
   $('#tNext').textContent = nx
     ? 'Ensuite : ' + NOM_PHASE[nx.kind] + ' — ' + (nx.mod ? nx.mod.nom : nx.bloc ? nx.bloc.nom : 'retour au calme')
