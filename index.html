@@ -353,6 +353,18 @@ td.num,th.num{font-variant-numeric:tabular-nums}
 .step.reserve{opacity:.6}
 .step.reserve .lbl{font-style:italic}
 
+/* la ligne gardiennes d'un bloc : elles jouent dedans, pas à côté */
+.gb-in{
+  font-family:var(--f-read); font-size:13.5px; line-height:1.45; color:var(--ink-2);
+  border-left:3px solid var(--warn); border-radius:0 var(--r-s) var(--r-s) 0;
+  background:var(--surface-2); padding:8px 11px;
+}
+.gb-in b{
+  display:block; font-family:var(--f-ui); font-size:10.5px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--warn); margin-bottom:2px;
+}
+@media print{.gb-in{background:none; border:1px dashed #999; border-left:2px solid #555; padding:4px 7px; font-size:8.5pt}}
+
 /* atelier gardienne, en parallèle du premier bloc */
 .gb-note{
   border:1px solid var(--line); border-left:3px solid var(--warn); border-radius:0 var(--r-s) var(--r-s) 0;
@@ -660,6 +672,52 @@ button.card:hover{border-color:var(--line-2)}
   @page{margin:12mm}
 }
 
+/* ============ FICHE BPJEPS (impression une page, paysage) ============ */
+.bpjeps{display:none}
+@media print{
+  body.print-bpjeps > *:not(main){display:none!important}
+  body.print-bpjeps main > section:not(#v-seance){display:none!important}
+  body.print-bpjeps #seanceOut, body.print-bpjeps .fiche{display:none!important}
+  body.print-bpjeps .bpjeps{display:block; color:#000; font-size:7.3pt; line-height:1.28; font-family:var(--f-ui); zoom:.94}
+
+  .bp-head{display:flex; align-items:baseline; gap:16px; padding-bottom:4px}
+  .bp-head b{font-size:13pt; letter-spacing:.02em; color:#123}
+  .bp-head span{font-size:8.5pt}
+  .bp-head u{text-decoration:none; border-bottom:.6pt solid #000; padding:0 4px; font-weight:700}
+  .bp-head .bp-club{margin-left:auto; color:#555; font-size:7.5pt}
+
+  .bp-top{display:grid; grid-template-columns:1.35fr .8fr .9fr 1.35fr; gap:4px; margin-bottom:4px}
+  .bp-top > div{border:.7pt solid #444; border-radius:3px; padding:3px 6px; min-height:0; font-size:7pt}
+  .bp-top b, .bp-obj b, .bp-foot b{
+    display:block; font-size:6.6pt; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:#123; margin-bottom:1px;
+  }
+  .bp-obj{border:.9pt solid #123; border-radius:3px; padding:3px 7px; margin-bottom:4px; font-size:7.6pt}
+  .bp-foot{border:.7pt solid #444; border-radius:3px; padding:3px 7px; margin-top:4px; font-size:6.7pt; color:#222}
+
+  .bp-table{width:100%; border-collapse:collapse; table-layout:fixed}
+  .bp-table th{
+    border:.6pt solid #444; background:#eef0f6; padding:3px 5px; text-align:left;
+    font-size:6.8pt; letter-spacing:.03em; text-transform:none; color:#123; white-space:normal;
+  }
+  .bp-table th:nth-child(1){width:12%}
+  .bp-table th:nth-child(2){width:20%}
+  .bp-table th:nth-child(3){width:19%}
+  .bp-table th:nth-child(4){width:19%}
+  .bp-table th:nth-child(5){width:16%}
+  .bp-table th:nth-child(6){width:14%}
+  .bp-table td{border:.6pt solid #666; padding:2px 4px; vertical-align:top; font-size:6.9pt; line-height:1.24; white-space:pre-line}
+  .bp-table tbody tr:hover{background:none}
+  .bp-ph{background:#f4f5f9}
+  .bp-ph b{display:block; font-size:7.8pt}
+  .bp-ph span{display:block; font-size:6.8pt; color:#444; font-variant-numeric:tabular-nums}
+  .bp-ph i{display:block; font-style:italic; font-size:6.8pt; color:#333; margin-top:1px}
+  .bp-table td p{margin:0 0 2px}
+  .bp-sch .schema{max-height:29px; width:auto; max-width:100%; display:block; margin:0 auto}
+  .bp-sch .sc-terrain{fill:#fff; stroke:#555; stroke-width:.3}
+  .bp-sch .sc-zlabel, .bp-sch .sc-clabel, .bp-sch .sc-cote{display:none}
+}
+
 /* ============ FICHE TERRAIN (impression une page) ============ */
 .fiche{display:none}
 @media print{
@@ -791,6 +849,9 @@ button.card:hover{border-color:var(--line-2)}
               <div class="field"><label for="fVar">Rotation</label><select id="fVar">
                 <option>Auto</option><option>1</option><option>2</option><option>3</option></select></div>
             </div>
+            <div class="field"><label for="fGardNoms">Au but ce week-end <span class="opt">les noms, séparés par des virgules</span></label>
+              <input type="text" id="fGardNoms" placeholder="Lena, Mia, Zoé, Emma" autocomplete="off">
+              <p class="hint">Mémorisé par semaine. À 4 noms, les deux premières sont les gardiennes de la première séance, les deux autres de la seconde — dans les exercices, pas à part.</p></div>
             <div class="field"><label for="fEspace">Espace disponible</label><select id="fEspace"></select></div>
             <div class="grid-2">
               <div class="field"><label for="fVarier">Exercices</label><select id="fVarier">
@@ -819,6 +880,7 @@ button.card:hover{border-color:var(--line-2)}
               <button class="btn btn-s" id="btnTerrain">Mode terrain</button>
               <button class="btn btn-s" id="btnPrint">Imprimer</button>
               <button class="btn btn-s" id="btnFiche">Fiche 1 page</button>
+              <button class="btn btn-s" id="btnBpjeps">Fiche BPJEPS</button>
               <button class="btn btn-s" id="btnNoterPanel">Noter la séance</button>
             </div>
           </div>
@@ -827,6 +889,7 @@ button.card:hover{border-color:var(--line-2)}
 
       <div id="seanceOut"></div>
       <div id="ficheOut" class="fiche" aria-hidden="true"></div>
+      <div id="bpjepsOut" class="bpjeps" aria-hidden="true"></div>
     </div>
   </section>
 
@@ -35575,6 +35638,33 @@ let GB = {};
 try { GB = JSON.parse(document.getElementById('gb').textContent); } catch (e) { }
 const gbDuCycle = cycle => GB[(cycle || '').split(' ')[0]] || null;
 
+/* semaine ISO d'une date — la clé du registre « qui va au but ce week-end » */
+function semaineISO(dstr) {
+  const d = new Date(dstr + 'T00:00:00');
+  const j = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const jour = j.getUTCDay() || 7;
+  j.setUTCDate(j.getUTCDate() + 4 - jour);
+  const an = j.getUTCFullYear();
+  const s = Math.ceil(((j - Date.UTC(an, 0, 1)) / 864e5 + 1) / 7);
+  return an + '-S' + String(s).padStart(2, '0');
+}
+const gardsDeLaSemaine = dstr => (store.read().gardSem[semaineISO(dstr)] || '').trim();
+
+/* 3 noms et plus : on répartit sur les deux séances de la semaine — les premières
+   à la première séance, les autres à la seconde. Le rang se déduit de l'historique. */
+function gardsDuJour(s) {
+  const noms = listeNoms(s.gardNoms);
+  if (noms.length < 3) return { jour: noms, autres: [] };
+  const sem = semaineISO(s.date);
+  const avant = store.read().seances
+    .filter(x => x.id !== s.id && x.date < s.date && semaineISO(x.date) === sem).length;
+  const coupe = Math.ceil(noms.length / 2);
+  return avant === 0
+    ? { jour: noms.slice(0, coupe), autres: noms.slice(coupe) }
+    : { jour: noms.slice(coupe), autres: noms.slice(0, coupe) };
+}
+const listeNoms = t => String(t || '').split(/[,;]/).map(x => x.trim()).filter(Boolean);
+
 /* Observation de match : trois questions par cycle, chacune reliée à un comportement
    du référentiel de ce cycle. « Pas vu » désigne le chantier de la semaine. */
 const OBS_MATCH = {
@@ -35723,6 +35813,7 @@ const store = {
     if (!mem.seances) mem.seances = [];
     if (!mem.matchs) mem.matchs = [];
     if (!mem.notes) mem.notes = {};
+    if (!mem.gardSem) mem.gardSem = {};
     if (casse) { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { } }
     return mem;
   },
@@ -36273,23 +36364,47 @@ function renderManual(mod, effectif) {
     + '</div></details>';
 }
 
-/* atelier gardienne : affiché dans le premier bloc de la séance, en parallèle du groupe */
-function gbKv(b, s) {
-  if (!b || b.debut !== 0 || !s.gardiennes || s.gardiennes < 1) return '';
-  const g = gbDuCycle(s.cycle); if (!g) return '';
-  return kv('Gardienne · ' + g.theme, g.ateliers.map((a, k) => (k + 1) + '. ' + a.nom).join(' — '));
+/* ============ GARDIENNES DANS LES EXERCICES ============
+   Pas d'atelier à part : les désignées du jour font toute la séance avec le
+   groupe et prennent le but partout où il y en a un. Chaque bloc dit quoi
+   faire d'elles, avec la consigne gardienne du cycle en cours.              */
+function gbActives(s) {
+  if (!s.gardiennes || s.gardiennes < 1) return null;
+  const rep = gardsDuJour(s);
+  const qui = rep.jour.length ? rep.jour.join(' et ')
+    : s.gardiennes > 1 ? 'tes gardiennes' : 'ta gardienne';
+  return { qui, rep, g: gbDuCycle(s.cycle) };
 }
-function gbNote(b, s) {
-  if (b.debut !== 0 || !s.gardiennes || s.gardiennes < 1) return '';
-  const g = gbDuCycle(s.cycle); if (!g) return '';
-  const pl = s.gardiennes > 1 ? 's' : '';
-  return '<aside class="gb-note">'
-    + '<p class="gb-h">Pendant ce bloc · gardienne' + pl + ' — ' + esc(g.theme) + '</p>'
-    + g.ateliers.map((a, k) => '<div class="gb-a"><b>' + (k + 1) + '. ' + esc(a.nom) + '</b>'
-      + '<span>' + esc(a.quoi) + '</span><i>' + esc(a.cle) + '</i></div>').join('')
-    + '<p class="gb-f">Matériel : ' + esc(g.materiel) + ' · avec une partenaire qui sert, en tournant. '
-    + 'Elle' + (pl ? 's' : '') + ' rejoi' + (pl ? 'gnent' : 'nt') + ' le groupe pour les situations et le match.</p>'
-    + '</aside>';
+/* comment ce bloc utilise le but : 'but' (vrais buts ou gardienne prévue),
+   'adaptable' (mini-buts remplaçables par de vrais buts), 'champ' (aucun but) */
+function gbUsage(b) {
+  const sp = b.mod ? (fiche(b.mod.id) || {}).schema
+    : b.cpa ? b.cpa.schema : b.tech ? b.tech.schema : null;
+  if (sp && (sp.buts || []).some(x => x.type !== 'mini')) return 'but';
+  const txt = b.mod ? (b.mod.materiel + ' ' + b.mod.organisation + ' ' + b.mod.dimensions + ' ' + b.mod.consignes).toLowerCase()
+    : b.cpa ? (b.cpa.court + ' ' + b.cpa.famille).toLowerCase() : '';
+  if (/gardienne/.test(txt)) return 'but';
+  if (/\bbuts?\b/.test(txt) && !/mini-but/.test(txt)) return 'but';
+  /* un ou deux mini-buts se remplacent par de vrais buts sans changer le thème ;
+     au-delà (jeux de portes multiples), les gardiennes restent dans le jeu */
+  const minis = sp ? (sp.buts || []).filter(x => x.type === 'mini').length : (/mini-but/.test(txt) ? 2 : 0);
+  if (minis > 0 && minis <= 2) return 'adaptable';
+  return 'champ';
+}
+function gbLigne(b, s) {
+  const a = gbActives(s); if (!a) return '';
+  if (b.kind === 'phys' || b.kind === 'retour' || b.kind === 'tech') return '';
+  const usage = gbUsage(b);
+  const cle = a.g ? bref(a.g.ateliers[0].cle, 110) : '';
+  if (usage === 'but') {
+    return '<p class="gb-in"><b>Gardiennes</b>' + esc(a.qui) + ' au but — une de chaque côté s\'il y a deux buts, sinon on échange à la moitié du bloc.'
+      + (cle ? ' Consigne du cycle : ' + esc(cle) : '') + '</p>';
+  }
+  if (usage === 'adaptable') {
+    return '<p class="gb-in"><b>Gardiennes</b>Option : remplace les mini-buts par deux vrais buts avec ' + esc(a.qui) + ' dedans — le thème de l\'exercice ne change pas, et elles travaillent leur poste en situation réelle.'
+      + (cle ? ' Consigne du cycle : ' + esc(cle) : '') + '</p>';
+  }
+  return '';
 }
 
 function blocHTML(b, s, i) {
@@ -36313,7 +36428,6 @@ function blocHTML(b, s, i) {
       + '<ol class="ateliers">' + t.ateliers.map((a, k) => '<li><b>Atelier ' + (k + 1) + ' — ' + esc(a.nom) + '</b>'
           + '<span class="quoi">' + esc(a.quoi) + '</span><span class="cle">' + esc(a.cle) + '</span></li>').join('') + '</ol>'
       + '<div class="rule"><b>Critère de réussite</b>' + esc(t.critere) + '</div>'
-      + gbNote(b, s)
       + (note ? '<div class="ma-note"><b>Ta note</b>' + esc(note.texte) + '</div>' : '')
       + '<details class="manual"><summary>Mode d’emploi · 2 minutes</summary><div class="manual-b">'
       + '<section><h5>Erreurs fréquentes</h5><ul class="err">'
@@ -36339,6 +36453,7 @@ function blocHTML(b, s, i) {
         + dessinerSchema(a.schema) + '</button>' + legendeSchema(a.schema)
         + '<p class="sc-hint no-print">Toucher pour agrandir</p></div>' : '')
       + '<div class="rule"><b>À annoncer aux joueuses</b>' + esc(a.court) + '</div>'
+      + gbLigne(b, s)
       + '<ul class="principes"><li class="pr-t">Les trois règles à ne pas négocier</li>'
       + a.principes.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>'
       + '<ol class="ateliers">' + a.ateliers.map((x, k) => '<li><b>Atelier ' + (k + 1) + ' — ' + esc(x.nom) + '</b>'
@@ -36450,11 +36565,11 @@ function blocHTML(b, s, i) {
     + schema
     + '<div class="kv">' + infos + '</div>'
     + annonce
+    + gbLigne(b, s)
     + '<div class="watch">' + pill('👁 ' + mod.critere1) + pill('👁 ' + mod.critere2) + pill('« ' + mod.motCle + ' »', 'accent') + '</div>'
     + (note ? '<div class="ma-note"><b>Ta note</b>' + esc(note.texte) + '</div>' : '')
     + '<div class="adj"><div><strong>Si c’est trop dur</strong>' + esc(ajusteTexte(mod, s, 'dur')) + '</div>'
     + '<div><strong>Si c’est trop facile</strong>' + esc(ajusteTexte(mod, s, 'facile')) + '</div></div>'
-    + gbNote(b, s)
     + renderManual(mod, s.effectif)
     + '<div class="blk-foot no-print"><button class="btn btn-s" data-swap="' + b.kind + '">Changer d’exercice</button>'
     + '<button class="btn btn-s" data-note="' + mod.id + '">' + (note ? 'Modifier ma note' : 'Noter cet exercice') + '</button>'
@@ -36499,14 +36614,23 @@ function renderSeance(s) {
     + (s.trace ? '<details class="pourquoi"><summary>Pourquoi cette séance ?</summary><ol class="pq">'
         + s.trace.map(x => '<li><b>' + esc(x.t) + '</b><span>' + esc(x.d) + '</span></li>').join('')
         + '</ol></details>' : '')
-    + '<div class="seance-head"><h3>Préparation</h3><span class="hint">' + frDate(s.date) + ' · ' + s.effectif + ' joueuses · ' + s.gardiennes + ' gardienne(s) · ' + s.duree + ' min · ' + esc(s.espace) + '</span></div>'
+    + '<div class="seance-head"><h3>Préparation</h3><span class="hint">' + frDate(s.date) + ' · ' + s.effectif + ' joueuses · ' + s.gardiennes + ' gardienne(s) · ' + s.duree + ' min · ' + esc(s.espace)
+    + (listeNoms(s.gardNoms).length
+      ? ' · au but ce week-end : ' + esc(listeNoms(s.gardNoms).join(', '))
+        + (gardsDuJour(s).autres.length ? ' — au but aujourd\'hui : ' + esc(gardsDuJour(s).jour.join(' et ')) : '')
+      : '') + '</span></div>'
     + '<div class="prep"><p class="eyebrow">À installer avant l’arrivée du groupe</p><ul>'
     + materiel.map(m => '<li>' + esc(m) + '</li>').join('')
     + (s.durees.phys > 0
       ? '<li>Bloc physique ' + esc(s.phys.type.toLowerCase()) + ' (' + s.phys.duree + ' min) placé ' + esc(s.phys.placement) + '</li>'
       : '<li>Pas de bloc physique : tout le temps est rendu au football</li>')
-    + (s.gardiennes >= 1 && gbDuCycle(s.cycle)
-      ? '<li>Atelier gardienne pendant la mise en route : ' + esc(gbDuCycle(s.cycle).theme.toLowerCase()) + ' — ' + esc(gbDuCycle(s.cycle).materiel) + '</li>' : '')
+    + (function () {
+      const a = gbActives(s); if (!a) return '';
+      return '<li>Gardiennes du jour : ' + esc(a.qui)
+        + (a.rep.autres.length ? ' (à l\'autre séance : ' + esc(a.rep.autres.join(' et ')) + ')' : '')
+        + ' — toute la séance avec le groupe, au but dès qu\'il y en a un. '
+        + (a.g ? 'Focus du cycle : ' + esc(a.g.theme.toLowerCase()) + '.' : '') + '</li>';
+    })()
     + '</ul>'
     + '<p class="hint">Posture attendue à l’étape « ' + esc(s.etape) + ' » : ' + esc(et.posture || '') + '</p></div>'
 
@@ -36526,6 +36650,132 @@ function renderSeance(s) {
   out.querySelectorAll('[data-swapa]').forEach(btn => btn.onclick = ouvrirSwapCpa);
   const bn = out.querySelector('#btnNoter'); if (bn) bn.onclick = noterCourante;
   renderFiche(s, blocs, c, et, materiel);
+  renderBpjeps(s, blocs, c, et, materiel);
+}
+
+/* ============ FICHE BPJEPS — le gabarit officiel d'une page, rempli ============
+   Reprend la structure de la fiche de séance attendue en formation :
+   Public / Domaine / Durée / Matériel, objectif « capables de… », puis pour
+   chaque phase : organisation, règles, critères, variables, sécurité.        */
+/* garde les premières phrases jusqu'à environ n caractères — jamais de coupe en plein mot */
+function bref(t, n) {
+  t = String(t || '');
+  if (t.length <= n) return t;
+  const ph = t.match(/[^.!?]+[.!?]+(\s|$)/g) || [t];
+  let out = '';
+  for (const x of ph) { if (out && (out + x).length > n) break; out += x; }
+  return (out || t.slice(0, n)).trim();
+}
+function secuBloc(kind, b) {
+  if (kind === 'phys') {
+    const fp = fichePhys(b.bloc.id);
+    return bref(fp && fp.securite ? fp.securite : '', 105) + ' Arrêt immédiat si douleur.';
+  }
+  return {
+    mr: 'Passive : espace vérifié, plots souples. Active : intensité progressive.',
+    tech: 'Passive : ateliers espacés, ballons de réserve hors zones de course. Active : services à hauteur convenue.',
+    s1: 'Passive : zones séparées. Active : signal d’arrêt connu, hydratation à la rotation.',
+    s2: 'Passive : marges de 2 m. Active : duels engagés, charge épaule seulement.',
+    cpa: 'Passive : surfaces dégagées. Active : personne dos au jeu sur les frappes.',
+    match: 'Passive : buts lestés, chasubles contrastées. Active : comptage au coup d’envoi.',
+    retour: 'Intensité décroissante, hydratation, retour groupé.'
+  }[kind] || '';
+}
+function ligneBpjeps(b, s) {
+  const kind = b.kind;
+  const nomPhase = {
+    mr: 'Échauffement', tech: b.debut === 0 ? 'Échauffement · bloc technique' : 'Technique',
+    phys: 'Physique', s1: 'Situation 1', s2: 'Situation 2',
+    cpa: 'Situation 3 · coup de pied arrêté', match: 'Match à thème', retour: 'Retour au calme + bilan'
+  }[kind] || kind;
+  const cel = (but, orga, sp, regles, criteres, variables) =>
+    '<tr><td class="bp-ph"><b>' + esc(nomPhase) + '</b><span>' + b.duree + ' min · ' + b.debut + '′ → ' + (b.debut + b.duree) + '′</span>'
+    + (but ? '<i>' + esc(bref(but, 70)) + '</i>' : '') + '</td>'
+    + '<td>' + (orga ? '<p>' + esc(bref(orga, 120)) + '</p>' : '') + (sp ? '<div class="bp-sch">' + dessinerSchema(sp) + '</div>' : '') + '</td>'
+    + '<td>' + esc(bref(regles, 150)) + '</td>'
+    + '<td>' + criteres + '</td>'
+    + '<td>' + esc(variables || '') + '</td>'
+    + '<td>' + esc(secuBloc(kind, b)) + '</td></tr>';
+
+  if (kind === 'tech') {
+    const t = b.tech;
+    return cel('corriger le fondamental « ' + t.famille.toLowerCase() + ' », au service du comportement du jour',
+      t.ateliers.length + ' ateliers en rotation, par binômes', t.schema, t.court,
+      '<b>Réussite :</b> ' + esc(t.critere), 'intégrées au critère : la porte s’élargit ou se réduit selon la réussite');
+  }
+  if (kind === 'phys') {
+    const p = b.bloc, fp = fichePhys(p.id);
+    const org = s.effectif <= 8 ? p.org68 : s.effectif <= 14 ? p.org914 : p.org1522;
+    return cel(p.objectif.toLowerCase(), p.format + ' · ' + org + ' · ' + p.espace, fp && fp.schema,
+      fp ? fp.court : p.consignes,
+      '<b>Réalisation :</b> ' + esc(p.consignes),
+      '− une série de moins si la qualité chute · + transitions raccourcies');
+  }
+  if (kind === 'cpa') {
+    const a = b.cpa;
+    return cel(a.famille.toLowerCase() + ' : des rôles fixes, répétés', a.ateliers.length + ' ateliers · rôles annoncés avant chaque ballon', a.schema,
+      a.court, '<b>Réussite :</b> ' + esc(a.critere.replace(/^Objectif : /, '')),
+      a.principes[2] || a.principes[0]);
+  }
+  if (kind === 'retour') {
+    const ref = MOD[s.modules.s1] || {};
+    const c = COMPS.find(x => x.nom === s.comportement) || {};
+    return cel('verbaliser le comportement travaillé, noter la séance',
+      'regroupement assis, ballons et chasubles rangés par les joueuses', null,
+      'Question : ' + (ref.question || 'qu’est-ce qui vous a aidées à réussir ?'),
+      '<b>Réussite :</b> chacune sait dire le comportement du jour avec ses mots',
+      '—');
+  }
+  const mod = b.mod, f = fiche(mod.id);
+  return cel(mod.objectif.toLowerCase(),
+    mod.dimensions + ' · ' + mod.organisation + ' · ' + mod.materiel, f && f.schema,
+    bref(f ? f.court : mod.consignes, 175) + ' Arrêt : deux coups de sifflet.',
+    '<b>Réussite :</b> ' + esc(mod.critere1) + '<br><b>Réalisation :</b> ' + esc(mod.critere2) + ' — mot-clé « ' + esc(mod.motCle) + ' »',
+    '− : ' + bref(ajusteTexte(mod, s, 'dur'), 85) + '\n+ : ' + bref(ajusteTexte(mod, s, 'facile'), 85));
+}
+
+function renderBpjeps(s, blocs, c, et, materiel) {
+  const el = $('#bpjepsOut'); if (!el) return;
+  const mq = Object.assign({}, MARQUE_DEF, store.read().marque || {});
+  const noms = listeNoms(s.gardNoms);
+  const brut = materiel.map(m => m.split(' — ')[1]).filter(Boolean)
+    .join(', ').split(/\s*[,;]\s*/).map(x => x.trim().toLowerCase()).filter(Boolean);
+  const par = {};
+  brut.forEach(x => {
+    const cle = x.replace(/^\d+\s*(?:[àa-]\s*\d+\s*)?/, '').replace(/s\b/g, '');
+    if (!par[cle] || (/^\d/.test(x) && !/^\d/.test(par[cle]))) par[cle] = x;
+  });
+  const minuscule = t => t ? t.charAt(0).toLowerCase() + t.slice(1) : t;
+  el.innerHTML =
+    '<div class="bp-head"><b>FICHE DE SÉANCE</b>'
+    + '<span>Nom : <u>' + esc(mq.coach || 'Pablo') + '</u></span>'
+    + '<span>Date : <u>' + frDate(s.date) + '</u></span>'
+    + '<span>Lieu : <u>' + (mq.lieu ? esc(mq.lieu) : '              ') + '</u></span>'
+    + '<span class="bp-club">' + esc(mq.sous) + '</span></div>'
+    + '<div class="bp-top">'
+    + '<div><b>Public</b>' + s.effectif + ' joueuses U15F, niveau débutant à intermédiaire (lacunes contrôle et passe), '
+    + (noms.length ? 'au but ce week-end : ' + esc(noms.join(', ')) + ', ' : s.gardiennes + ' gardienne(s), ')
+    + '1 éducateur.</div>'
+    + '<div><b>Domaine · activité</b>APJS · football à 8.</div>'
+    + '<div><b>Durée · découpage</b>' + s.duree + ' min = ' + blocs.map(b => b.duree).join(' + ') + '.</div>'
+    + '<div><b>Matériel</b>' + esc(Object.values(par).join(', ') || '—') + ' + trousse de secours, téléphone, sifflet, gourdes.</div>'
+    + '</div>'
+    + '<div class="bp-obj"><b>Objectif de la séance</b>À la fin de la séance, les joueuses sont capables de « '
+    + esc(minuscule(s.comportement)) + ' » (étape ' + esc(s.etape.toLowerCase()) + ') : '
+    + esc(minuscule(c.observe || '')) + ' — observable dans le match à thème, mot-clé « ' + esc(c.motCle || '') + ' ».</div>'
+    + '<table class="bp-table"><thead><tr>'
+    + '<th>Phase · temps · but</th><th>Organisation / dispositif</th><th>Règles et consignes</th>'
+    + '<th>Critères de réussite / réalisation</th><th>Variables − / +</th><th>Sécurité</th></tr></thead><tbody>'
+    + '<tr><td class="bp-ph"><b>Accueil / prise en main</b><span>à l’arrivée</span><i>poser le cadre du jour</i></td>'
+    + '<td><p>Regroupement au centre, gourdes au même endroit, présences.</p></td>'
+    + '<td>Annonce du comportement du jour, du mot-clé' + (noms.length ? ' et des gardiennes de la semaine' : '') + '.</td>'
+    + '<td><b>Réussite :</b> toutes savent le thème et le signal d’arrêt (deux coups de sifflet).</td>'
+    + '<td>—</td>'
+    + '<td>Terrain inspecté ; trousse de secours et téléphone au bord.</td></tr>'
+    + blocs.map(b => ligneBpjeps(b, s)).join('')
+    + '</tbody></table>'
+    + '<div class="bp-foot"><b>Analyse de risques</b>Public jeune × sport collectif × extérieur × petit matériel × météo → parades : échauffement progressif, aires espacées et vérifiées, buts lestés, hydratation entre les blocs ; '
+    + 'encadrement : éducateur mobile, signal d’arrêt connu de toutes, comptage à chaque regroupement. À ajuster selon la météo du jour.</div>';
 }
 
 /* ============ FICHE TERRAIN — une page, à glisser dans la poche ============
@@ -36606,10 +36856,12 @@ function renderFiche(s, blocs, c, et, materiel) {
     + '<h3>' + esc(s.comportement) + '</h3>'
     + '<p class="fo-w">' + esc(c.observe || '') + '</p></div>'
     + '<div class="fo-k"><span>Mot-clé</span><b>' + esc(c.motCle || '') + '</b></div></div>'
-    + (s.gardiennes >= 1 && gbDuCycle(s.cycle)
-      ? '<p class="fgb"><b>Gardienne' + (s.gardiennes > 1 ? 's' : '') + ' · ' + esc(gbDuCycle(s.cycle).theme) + '</b> — '
-        + gbDuCycle(s.cycle).ateliers.map((a, k) => (k + 1) + '. ' + esc(a.nom)).join('  ·  ')
-        + ' <span>(pendant la mise en route)</span></p>' : '')
+    + (function () {
+      const a = gbActives(s); if (!a) return '';
+      return '<p class="fgb"><b>Gardiennes : ' + esc(a.qui) + '</b> — au but sur chaque exercice à but, dans le jeu sinon.'
+        + (a.g ? ' Focus : ' + esc(a.g.theme.toLowerCase()) + ' — ' + esc(bref(a.g.ateliers[0].cle, 80)) : '')
+        + '</p>';
+    })()
     + '<div class="fbs-l">' + blocs.map(b => ligneFiche(b, s, c.motCle)).join('') + '</div>'
     + '<div class="ff"><div><b>Matériel à sortir</b>' + esc(mat.join(' · ') || '—') + '</div>'
     + '<div><b>Notes du jour · à reporter dans le carnet</b>'
@@ -36867,7 +37119,8 @@ function renderHistorique() {
           : '<span class="hint">rien à corriger — le plan continue</span>') + '</td>'
         + '<td class="no-print"><button class="btn btn-s" data-delm="' + m.id + '">✕</button></td></tr>').join('')
       + '</tbody></table></div>'
-      : '<div class="empty-state">Aucun match enregistré.</div>');
+      : '<div class="empty-state">Aucun match enregistré.</div>')
+    + rotationGardiennes();
 
   el.querySelectorAll('[data-open]').forEach(b => b.onclick = () => {
     const s = db.seances.find(x => x.id === b.dataset.open);
@@ -36881,6 +37134,28 @@ function renderHistorique() {
     db.matchs = db.matchs.filter(x => x.id !== b.dataset.delm); store.save(); renderHistorique();
   });
   $('#hAddMatch').onclick = ouvrirMatch;
+}
+
+/* registre « qui est allée au but » : la rotation reste équitable si elle se voit */
+function rotationGardiennes() {
+  const reg = store.read().gardSem || {};
+  const cles = Object.keys(reg).sort().reverse();
+  if (!cles.length) return '';
+  const compte = {};
+  cles.forEach(k => listeNoms(reg[k]).forEach(n => {
+    const c = n.charAt(0).toUpperCase() + n.slice(1);
+    compte[c] = (compte[c] || 0) + 1;
+  }));
+  const tri = Object.entries(compte).sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]));
+  return '<div class="seance-head" style="margin-top:26px"><h3>Au but, semaine par semaine</h3>'
+    + '<span class="hint">se remplit depuis le panneau Séance — sert à garder la rotation équitable</span></div>'
+    + '<div class="tablewrap"><table><thead><tr><th>Semaine</th><th>Désignées</th></tr></thead><tbody>'
+    + cles.slice(0, 12).map(k => '<tr><td class="num">' + esc(k.replace('-S', ' · semaine ')) + '</td>'
+      + '<td>' + esc(reg[k]) + '</td></tr>').join('')
+    + '</tbody></table></div>'
+    + '<p class="hint" style="margin-top:8px">Passages par joueuse : '
+    + tri.map(([n, c]) => esc(n) + ' ×' + c).join(' · ')
+    + (tri.length > 1 && tri[0][1] < tri[tri.length - 1][1] ? ' — les moins passées sont en tête de liste.' : '.') + '</p>';
 }
 
 function ouvrirMatch() {
@@ -37294,7 +37569,7 @@ function drawTerrain() {
   if (b.tech) {
     $('#tRule').innerHTML = '<b>À annoncer</b>' + esc(b.tech.court);
     $('#tWatch').innerHTML = pill('Critère : ' + b.tech.critere.split('.')[0], 'accent');
-    $('#tKv').innerHTML = b.tech.ateliers.map((a, k) => kv('Atelier ' + (k + 1) + ' · ' + a.nom, a.quoi)).join('') + gbKv(b, s);
+    $('#tKv').innerHTML = b.tech.ateliers.map((a, k) => kv('Atelier ' + (k + 1) + ' · ' + a.nom, a.quoi)).join('');
     finBloc();
     return;
   }
@@ -37310,7 +37585,11 @@ function drawTerrain() {
     : b.bloc ? '<b>Consignes clés</b>' + esc(b.bloc.consignes)
       : '<b>Question aux joueuses</b>' + esc((COMPS.find(c => c.nom === s.comportement) || {}).question || '');
   $('#tWatch').innerHTML = b.mod ? pill('👁 ' + b.mod.critere1) + pill('👁 ' + b.mod.critere2) + pill('« ' + b.mod.motCle + ' »', 'accent') : '';
-  $('#tKv').innerHTML = gbKv(b, s) + (b.mod
+  const a2 = gbActives(s);
+  const gkv = a2 && b.kind !== 'phys' && b.kind !== 'retour' && gbUsage(b) !== 'champ'
+    ? kv('Gardiennes', (gbUsage(b) === 'but' ? a2.qui + ' au but' : 'option : vrais buts avec ' + a2.qui)
+        + (a2.g ? ' — ' + bref(a2.g.ateliers[0].cle, 90) : '')) : '';
+  $('#tKv').innerHTML = gkv + (b.mod
     ? kv('Dimensions', b.mod.dimensions) + kv('Organisation', b.mod.organisation) + kv('Si trop dur', ajusteTexte(b.mod, s, 'dur')) + kv('Si trop facile', ajusteTexte(b.mod, s, 'facile'))
     : b.bloc ? (function () {
         const fp = fichePhys(b.bloc.id);
@@ -37351,7 +37630,8 @@ function lireFormulaire() {
     varier: $('#fVarier').value,
     physique: $('#fPhys').value,
     technique: $('#fTech').value,
-    cpa: $('#fCpa') ? $('#fCpa').value : 'Auto'
+    cpa: $('#fCpa') ? $('#fCpa').value : 'Auto',
+    gardNoms: $('#fGardNoms') ? $('#fGardNoms').value.trim() : ''
   };
 }
 
@@ -37438,7 +37718,9 @@ function sauvegardeAllegee() {
   const db = store.read();
   return {
     seances: db.seances.map(s => { const c = Object.assign({}, s); delete c.trace; return c; }),
-    matchs: db.matchs, notes: db.notes, marque: db.marque
+    matchs: db.matchs, notes: db.notes, marque: db.marque,
+    gardSem: db.gardSem, coupures: db.coupures, parSemaine: db.parSemaine,
+    planResserre: db.planResserre, reglages: db.reglages
   };
 }
 function exporter() {
@@ -37457,7 +37739,9 @@ function importer() {
   try {
     const d = JSON.parse(txt);
     if (!d.seances) throw 0;
-    mem = { seances: d.seances || [], matchs: d.matchs || [], notes: d.notes || {}, theme: mem.theme, marque: d.marque || mem.marque };
+    mem = { seances: d.seances || [], matchs: d.matchs || [], notes: d.notes || {}, theme: mem.theme, marque: d.marque || mem.marque,
+            gardSem: d.gardSem || {}, coupures: d.coupures || mem.coupures, parSemaine: d.parSemaine || mem.parSemaine,
+            planResserre: !!d.planResserre, reglages: d.reglages || mem.reglages };
     store.save(); appliquerMarque(mem.marque); fermerDialog(); renderHistorique(); toast('Données importées');
   } catch (e) { toast('Fichier illisible'); }
 }
@@ -37471,7 +37755,7 @@ function appliquerTheme(t) {
 /* ================= IDENTITÉ DU GROUPEMENT ================= */
 /* Couleurs et logo du club. Tant que rien n'est renseigné, la palette d'origine s'applique. */
 /* Valeurs par défaut = charte GF MMJ (Marine #1B274A, Rose vif #D10E77) déjà appliquée dans le CSS */
-const MARQUE_DEF = { nom: 'CARNET U15F', sous: 'GF MMJ · Mûrs · Melaine · Juigné', accent: '', field: '', logo: '' };
+const MARQUE_DEF = { nom: 'CARNET U15F', sous: 'GF MMJ · Mûrs · Melaine · Juigné', coach: 'Pablo', lieu: '', accent: '', field: '', logo: '' };
 const CHARTE = { accent: '#D10E77', field: '#1B274A' };
 
 function hex2hsl(h) {
@@ -37586,6 +37870,10 @@ function ouvrirMarque() {
     + '<div class="stack">'
     + '<div class="field"><label for="brNom">Titre affiché</label><input type="text" id="brNom" value="' + esc(m.nom) + '"></div>'
     + '<div class="field"><label for="brSous">Sous-titre</label><input type="text" id="brSous" value="' + esc(m.sous) + '"></div>'
+    + '<div class="grid-2">'
+    + '<div class="field"><label for="brCoach">Éducateur <span class="opt">pour la fiche BPJEPS</span></label><input type="text" id="brCoach" value="' + esc(m.coach || 'Pablo') + '"></div>'
+    + '<div class="field"><label for="brLieu">Lieu d\'entraînement</label><input type="text" id="brLieu" value="' + esc(m.lieu || '') + '" placeholder="Stade de Mûrs-Érigné"></div>'
+    + '</div>'
     + '<div class="field"><label for="brLogo">Logo (PNG, JPG ou SVG)</label><input type="file" id="brLogo" accept="image/*">'
     + '<div class="logo-prev" id="brPrev">' + (logo ? '<img src="' + logo + '" alt="">' : '<span class="hint">Aucun logo pour l’instant</span>') + '</div></div>'
     + '<div class="swatch-row">'
@@ -37601,6 +37889,7 @@ function ouvrirMarque() {
       label: 'Appliquer', primary: true, onClick: () => {
         db.marque = {
           nom: $('#brNom').value.trim() || MARQUE_DEF.nom, sous: $('#brSous').value.trim(),
+          coach: $('#brCoach').value.trim(), lieu: $('#brLieu').value.trim(),
           accent: $('#brAcc').value, field: $('#brFld').value, logo: logo
         };
         store.save(); appliquerMarque(db.marque); fermerDialog(); toast('Identité appliquée');
@@ -37658,11 +37947,24 @@ function init() {
   $('#fEspace').value = 'Quart de terrain';
   chargerReglages();
   const cy = cycleParDate(today); if (cy) $('#fCycle').value = cy;
-  $('#fDate').onchange = () => { const c = cycleParDate($('#fDate').value); if (c) $('#fCycle').value = c; };
+  const majGardNoms = () => { const e = $('#fGardNoms'); if (e) e.value = gardsDeLaSemaine($('#fDate').value); };
+  majGardNoms();
+  if ($('#fGardNoms')) $('#fGardNoms').oninput = () => {
+    const n = listeNoms($('#fGardNoms').value).length;
+    if (n > 0) $('#fGard').value = n >= 3 ? Math.ceil(n / 2) : n;
+  };
+  $('#fDate').onchange = () => { const c = cycleParDate($('#fDate').value); if (c) $('#fCycle').value = c; majGardNoms(); };
 
   $('#tabs').onclick = e => { const b = e.target.closest('.tab'); if (b) setView(b.dataset.view); };
   $('#btnGen').onclick = () => {
     sauverReglages();
+    if ($('#fGardNoms')) {
+      const db2 = store.read();
+      const cle = semaineISO($('#fDate').value || iso(new Date()));
+      const v = $('#fGardNoms').value.trim();
+      if (v) db2.gardSem[cle] = v; else delete db2.gardSem[cle];
+      store.save();
+    }
     courante = genererSeance(lireFormulaire());
     renderSeance(courante);
     if (window.innerWidth < 901) $('#seanceOut').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -37670,6 +37972,18 @@ function init() {
   $('#btnSave').onclick = () => sauverCourante(false);
   $('#btnNoterPanel').onclick = noterCourante;
   $('#btnPrint').onclick = () => { if (!courante) { toast('Génère d’abord une séance'); return; } window.print(); };
+  $('#btnBpjeps').onclick = () => {
+    if (!courante) { toast('Génère d’abord une séance'); return; }
+    const body = document.body;
+    const st = document.createElement('style');
+    st.textContent = '@page{size:A4 landscape; margin:8mm}';
+    document.head.appendChild(st);
+    body.classList.add('print-bpjeps');
+    const off = () => { body.classList.remove('print-bpjeps'); st.remove(); window.removeEventListener('afterprint', off); };
+    window.addEventListener('afterprint', off);
+    window.print();
+    setTimeout(off, 1200);
+  };
   $('#btnFiche').onclick = () => {
     if (!courante) { toast('Génère d’abord une séance'); return; }
     const body = document.body;
