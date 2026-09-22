@@ -35818,9 +35818,76 @@ const store = {
     return mem;
   },
   save() {
+    if (mem && !SYNC.adoption) mem.savedAt = new Date().toISOString();
     try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { }
+    if (!SYNC.adoption) syncPlanifier();
   }
 };
+
+/* ============ SYNCHRONISATION ENTRE APPAREILS ============
+   Sur la version en ligne (claude.ai), le carnet suit le compte : la copie
+   la plus récente gagne, poussée quelques secondes après chaque changement.
+   Sur le fichier autonome (GitHub Pages), rien ne change : stockage local. */
+const SYNC = { etat: 'aucune', ref: null, minuterie: null, dernierPousse: '', adoption: false, quand: '' };
+function syncPlanifier() {
+  if (!SYNC.ref) return;
+  clearTimeout(SYNC.minuterie);
+  SYNC.minuterie = setTimeout(syncPousser, 2500);
+}
+async function syncPousser() {
+  if (!SYNC.ref || !mem || !mem.savedAt || mem.savedAt === SYNC.dernierPousse) return;
+  const envoi = mem.savedAt;
+  try {
+    await SYNC.ref.set({ savedAt: envoi, donnees: sauvegardeAllegee() });
+    SYNC.dernierPousse = envoi; SYNC.etat = 'ok'; SYNC.quand = envoi;
+  } catch (e) {
+    SYNC.etat = 'erreur';
+    if (e && e.code === 'quota_exceeded') toast('Synchronisation pleine : fais un export et préviens Claude');
+  }
+}
+function syncAdopter(d) {
+  SYNC.adoption = true;
+  try {
+    const local = store.read();
+    mem = Object.assign({}, d.donnees);
+    mem.theme = local.theme;
+    if (!mem.seances) mem.seances = []; if (!mem.matchs) mem.matchs = [];
+    if (!mem.notes) mem.notes = {}; if (!mem.gardSem) mem.gardSem = {};
+    mem.savedAt = d.savedAt;
+    store.save();
+    SYNC.dernierPousse = d.savedAt; SYNC.etat = 'ok'; SYNC.quand = d.savedAt;
+    appliquerMarque(mem.marque);
+    courante = null; renderSeance(null); setView('seance');
+    if ($('#fGardNoms')) $('#fGardNoms').value = gardsDeLaSemaine($('#fDate').value || iso(new Date()));
+    toast('Carnet synchronisé : version du ' + frDate(d.savedAt.slice(0, 10)) + ' récupérée');
+  } finally { SYNC.adoption = false; }
+}
+async function initSync() {
+  if (!(window.claude && typeof window.claude.use === 'function')) return;
+  let dbc, usr;
+  try { [dbc, usr] = await Promise.all([window.claude.use('db'), window.claude.use('user')]); } catch (e) { return; }
+  if (!dbc || !usr) return;
+  let uid = null;
+  try { uid = await usr.id(); } catch (e) { }
+  if (!uid) return;
+  try { SYNC.ref = dbc.doc('data/users/' + uid + '/carnet'); } catch (e) { return; }
+  SYNC.etat = 'ok';
+  let snap = null;
+  try { snap = await SYNC.ref.get(); } catch (e) { SYNC.etat = 'erreur'; return; }
+  const local = store.read();
+  const distant = snap && snap.exists ? snap.data() : null;
+  const tLoc = local.savedAt || '';
+  const tDis = (distant && distant.savedAt) || '';
+  if (distant && distant.donnees && tDis > tLoc) syncAdopter(distant);
+  else if (tLoc && tLoc !== tDis) syncPousser();
+  else { SYNC.dernierPousse = tLoc; SYNC.quand = tDis || tLoc; }
+  /* un autre appareil ouvert en même temps : on suit ses enregistrements */
+  SYNC.ref.onSnapshot(s => {
+    if (!s.exists) return;
+    const d = s.data();
+    if (d && d.donnees && d.savedAt && d.savedAt > (store.read().savedAt || '') && d.savedAt !== SYNC.dernierPousse) syncAdopter(d);
+  }, () => { SYNC.etat = 'erreur'; });
+}
 
 /* ================= OUTILS ================= */
 const $ = s => document.querySelector(s);
@@ -37688,9 +37755,16 @@ function setView(v) {
 function ouvrirDonnees() {
   const db = store.read();
   ouvrirDialog('Données du carnet',
-    '<p class="hint">Les séances et les bilans sont enregistrés dans ce navigateur, sur cet appareil. Garde une copie de temps en temps, et colle-la ici pour repartir sur un autre appareil.</p>'
+    (SYNC.etat === 'ok'
+      ? '<p class="hint">Synchronisation entre appareils : <b>active</b> — cette version en ligne suit ton compte Claude. '
+        + 'Chaque enregistrement est poussé automatiquement, et l\'appareil qui ouvre le carnet récupère la version la plus récente'
+        + (SYNC.quand ? ' (dernière : ' + frDate(SYNC.quand.slice(0, 10)) + ')' : '') + '. '
+        + 'La copie de sauvegarde ci-dessous reste utile pour archiver ou pour alimenter le fichier GitHub Pages.</p>'
+      : '<p class="hint">Tout ce que tu enregistres vit dans CE navigateur, sur CE PC : rien ne se partage tout seul entre deux ordinateurs, et le fichier du carnet lui-même ne contient aucune donnée. '
+        + 'Pour passer sur un autre appareil : Télécharger (ou Copier) ici, puis Restaurer là-bas — ou utilise la version en ligne du carnet, qui se synchronise toute seule.</p>')
     + '<div class="kv">' + kv('Séances', db.seances.length + '') + kv('Bilans', db.seances.filter(s => s.bilan).length + '') + kv('Matchs', db.matchs.length + '') + kv('Notes sur exercices', Object.keys(db.notes || {}).length + '')
-    + kv('Poids de la sauvegarde', Math.round(JSON.stringify(sauvegardeAllegee()).length / 1024) + ' Ko') + '</div>'
+    + kv('Poids de la sauvegarde', Math.round(JSON.stringify(sauvegardeAllegee()).length / 1024) + ' Ko')
+    + kv('Dernière copie prise', db.lastExport ? frDate(db.lastExport) : 'jamais') + '</div>'
     + '<div class="field"><label for="expTxt">Copie de sauvegarde</label><textarea id="expTxt" readonly>' + esc(JSON.stringify(sauvegardeAllegee())) + '</textarea>'
     + '<div class="btn-row"><button class="btn btn-s" id="btnCopy">Copier</button><button class="btn btn-s" id="btnDl">Télécharger</button></div></div>'
     + '<div class="field"><label for="impTxt">Restaurer une sauvegarde</label><textarea id="impTxt" placeholder="Colle ici le contenu d’une sauvegarde…"></textarea></div>'
@@ -37708,6 +37782,7 @@ function ouvrirDonnees() {
         t.select(); t.setSelectionRange(0, t.value.length);
         let ok = false;
         try { ok = document.execCommand('copy'); } catch (e) { }
+        if (ok) { const d2 = store.read(); d2.lastExport = iso(new Date()); store.save(); }
         if (navigator.clipboard) navigator.clipboard.writeText(t.value).then(() => toast('Sauvegarde copiée'), () => { });
         else toast(ok ? 'Sauvegarde copiée' : 'Sélectionne le texte puis copie-le');
       };
@@ -37723,14 +37798,27 @@ function sauvegardeAllegee() {
     planResserre: db.planResserre, reglages: db.reglages
   };
 }
-function exporter() {
+async function exporter() {
+  const contenu = JSON.stringify(sauvegardeAllegee(), null, 2);
+  const nom = 'carnet-u15f-' + iso(new Date()) + '.json';
+  const fini = () => { const db = store.read(); db.lastExport = iso(new Date()); store.save(); toast('Sauvegarde téléchargée'); };
+  if (window.claude && typeof window.claude.use === 'function') {
+    const dl = await window.claude.use('downloads').catch(() => null);
+    if (dl) {
+      try { await dl.save({ filename: nom, data: contenu }); fini(); }
+      catch (e) { if (e && e.code !== 'declined') toast('Téléchargement refusé ici — utilise « Copier »'); }
+      return;
+    }
+    toast('Téléchargement indisponible ici — utilise « Copier »');
+    return;
+  }
   try {
-    const blob = new Blob([JSON.stringify(sauvegardeAllegee(), null, 2)], { type: 'application/json' });
+    const blob = new Blob([contenu], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'carnet-u15f-' + iso(new Date()) + '.json';
+    a.download = nom;
     document.body.appendChild(a); a.click(); a.remove();
-    toast('Sauvegarde téléchargée');
+    fini();
   } catch (e) { toast('Téléchargement indisponible ici — utilise « Copier »'); }
 }
 function importer() {
@@ -37741,7 +37829,7 @@ function importer() {
     if (!d.seances) throw 0;
     mem = { seances: d.seances || [], matchs: d.matchs || [], notes: d.notes || {}, theme: mem.theme, marque: d.marque || mem.marque,
             gardSem: d.gardSem || {}, coupures: d.coupures || mem.coupures, parSemaine: d.parSemaine || mem.parSemaine,
-            planResserre: !!d.planResserre, reglages: d.reglages || mem.reglages };
+            planResserre: !!d.planResserre, reglages: d.reglages || mem.reglages, lastExport: mem.lastExport };
     store.save(); appliquerMarque(mem.marque); fermerDialog(); renderHistorique(); toast('Données importées');
   } catch (e) { toast('Fichier illisible'); }
 }
@@ -37935,9 +38023,21 @@ function ouvrirMarque() {
 }
 
 /* ================= INIT ================= */
+function rappelSauvegarde(db) {
+  const perso = db.seances.length > SEED.seances.length || db.matchs.length > 0
+    || Object.keys(db.gardSem || {}).length > 0 || Object.keys(db.notes || {}).length > 0;
+  if (!perso) return;
+  const jours = db.lastExport ? Math.floor((new Date() - new Date(db.lastExport + 'T00:00:00')) / 864e5) : 999;
+  if (jours < 7) return;
+  setTimeout(() => SYNC.etat === 'ok' || toast(db.lastExport
+    ? 'Ta dernière copie de sauvegarde date du ' + frDate(db.lastExport) + ' — pense à en refaire une (icône ⤓).'
+    : 'Tes séances ne vivent que sur ce PC : prends une copie de sauvegarde (icône ⤓) pour les retrouver ailleurs.'), 6000);
+}
 function init() {
   remplirSelects();
   const db = store.read();
+  initSync();
+  rappelSauvegarde(db);
   appliquerTheme(db.theme);
   appliquerMarque(db.marque);
   $('#brandBtn').onclick = ouvrirMarque;
